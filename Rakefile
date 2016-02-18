@@ -12,14 +12,16 @@ end
 require 'rake'
 
 require 'jeweler'
+require_relative 'lib/version'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://guides.rubygems.org/specification-reference/ for more options
   gem.name = "puppet-repl"
-  gem.homepage = "http://github.com/logicminds/puppet-repl"
+  gem.version = "#{PuppetRepl::VERSION}"
+  gem.homepage = "http://github.com/nwops/puppet-repl"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
-  gem.email = "corey@logicminds.biz"
+  gem.summary = %Q{A repl for the puppet language}
+  gem.description = %Q{A interactive command line tool for evaluating the puppet language}
+  gem.email = "corey@nwops.io"
   gem.authors = ["Corey Osman"]
   # dependencies defined in Gemfile
 end
