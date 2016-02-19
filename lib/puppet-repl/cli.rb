@@ -1,5 +1,6 @@
 require 'puppet'
 require 'puppet/pops'
+require "readline"
 
 module PuppetRepl
   class Cli
@@ -60,7 +61,6 @@ module PuppetRepl
       else
         output.join("\n")
       end
-
     end
 
     def handle_input(input)
@@ -84,6 +84,10 @@ module PuppetRepl
       end
     end
 
+    def self.ripl_start
+      Ripl.start
+    end
+
     def self.print_repl_desc
       puts(<<-EOT)
 Puppet Version: #{Puppet.version}
@@ -97,13 +101,8 @@ Type "exit", "functions", "types", "reset", "help" for more information.
     def self.start
       print_repl_desc
       repl_obj = new
-      repl = -> prompt do
-        print prompt
-        repl_obj.handle_input(gets.chomp!)
-      end
-
-      loop do
-        repl[">> "]
+      while buf = Readline.readline(">> ", true)
+        repl_obj.handle_input(buf)
       end
     end
   end
