@@ -66,7 +66,7 @@ GEM
       rspec-core (~> 3.4.0)
       rspec-expectations (~> 3.4.0)
       rspec-mocks (~> 3.4.0)
-    rspec-core (3.4.2)
+    rspec-core (3.4.3)
       rspec-support (~> 3.4.0)
     rspec-expectations (3.4.0)
       diff-lcs (>= 1.2.0, < 2.0)
@@ -91,6 +91,7 @@ DEPENDENCIES
   jeweler (~> 2.0.1)
   pry
   puppet (>= 3.8)
+  rake
   rdoc (~> 3.12)
   rspec
   simplecov

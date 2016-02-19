@@ -24,7 +24,7 @@ describe "PuppetRepl" do
       "$file_path = '/tmp/test2.txt'"
     end
     it 'can process a variable' do
-      repl_output = ' => /tmp/test2.txt'
+      repl_output = " => /tmp/test2.txt\n"
       expect{repl.handle_input(input)}.to output(repl_output).to_stdout
     end
   end
@@ -34,7 +34,17 @@ describe "PuppetRepl" do
       "file{'/tmp/test2.txt': ensure => present, mode => '0755'}"
     end
     it 'can process a resource' do
-      repl_output = " => File['/tmp/test2.txt']"
+      repl_output = " => File['/tmp/test2.txt']\n"
+      expect{repl.handle_input(input)}.to output(repl_output).to_stdout
+    end
+  end
+
+  describe 'bad input' do
+    let(:input) do
+      "Service{"
+    end
+    it 'can process' do
+      repl_output = " => Syntax error at end of file\n"
       expect{repl.handle_input(input)}.to output(repl_output).to_stdout
     end
   end
@@ -44,7 +54,7 @@ describe "PuppetRepl" do
       "['/tmp/test3', '/tmp/test4'].each |String $path| { file{$path: ensure => present} }"
     end
     it 'can process a each block' do
-      repl_output = ''
+      repl_output = " => [\"/tmp/test3\", \"/tmp/test4\"]\n"
       expect{repl.handle_input(input)}.to output(repl_output).to_stdout
     end
   end

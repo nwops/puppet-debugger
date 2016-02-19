@@ -52,17 +52,14 @@ module PuppetRepl
     end
 
     def normalize_output(result)
-      items = [result].flatten
-      output = items.map do |r|
-        "#{r}"
+      if result.instance_of?(Array)
+        if result.count == 1
+          return result.first
+        end
       end
-      if items.count > 1
-        "\n" + output.join("\n")
-      else
-        output.join("\n")
-      end
+      result
     end
-
+#scope.environment.known_resource_types
     def handle_input(input)
       case input
       when 'help'
