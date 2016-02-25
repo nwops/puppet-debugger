@@ -6,6 +6,14 @@ module PuppetRepl
   class Cli
     include PuppetRepl::Support
 
+    def initialize
+      begin
+        Puppet.initialize_settings
+      rescue
+        # do nothing otherwise calling init twice raises an error
+      end
+    end
+
     def puppet_eval(input)
       begin
         parser.evaluate_string(scope, input)
@@ -32,7 +40,7 @@ module PuppetRepl
       when 'help'
         PuppetRepl::Cli.print_repl_desc
       when 'functions'
-        puts function_map
+        puts function_map.keys.sort
       when 'types'
         puts "list of types coming soon"
       when '_'
@@ -41,9 +49,6 @@ module PuppetRepl
         puts "Puppet Environment: #{puppet_env_name}"
       when 'exit'
         exit 0
-      when 'pry'
-        require 'pry'
-        binding.pry
       when 'reset'
         @scope = nil
       when 'current_resources'

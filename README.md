@@ -8,6 +8,12 @@ Requires Puppet 3.8+ and only uses the future parser.
 ## Installation
 `gem install puppet-repl`
 
+## Load path
+puppet-repl will load all functions from your basemodulepath and environmentpath.
+
+This means if you run `puppet module install puppetlabs-stdlib` and they will be available
+in the repl.
+
 ## Usage
 Puppet-repl will only parse and evaulate your code.  It will not build a catalog
 and try to enforce the catalog. This has a few side affects.
@@ -34,7 +40,8 @@ Type "exit", "functions", "types", "reset", "help" for more information.
 
 ```
 
-Using Variables
+## Using Variables
+
 ```
 MacBook-Pro-2/tmp % prepl
 Puppet Version: 4.2.2
@@ -49,16 +56,13 @@ Type "exit", "functions", "types", "reset", "help" for more information.
 >>
 ```
 
-Using functions: functions will run and produce the desired output.
+## Using functions
+Functions will run and produce the desired output.  If you type the word `functions`
+a list of available functions will be displayed on the screen.
 
 ```
 >> split('hello/there/one/two/three','/')
- =>
-hello
-there
-one
-two
-three
+ => ["hello", "there", "one", "two", "three"]
 
 ```
 ## Duplicate resource error
@@ -72,6 +76,7 @@ Just like normal puppet code you cannot create duplicate resources.
 You can reset the parser by running `reset` within the repl without having to exit.
 
 ## Troubleshooting
+
 ## Forward
 I was just playing around and created this simple tool.  Its alpha quality,
 and a ton of features need to be added. Please create a issue if you see a bug or feature that should be added.

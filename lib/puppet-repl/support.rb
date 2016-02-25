@@ -11,8 +11,6 @@ module PuppetRepl
 
     def puppet_lib_dir
       # returns something like "/Library/Ruby/Gems/2.0.0/gems/puppet-4.2.2/lib/puppet.rb"
-      require 'pry'
-      binding.pry
       @puppet_lib_dir ||= File.dirname(Puppet.method(:[]).source_location.first)
     end
 
@@ -33,18 +31,19 @@ module PuppetRepl
 
     # returns either the module name or puppet version
     def mod_finder
-      @mod_finder ||= Regex.new('\/([\w\-\.]+)\/lib')
+      @mod_finder ||= Regexp.new('\/([\w\-\.]+)\/lib')
     end
 
     # returns a map of functions
     def function_map
       unless @functions
         @functions = {}
-        function_files.each_with_object do |file, obj|
+        function_files.each do |file|
+          obj = {}
           name = File.basename(file, '.rb')
           obj[:name] = name
-          obj[:parent] = @mod_finder.match(file)[1]
-          @functions[name] = obj
+          obj[:parent] = mod_finder.match(file)[1]
+          @functions["#{obj[:parent]}::#{name}"] = obj
         end
       end
       @functions
@@ -104,7 +103,7 @@ module PuppetRepl
       scope = Puppet::Parser::Scope.new(compiler)
       scope.source = Puppet::Resource::Type.new(:node, node_name)
       scope.parent = @compiler.topscope
-      #load_lib_dirs
+      load_lib_dirs
       scope
     end
 

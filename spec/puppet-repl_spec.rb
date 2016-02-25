@@ -14,7 +14,7 @@ describe "PuppetRepl" do
       'help'
     end
     it 'can show the help screen' do
-      repl_output = "Puppet Version: 4.3.2\nPuppet Repl Version: 0.0.1\nCreated by: NWOps <corey@nwops.io>\nType \"exit\", \"functions\", \"types\", \"reset\", \"help\" for more information.\n\n"
+      repl_output = "Ruby Version: #{RUBY_VERSION}\nPuppet Version: 4.3.2\nPuppet Repl Version: 0.0.1\nCreated by: NWOps <corey@nwops.io>\nType \"exit\", \"functions\", \"types\", \"reset\", \"help\" for more information.\n\n"
       expect{repl.handle_input(input)}.to output(repl_output).to_stdout
     end
   end
@@ -48,6 +48,22 @@ describe "PuppetRepl" do
       expect{repl.handle_input(input)}.to output(repl_output).to_stdout
     end
   end
+
+  describe 'reset' do
+    before(:each) do
+      repl.handle_input(input)
+    end
+    let(:input) do
+      "file{'/tmp/reset': ensure => present}"
+    end
+
+    it 'can process a each block' do
+      repl.handle_input('reset')
+      repl_output = " => File['/tmp/reset']\n"
+      expect{repl.handle_input(input)}.to output(repl_output).to_stdout
+    end
+  end
+
 
   describe 'each block' do
     let(:input) do
