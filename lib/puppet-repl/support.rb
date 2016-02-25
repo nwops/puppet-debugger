@@ -9,11 +9,45 @@ module PuppetRepl
       dirs.flatten
     end
 
+    def puppet_lib_dir
+      # returns something like "/Library/Ruby/Gems/2.0.0/gems/puppet-4.2.2/lib/puppet.rb"
+      require 'pry'
+      binding.pry
+      @puppet_lib_dir ||= File.dirname(Puppet.method(:[]).source_location.first)
+    end
+
+    # returns a array of function files
     def function_files
-      lib_dirs.map do |lib_dir|
-        [Dir.glob(File.join(lib_dir, 'puppet', 'functions', '*.rb')),
-           Dir.glob(File.join(lib_dir, 'puppet', 'parser', 'functions', '*.rb')) ]
-      end.flatten
+      search_dirs = lib_dirs.map do |lib_dir|
+        [File.join(lib_dir, 'puppet', 'functions', '**', '*.rb'),
+          File.join(lib_dir, 'functions', '**', '*.rb'),
+         File.join(lib_dir, 'puppet', 'parser', 'functions', '*.rb')
+         ]
+      end
+      # add puppet lib directories
+      search_dirs << [File.join(puppet_lib_dir, 'puppet', 'functions', '**', '*.rb'),
+        File.join(puppet_lib_dir, 'puppet', 'parser', 'functions', '*.rb')
+       ]
+      Dir.glob(search_dirs.flatten)
+    end
+
+    # returns either the module name or puppet version
+    def mod_finder
+      @mod_finder ||= Regex.new('\/([\w\-\.]+)\/lib')
+    end
+
+    # returns a map of functions
+    def function_map
+      unless @functions
+        @functions = {}
+        function_files.each_with_object do |file, obj|
+          name = File.basename(file, '.rb')
+          obj[:name] = name
+          obj[:parent] = @mod_finder.match(file)[1]
+          @functions[name] = obj
+        end
+      end
+      @functions
     end
 
     def lib_dirs
@@ -33,8 +67,9 @@ module PuppetRepl
       @parser || ::Puppet::Pops::Parser::EvaluatingParser.new
     end
 
+    # the cached name of the environment
     def puppet_env_name
-      @penv ||= ENV['PUPPET_ENV'] || 'prepl'
+      @penv ||= ENV['PUPPET_ENV'] || Puppet[:environment]
     end
 
     # creates a puppet environment given a module path and environment name
@@ -47,16 +82,29 @@ module PuppetRepl
         )
     end
 
+    # def functions
+    #   @functions = []
+    #   @functions << compiler.loaders.static_loader.loaded.keys.find_all {|l| l.type == :function}
+    # end
+
+    def environment_loaders
+      name = compiler.loaders.public_environment_loader.loader_name
+    end
+
+    def compiler
+      @compiler
+    end
+
     def create_scope(node_name)
       #options['parameters']
       #options['facts']
       #options[:classes]
       node = create_node(node_name)
-      compiler = create_compiler(node)
+      @compiler = create_compiler(node)
       scope = Puppet::Parser::Scope.new(compiler)
       scope.source = Puppet::Resource::Type.new(:node, node_name)
-      scope.parent = compiler.topscope
-      load_lib_dirs
+      scope.parent = @compiler.topscope
+      #load_lib_dirs
       scope
     end
 

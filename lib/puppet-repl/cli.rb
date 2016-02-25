@@ -32,11 +32,13 @@ module PuppetRepl
       when 'help'
         PuppetRepl::Cli.print_repl_desc
       when 'functions'
-        puts function_files
+        puts function_map
       when 'types'
         puts "list of types coming soon"
       when '_'
         puts(" => #{@last_item}")
+      when 'environment'
+        puts "Puppet Environment: #{puppet_env_name}"
       when 'exit'
         exit 0
       when 'pry'
@@ -44,6 +46,8 @@ module PuppetRepl
         binding.pry
       when 'reset'
         @scope = nil
+      when 'current_resources'
+        compiler.known_resource_types
       else
         result = puppet_eval(input)
         @last_item = result
@@ -57,6 +61,7 @@ module PuppetRepl
 
     def self.print_repl_desc
       puts(<<-EOT)
+Ruby Version: #{RUBY_VERSION}
 Puppet Version: #{Puppet.version}
 Puppet Repl Version: #{PuppetRepl::VERSION}
 Created by: NWOps <corey@nwops.io>
