@@ -1,43 +1,10 @@
 require 'puppet'
 require 'puppet/pops'
-require "readline"
-
+require 'readline'
+require_relative 'support'
 module PuppetRepl
   class Cli
-
-    # returns a future parser for evaluating code
-    def parser
-      @parser || ::Puppet::Pops::Parser::EvaluatingParser.new
-    end
-
-    def module_dirs
-      Puppet.settings[:basemodulepath].split(':')
-    end
-
-    # creates a puppet environment given a module path and environment name
-    def puppet_environment
-      @puppet_environment ||= Puppet::Node::Environment.create('production', module_dirs)
-    end
-
-    def scope
-      unless @scope
-        begin
-          Puppet.initialize_settings
-        rescue
-          # do nothing otherwise calling init twice raises an error
-        end
-        #options['parameters']
-        #options['facts']
-        #options[:classes]
-        node_name = 'node_name'
-        node = Puppet::Node.new(node_name, :environment => puppet_environment)
-        compiler = Puppet::Parser::Compiler.new(node)
-        @scope = Puppet::Parser::Scope.new(compiler)
-        @scope.source = Puppet::Resource::Type.new(:node, node_name)
-        @scope.parent = compiler.topscope
-      end
-      @scope
-    end
+    include PuppetRepl::Support
 
     def puppet_eval(input)
       begin
@@ -59,19 +26,22 @@ module PuppetRepl
       end
       result
     end
-#scope.environment.known_resource_types
+
     def handle_input(input)
       case input
       when 'help'
         PuppetRepl::Cli.print_repl_desc
       when 'functions'
-        puts "list of functions coming soon"
+        puts function_files
       when 'types'
         puts "list of types coming soon"
       when '_'
         puts(" => #{@last_item}")
       when 'exit'
         exit 0
+      when 'pry'
+        require 'pry'
+        binding.pry
       when 'reset'
         @scope = nil
       else
