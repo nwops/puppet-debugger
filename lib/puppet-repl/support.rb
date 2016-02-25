@@ -1,3 +1,6 @@
+require 'puppet/pops'
+require 'facterdb'
+
 module PuppetRepl
   module Support
 
@@ -9,9 +12,36 @@ module PuppetRepl
       dirs.flatten
     end
 
+    # this is required in order to load things only when we need them
+    def do_initialize
+      begin
+        Puppet.initialize_settings
+      rescue
+        # do nothing otherwise calling init twice raises an error
+      end
+    end
+
     def puppet_lib_dir
       # returns something like "/Library/Ruby/Gems/2.0.0/gems/puppet-4.2.2/lib/puppet.rb"
       @puppet_lib_dir ||= File.dirname(Puppet.method(:[]).source_location.first)
+    end
+
+    def new_parser
+      @new_parser ||= Puppet::Parser::ParserFactory.parser
+      # setting the file and string results in evaulting the string
+      # setting the file and not the string results in evaulting the file
+      @new_parser.file = 'repl'
+      #this defines what to parse, and where it came from (can use ‘repl’ as the filename)
+      @new_parser
+    end
+
+    def puppet_evaluate(input)
+      new_parser.string = input
+      result = new_parser.parse
+      #- this creates the top level definitions
+      # repl is just a fake name for the module
+      #result = result.instantiate('repl')
+      result.safeevaluate(scope) #- this evaluates and returns the result
     end
 
     # returns a array of function files
@@ -37,6 +67,7 @@ module PuppetRepl
     # returns a map of functions
     def function_map
       unless @functions
+        do_initialize
         @functions = {}
         function_files.each do |file|
           obj = {}
@@ -63,6 +94,7 @@ module PuppetRepl
 
     # returns a future parser for evaluating code
     def parser
+      Puppet::Parser::ParserFactory.evaluating_parser
       @parser || ::Puppet::Pops::Parser::EvaluatingParser.new
     end
 
@@ -74,11 +106,15 @@ module PuppetRepl
     # creates a puppet environment given a module path and environment name
     # this is cached
     def puppet_environment
-      @puppet_environment ||= Puppet::Node::Environment.create(
-        puppet_env_name,
-        module_dirs,
-        manifests_dir
-        )
+      unless @puppet_environment
+        do_initialize
+        @puppet_environment = Puppet::Node::Environment.create(
+          puppet_env_name,
+          module_dirs,
+          manifests_dir
+          )
+      end
+      @puppet_environment
     end
 
     # def functions
@@ -94,16 +130,16 @@ module PuppetRepl
       @compiler
     end
 
-    def create_scope(node_name)
-      #options['parameters']
-      #options['facts']
-      #options[:classes]
-      node = create_node(node_name)
+    def node
+      @node ||= create_node
+    end
+
+    def create_scope
       @compiler = create_compiler(node)
       scope = Puppet::Parser::Scope.new(compiler)
-      scope.source = Puppet::Resource::Type.new(:node, node_name)
+      scope.source = Puppet::Resource::Type.new(:node, node.name)
       scope.parent = @compiler.topscope
-      load_lib_dirs
+      compiler.compile # this will load everything into the scope
       scope
     end
 
@@ -111,26 +147,38 @@ module PuppetRepl
       Puppet::Parser::Compiler.new(node)
     end
 
-    def create_node(node_name)
-      Puppet::Node.new(node_name, :environment => puppet_environment)
+    def facterdb_filter
+      'operatingsystem=RedHat and operatingsystemrelease=/^7/ and architecture=x86_64 and facterversion=/^2.4\./'
+    end
+
+    # uses facterdb (cached facts) and retrives the facts given a filter
+    def facts
+      unless @facts
+        @facts ||= FacterDB.get_facts(facterdb_filter).first
+      end
+      @facts
+    end
+
+    # creates a node object
+    def create_node
+      options = {}
+      options[:parameters] = facts
+      options[:facts] = facts
+      options[:classes] = []
+      options[:environment] = puppet_environment
+      Puppet::Node.new(facts[:fqdn], options)
     end
 
     def scope
-      begin
-        Puppet.initialize_settings
-      rescue
-        # do nothing otherwise calling init twice raises an error
+      unless @scope
+        do_initialize
+        @scope ||= create_scope
       end
-      @scope ||= create_scope('node_name')
+      @scope
     end
 
     def manifests_dir
       File.join(Puppet[:environmentpath],puppet_env_name,'manifests')
-    end
-
-    def build_node(name, opts = {})
-      opts.merge!({:environment => node_environment})
-      Puppet::Node.new(name, opts)
     end
 
   end

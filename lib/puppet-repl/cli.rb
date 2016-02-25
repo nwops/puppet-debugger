@@ -1,18 +1,10 @@
 require 'puppet'
-require 'puppet/pops'
 require 'readline'
+require 'json'
 require_relative 'support'
 module PuppetRepl
   class Cli
     include PuppetRepl::Support
-
-    def initialize
-      begin
-        Puppet.initialize_settings
-      rescue
-        # do nothing otherwise calling init twice raises an error
-      end
-    end
 
     def puppet_eval(input)
       begin
@@ -41,8 +33,8 @@ module PuppetRepl
         PuppetRepl::Cli.print_repl_desc
       when 'functions'
         puts function_map.keys.sort
-      when 'types'
-        puts "list of types coming soon"
+      when 'facts'
+        puts JSON.pretty_generate(node.facts)
       when '_'
         puts(" => #{@last_item}")
       when 'environment'
@@ -58,10 +50,6 @@ module PuppetRepl
         @last_item = result
         puts(" => #{normalize_output(result)}")
       end
-    end
-
-    def self.ripl_start
-      Ripl.start
     end
 
     def self.print_repl_desc

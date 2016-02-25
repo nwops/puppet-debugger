@@ -31,13 +31,16 @@ describe 'support' do
 
   it 'should return lib dirs' do
     expect(repl.lib_dirs.count).to be >= 1
-
-
   end
 
   it 'should return module dirs' do
     expect(repl.module_dirs.count).to be >= 1
-
   end
 
+  it 'should return a list of facts' do
+    expect(repl.facts).to be_instance_of(Hash)
+    expect(repl.facts[:fqdn]).to eq('foo.example.com')
+  end
+
+  
 end

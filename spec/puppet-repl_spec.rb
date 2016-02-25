@@ -14,7 +14,7 @@ describe "PuppetRepl" do
       'help'
     end
     it 'can show the help screen' do
-      repl_output = "Ruby Version: #{RUBY_VERSION}\nPuppet Version: 4.3.2\nPuppet Repl Version: 0.0.1\nCreated by: NWOps <corey@nwops.io>\nType \"exit\", \"functions\", \"types\", \"reset\", \"help\" for more information.\n\n"
+      repl_output = "Ruby Version: #{RUBY_VERSION}\nPuppet Version: 4.3.2\nPuppet Repl Version: 0.0.2\nCreated by: NWOps <corey@nwops.io>\nType \"exit\", \"functions\", \"types\", \"reset\", \"help\" for more information.\n\n"
       expect{repl.handle_input(input)}.to output(repl_output).to_stdout
     end
   end
@@ -64,7 +64,6 @@ describe "PuppetRepl" do
     end
   end
 
-
   describe 'each block' do
     let(:input) do
       "['/tmp/test3', '/tmp/test4'].each |String $path| { file{$path: ensure => present} }"
@@ -72,6 +71,25 @@ describe "PuppetRepl" do
     it 'can process a each block' do
       repl_output = " => [\"/tmp/test3\", \"/tmp/test4\"]\n"
       expect{repl.handle_input(input)}.to output(repl_output).to_stdout
+    end
+  end
+
+  describe 'facts' do
+    let(:input) do
+      "$::fqdn"
+    end
+    it 'should be able to resolve fqdn' do
+      repl_output = " => foo.example.com\n"
+      expect{repl.handle_input(input)}.to output(repl_output).to_stdout
+    end
+  end
+
+  describe 'print facts' do
+    let(:input) do
+      "facts"
+    end
+    it 'should be able to print facts' do
+      expect{repl.handle_input(input)}.to output(/"kernel": "Linux"/).to_stdout
     end
   end
 end
