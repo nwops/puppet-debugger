@@ -49,8 +49,6 @@ module PuppetRepl
           res.to_s
         end
         if !args.first.nil?
-          require 'pry'
-          binding.pry
           ap res[args.first.to_i]
         else
           puts "Resources not shown in any specific order".warning

@@ -74,8 +74,12 @@ module PuppetRepl
     end
 
     def handle_input(input)
-      if self.respond_to?(input.to_sym)
-        self.send(input.to_sym)
+      return if input.nil? or input.empty?
+      args = input.split(' ')
+      return if args.count < 1
+      command = args.shift.to_sym
+      if self.respond_to?(command)
+        self.send(command, args)
       else
         case input
         when /exit/
@@ -123,13 +127,26 @@ Type "exit", "functions", "vars", "krt", "facts", "resources", "classes",
       EOT
     end
 
-    def self.start(scope=nil)
+    def read_loop
+      while buf = Readline.readline(">> ", true)
+        handle_input(buf)
+      end
+    end
+
+    # start reads from stdin or from a file
+    # if from stdin, the repl will process the input and exit
+    # if from a file, the repl will process the file and continue to prompt
+    # @param [Scope] puppet scope object
+    def self.start(options={:scope => nil})
       print_repl_desc
       repl_obj = new
-      repl_obj.initialize_from_scope(scope)
-      while buf = Readline.readline(">> ", true)
-        repl_obj.handle_input(buf)
+      if ARGF.filename != "-" or (not STDIN.tty? and not STDIN.closed?)
+         input = ARGF.first
+         repl_obj.handle_input(input)
+         exit 0
       end
+      repl_obj.initialize_from_scope(options[:scope])
+      repl_obj.read_loop
     end
   end
 end

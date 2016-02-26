@@ -38,6 +38,25 @@ describe "PuppetRepl" do
     end
   end
 
+  describe 'empty' do
+    let(:input) do
+      ""
+    end
+    it 'can run' do
+      repl_output = ''
+      expect{repl.handle_input(input)}.to output(repl_output).to_stdout
+    end
+    describe 'space' do
+      let(:input) do
+        " "
+      end
+      it 'can run' do
+        repl_output = ''
+        expect{repl.handle_input(input)}.to output(repl_output).to_stdout
+      end
+    end
+  end
+
   describe 'krt' do
     let(:input) do
       "krt"
@@ -101,6 +120,7 @@ describe "PuppetRepl" do
       repl_output = /Puppet::Type::File/
       expect{repl.handle_input(input)}.to output(repl_output).to_stdout
     end
+
     describe 'loglevel' do
       it 'has not changed' do
         repl.handle_input(":set loglevel debug")
