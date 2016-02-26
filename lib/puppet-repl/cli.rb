@@ -58,7 +58,7 @@ Ruby Version: #{RUBY_VERSION}
 Puppet Version: #{Puppet.version}
 Puppet Repl Version: #{PuppetRepl::VERSION}
 Created by: NWOps <corey@nwops.io>
-Type "exit", "functions", "types", "reset", "help" for more information.
+Type "exit", "functions", "facts", "reset", "help" for more information.
 
       EOT
     end
