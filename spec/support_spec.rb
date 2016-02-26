@@ -42,5 +42,6 @@ describe 'support' do
     expect(repl.facts[:fqdn]).to eq('foo.example.com')
   end
 
-  
+
+
 end

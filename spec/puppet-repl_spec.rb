@@ -101,6 +101,11 @@ describe "PuppetRepl" do
       sum = " => 5d41402abc4b2a76b9719d911017c592\n"
       expect{repl.handle_input(input)}.to output(sum).to_stdout
     end
+    it 'should be able to print facts' do
+      output = " => HELLO\n"
+      expect{repl.handle_input("swapcase(hello)")}.to output(output).to_stdout
+    end
+
   end
 
 end

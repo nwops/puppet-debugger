@@ -121,6 +121,7 @@ module PuppetRepl
       scope = Puppet::Parser::Scope.new(compiler)
       scope.source = Puppet::Resource::Type.new(:node, node.name)
       scope.parent = compiler.topscope
+      load_lib_dirs
       compiler.compile # this will load everything into the scope
       scope
     end
