@@ -14,7 +14,7 @@ describe "PuppetRepl" do
       'help'
     end
     it 'can show the help screen' do
-      repl_output = "Ruby Version: #{RUBY_VERSION}\nPuppet Version: 4.3.2\nPuppet Repl Version: 0.0.3\nCreated by: NWOps <corey@nwops.io>\nType \"exit\", \"functions\", \"facts\", \"reset\", \"help\" for more information.\n\n"
+      repl_output = "Ruby Version: #{RUBY_VERSION}\nPuppet Version: 4.3.2\nPuppet Repl Version: 0.0.4\nCreated by: NWOps <corey@nwops.io>\nType \"exit\", \"functions\", \"facts\", \"reset\", \"help\" for more information.\n\n"
       expect{repl.handle_input(input)}.to output(repl_output).to_stdout
     end
   end
