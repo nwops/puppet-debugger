@@ -92,4 +92,15 @@ describe "PuppetRepl" do
       expect{repl.handle_input(input)}.to output(/"kernel": "Linux"/).to_stdout
     end
   end
+
+  describe 'execute functions' do
+    let(:input) do
+      "md5('hello')"
+    end
+    it 'should be able to print facts' do
+      sum = " => 5d41402abc4b2a76b9719d911017c592\n"
+      expect{repl.handle_input(input)}.to output(sum).to_stdout
+    end
+  end
+
 end
