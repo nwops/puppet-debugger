@@ -1,0 +1,15 @@
+language: ruby
+install: "bundle install --without development"
+before_script: "bundle exec puppet module install puppetlabs-stdlib"
+script: "bundle exec rake spec SPEC_OPTS='--format documentation'"
+rvm:
+- 1.9.3
+- 2.0.0
+- 2.2.1
+env:
+  matrix:
+    - PUPPET_GEM_VERSION="~> 3.8"
+    - PUPPET_GEM_VERSION="~> 4.2"
+    - PUPPET_GEM_VERSION="~> 4.3"
+notifications:
+  email: corey@logicminds.biz

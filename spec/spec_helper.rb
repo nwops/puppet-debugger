@@ -1,6 +1,5 @@
 require 'simplecov'
 require_relative '../lib/puppet-repl'
-require 'pry'
 
 module SimpleCov::Configuration
   def clean_filters

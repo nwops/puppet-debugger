@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/nwops/puppet-repl.png)](https://travis-ci.org/nwops/puppet-repl)
 # puppet-repl
 
 A interactive command line tool for evaluating the puppet language.
