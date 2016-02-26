@@ -26,24 +26,6 @@ module PuppetRepl
       @puppet_lib_dir ||= File.dirname(Puppet.method(:[]).source_location.first)
     end
 
-    def new_parser
-      @new_parser ||= Puppet::Parser::ParserFactory.parser
-      # setting the file and string results in evaulting the string
-      # setting the file and not the string results in evaulting the file
-      @new_parser.file = 'repl'
-      #this defines what to parse, and where it came from (can use ‘repl’ as the filename)
-      @new_parser
-    end
-
-    def puppet_evaluate(input)
-      new_parser.string = input
-      result = new_parser.parse
-      #- this creates the top level definitions
-      # repl is just a fake name for the module
-      #result = result.instantiate('repl')
-      result.safeevaluate(scope) #- this evaluates and returns the result
-    end
-
     # returns a array of function files
     def function_files
       search_dirs = lib_dirs.map do |lib_dir|
@@ -135,10 +117,10 @@ module PuppetRepl
     end
 
     def create_scope
-      @compiler = create_compiler(node)
+      @compiler = create_compiler(node) # creates a new compiler for each scope
       scope = Puppet::Parser::Scope.new(compiler)
       scope.source = Puppet::Resource::Type.new(:node, node.name)
-      scope.parent = @compiler.topscope
+      scope.parent = compiler.topscope
       compiler.compile # this will load everything into the scope
       scope
     end
