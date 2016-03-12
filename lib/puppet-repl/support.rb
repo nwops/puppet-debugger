@@ -1,12 +1,23 @@
 require 'puppet/pops'
 require 'facterdb'
+# load all the generators found in the generators directory
+Dir.glob(File.join(File.dirname(__FILE__),'support', '*.rb')).each do |file|
+  require_relative File.join('support', File.basename(file, '.rb'))
+end
 
 module PuppetRepl
   module Support
+    include PuppetRepl::Support::Compilier
+    include PuppetRepl::Support::Environment
+    include PuppetRepl::Support::Facts
+    include PuppetRepl::Support::Scope
+    include PuppetRepl::Support::Functions
+    include PuppetRepl::Support::Node
 
     # returns an array of module directories
     def module_dirs
       dirs = []
+      do_initialize if Puppet[:codedir].nil?
       dirs << File.join(Puppet[:environmentpath],puppet_env_name,'modules') unless Puppet[:environmentpath].empty?
       dirs << Puppet.settings[:basemodulepath].split(':')
       dirs.flatten
@@ -37,40 +48,9 @@ module PuppetRepl
       @puppet_lib_dir ||= File.dirname(Puppet.method(:[]).source_location.first)
     end
 
-    # returns a array of function files
-    def function_files
-      search_dirs = lib_dirs.map do |lib_dir|
-        [File.join(lib_dir, 'puppet', 'functions', '**', '*.rb'),
-          File.join(lib_dir, 'functions', '**', '*.rb'),
-         File.join(lib_dir, 'puppet', 'parser', 'functions', '*.rb')
-         ]
-      end
-      # add puppet lib directories
-      search_dirs << [File.join(puppet_lib_dir, 'puppet', 'functions', '**', '*.rb'),
-        File.join(puppet_lib_dir, 'puppet', 'parser', 'functions', '*.rb')
-       ]
-      Dir.glob(search_dirs.flatten)
-    end
-
     # returns either the module name or puppet version
     def mod_finder
       @mod_finder ||= Regexp.new('\/([\w\-\.]+)\/lib')
-    end
-
-    # returns a map of functions
-    def function_map
-      unless @functions
-        do_initialize
-        @functions = {}
-        function_files.each do |file|
-          obj = {}
-          name = File.basename(file, '.rb')
-          obj[:name] = name
-          obj[:parent] = mod_finder.match(file)[1]
-          @functions["#{obj[:parent]}::#{name}"] = obj
-        end
-      end
-      @functions
     end
 
     def lib_dirs
@@ -90,82 +70,20 @@ module PuppetRepl
       @parser || ::Puppet::Pops::Parser::EvaluatingParser.new
     end
 
-    # the cached name of the environment
-    def puppet_env_name
-      @penv ||= ENV['PUPPET_ENV'] || Puppet[:environment]
-    end
-
-    # creates a puppet environment given a module path and environment name
-    # this is cached
-    def puppet_environment
-      unless @puppet_environment
-        do_initialize
-        @puppet_environment = Puppet::Node::Environment.create(
-          puppet_env_name,
-          module_dirs,
-          manifests_dir
-          )
-      end
-      @puppet_environment
-    end
-
-    # def functions
-    #   @functions = []
-    #   @functions << compiler.loaders.static_loader.loaded.keys.find_all {|l| l.type == :function}
-    # end
-
-    def environment_loaders
-      name = compiler.loaders.public_environment_loader.loader_name
-    end
-
     def compiler
       @compiler
     end
 
+    # @return [node] puppet node object
     def node
       @node ||= create_node
     end
 
-    def create_scope
-      @compiler = create_compiler(node) # creates a new compiler for each scope
-      scope = Puppet::Parser::Scope.new(compiler)
-      scope.source = Puppet::Resource::Type.new(:node, node.name)
-      scope.parent = compiler.topscope
-      load_lib_dirs
-      compiler.compile # this will load everything into the scope
-      scope
-    end
-
-    def create_compiler(node)
-      Puppet::Parser::Compiler.new(node)
-    end
-
-    def facterdb_filter
-      'operatingsystem=RedHat and operatingsystemrelease=/^7/ and architecture=x86_64 and facterversion=/^2.4\./'
-    end
-
-    # uses facterdb (cached facts) and retrives the facts given a filter
-    def facts
-      unless @facts
-        @facts ||= FacterDB.get_facts(facterdb_filter).first
-      end
-      @facts
-    end
-
-    # creates a node object
-    def create_node
-      options = {}
-      options[:parameters] = facts
-      options[:facts] = facts
-      options[:classes] = []
-      options[:environment] = puppet_environment
-      Puppet::Node.new(facts[:fqdn], options)
-    end
-
+    # @return [Scope] puppet scope object
     def scope
       unless @scope
         do_initialize
-        @scope ||= create_scope
+        @scope ||= create_scope(node)
       end
       @scope
     end
@@ -176,4 +94,3 @@ module PuppetRepl
 
   end
 end
-#scope.environment.known_resource_types

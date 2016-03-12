@@ -2,27 +2,49 @@ require 'puppet'
 require 'readline'
 require 'json'
 require_relative 'support'
+
 module PuppetRepl
   class Cli
     include PuppetRepl::Support
 
-    def puppet_eval(input)
-      begin
-        parser.evaluate_string(scope, input)
-      rescue ArgumentError => e
-        e.message
-      rescue Puppet::ParseErrorWithIssue => e
-        e.message
-      rescue Exception => e
-        e.message
+    attr_accessor :settings
+
+    def ap_formatter
+      unless @ap_formatter
+        inspector = AwesomePrint::Inspector.new({:sort_keys => true, :indent => 2})
+        @ap_formatter = AwesomePrint::Formatter.new(inspector)
       end
+      @ap_formatter
+    end
+
+    def puppet_eval(input)
+      parser.evaluate_string(scope, input)
+    end
+
+    def to_resource_declaration(type)
+      res = scope.catalog.resource(type.type_name, type.title)
+      res.to_ral
+    end
+
+    # ruturns a formatted array
+    def expand_resource_type(types)
+      output = [types].flatten.map do |t|
+        if t.class.to_s == 'Puppet::Pops::Types::PResourceType'
+          to_resource_declaration(t)
+        else
+          t
+        end
+      end
+      output
     end
 
     def normalize_output(result)
       if result.instance_of?(Array)
-        if result.count == 1
-          return result.first
+        output = expand_resource_type(result)
+        if output.count == 1
+          return output.first
         end
+        return output
       end
       result
     end
@@ -60,6 +82,8 @@ module PuppetRepl
         ap(vars, {:sort_keys => true, :indent => -1})
       when 'environment'
         puts "Puppet Environment: #{puppet_env_name}"
+      when 'vars'
+        ap(scope.to_hash, {:sort_keys => true, :indent => 0})
       when 'exit'
         exit 0
       when 'reset'
@@ -67,9 +91,21 @@ module PuppetRepl
       when 'krt'
         ap(known_resource_types, {:sort_keys => true, :indent => -1})
       else
-        result = puppet_eval(input)
-        @last_item = result
-        puts(" => #{normalize_output(result)}")
+        begin
+          print " => "
+          result = puppet_eval(input)
+          @last_item = result
+          output = normalize_output(result)
+          ap(output)
+        rescue ArgumentError => e
+          puts e.message
+        rescue Puppet::ResourceError => e
+          puts e.message
+        rescue Puppet::ParseErrorWithIssue => e
+          puts e.message
+        rescue Exception => e
+          puts e.message
+        end
       end
     end
 

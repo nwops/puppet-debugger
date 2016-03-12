@@ -6,8 +6,26 @@ describe "PuppetRepl" do
     "service{'httpd': ensure => running}"
   end
 
+  before(:each) do
+    repl.handle_input('reset')
+  end
+
   let(:repl) do
     PuppetRepl::Cli.new
+  end
+
+  let(:input) do
+    "file{'/tmp/test2.txt': ensure => present, mode => '0755'}"
+  end
+
+  let(:resource_types) do
+    repl.parser.evaluate_string(repl.scope, input)
+  end
+
+  describe 'returns a array of resource_types' do
+    it 'returns resource type' do
+      expect(resource_types.first.class.to_s).to eq('Puppet::Pops::Types::PResourceType')
+    end
   end
 
   describe 'help' do
@@ -35,7 +53,7 @@ describe "PuppetRepl" do
       "$file_path = '/tmp/test2.txt'"
     end
     it 'can process a variable' do
-      repl_output = " => /tmp/test2.txt\n"
+      repl_output = " => \e[0;33m\"/tmp/test2.txt\"\e[0m\n"
       expect{repl.handle_input(input)}.to output(repl_output).to_stdout
     end
   end
@@ -45,7 +63,7 @@ describe "PuppetRepl" do
       "file{'/tmp/test2.txt': ensure => present, mode => '0755'}"
     end
     it 'can process a resource' do
-      repl_output = " => File['/tmp/test2.txt']\n"
+      repl_output = /Puppet::Type::File/
       expect{repl.handle_input(input)}.to output(repl_output).to_stdout
     end
   end
@@ -60,6 +78,16 @@ describe "PuppetRepl" do
     end
   end
 
+  describe 'bad resources' do
+    let(:input) do
+      "file{'/tmp/test': ensure => present, mode => 755}"
+    end
+    it 'can process' do
+      repl_output = /The file mode specification must be a string/
+      expect{repl.handle_input(input)}.to output(repl_output).to_stdout
+    end
+  end
+
   describe 'reset' do
     before(:each) do
       repl.handle_input(input)
@@ -70,7 +98,17 @@ describe "PuppetRepl" do
 
     it 'can process a each block' do
       repl.handle_input('reset')
-      repl_output = " => File['/tmp/reset']\n"
+      repl_output = /Puppet::Type::File/
+      expect{repl.handle_input(input)}.to output(repl_output).to_stdout
+    end
+  end
+
+  describe 'map block' do
+    let(:input) do
+      "['/tmp/test3', '/tmp/test4'].map |String $path| { file{$path: ensure => present} }"
+    end
+    it 'can process a each block' do
+      repl_output = /Puppet::Type::File/
       expect{repl.handle_input(input)}.to output(repl_output).to_stdout
     end
   end
@@ -79,8 +117,10 @@ describe "PuppetRepl" do
     let(:input) do
       "['/tmp/test3', '/tmp/test4'].each |String $path| { file{$path: ensure => present} }"
     end
+    let(:repl_output) do
+      " => [\n    \e[1;37m[0] \e[0m\e[0;33m\"/tmp/test3\"\e[0m,\n    \e[1;37m[1] \e[0m\e[0;33m\"/tmp/test4\"\e[0m\n]\n"
+    end
     it 'can process a each block' do
-      repl_output = " => [\"/tmp/test3\", \"/tmp/test4\"]\n"
       expect{repl.handle_input(input)}.to output(repl_output).to_stdout
     end
   end
@@ -90,7 +130,7 @@ describe "PuppetRepl" do
       "$::fqdn"
     end
     it 'should be able to resolve fqdn' do
-      repl_output = " => foo.example.com\n"
+      repl_output = " => \e[0;33m\"foo.example.com\"\e[0m\n"
       expect{repl.handle_input(input)}.to output(repl_output).to_stdout
     end
   end
@@ -135,14 +175,13 @@ describe "PuppetRepl" do
       "md5('hello')"
     end
     it 'execute md5' do
-      sum = " => 5d41402abc4b2a76b9719d911017c592\n"
+      sum = " => \e[0;33m\"5d41402abc4b2a76b9719d911017c592\"\e[0m\n"
       expect{repl.handle_input(input)}.to output(sum).to_stdout
     end
     it 'execute swapcase' do
-      output = " => HELLO\n"
+      output = /HELLO/
       expect{repl.handle_input("swapcase('hello')")}.to output(output).to_stdout
     end
 
   end
-
 end

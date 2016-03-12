@@ -1,5 +1,5 @@
 require 'spec_helper'
-
+require 'tempfile'
 
 describe 'support' do
 
@@ -13,6 +13,27 @@ describe 'support' do
 
   let(:puppet_version) do
     repl.mod_finder.match(repl.puppet_lib_dir)[1]
+  end
+
+  let(:manifest_file) do
+    file = File.open('/tmp/repl_puppet_manifest.pp', 'w') do |f|
+      f.write(manifest_code)
+    end
+    '/tmp/repl_puppet_manifest.pp'
+  end
+
+  let(:manifest_code) do
+    <<-EOF
+    file{'/tmp/test.txt': ensure => absent } \n
+    notify{'hello_there':} \n
+    service{'httpd': ensure => running}\n
+
+    EOF
+
+  end
+
+  after(:each) do
+    #manifest_file.close
   end
 
   context '#function_map' do
@@ -41,7 +62,5 @@ describe 'support' do
     expect(repl.facts).to be_instance_of(Hash)
     expect(repl.facts[:fqdn]).to eq('foo.example.com')
   end
-
-
 
 end
