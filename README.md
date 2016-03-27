@@ -100,8 +100,8 @@ You can reset the parser by running `reset` within the repl without having to ex
 
 ## Setting the puppet log level
 If you want to see what puppet is doing behind the scenes you can set the log level
-via `:set loglevel debug`.  Valid log levels are `debug`, `info`, `warn` and other
-levels defined in puppet source code.
+via `:set loglevel debug`.  Valid log levels are `debug`, `info`, `warning` and other
+levels defined in puppet [config reference](https://docs.puppetlabs.com/puppet/4.4/reference/configuration.html#loglevel) .
 
 ```
 >> hiera('value')
