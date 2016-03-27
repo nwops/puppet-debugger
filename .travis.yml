@@ -12,5 +12,6 @@ env:
     - PUPPET_GEM_VERSION="~> 3.8"
     - PUPPET_GEM_VERSION="~> 4.2"
     - PUPPET_GEM_VERSION="~> 4.3"
+    - PUPPET_GEM_VERSION="~> 4.4"
 notifications:
   email: corey@logicminds.biz
