@@ -1,3 +1,22 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [puppet-repl](#puppet-repl)
+  - [Compatibility](#compatibility)
+  - [Installation](#installation)
+  - [Load path](#load-path)
+  - [Usage](#usage)
+  - [Using Variables](#using-variables)
+  - [Using functions](#using-functions)
+  - [Duplicate resource error](#duplicate-resource-error)
+  - [Setting the puppet log level](#setting-the-puppet-log-level)
+  - [Troubleshooting](#troubleshooting)
+  - [Forward](#forward)
+  - [Copyright](#copyright)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 [![Build Status](https://travis-ci.org/nwops/puppet-repl.png)](https://travis-ci.org/nwops/puppet-repl)
 # puppet-repl
 
@@ -66,6 +85,9 @@ a list of available functions will be displayed on the screen.
  => ["hello", "there", "one", "two", "three"]
 
 ```
+
+So you can imagine how much fun this can be trying out different types of functions.
+
 ## Duplicate resource error
 Just like normal puppet code you cannot create duplicate resources.
 
@@ -76,10 +98,26 @@ Just like normal puppet code you cannot create duplicate resources.
 ```
 You can reset the parser by running `reset` within the repl without having to exit.
 
+## Setting the puppet log level
+If you want to see what puppet is doing behind the scenes you can set the log level
+via `:set loglevel debug`.  Valid log levels are `debug`, `info`, `warn` and other
+levels defined in puppet source code.
+
+```
+>> hiera('value')
+ => foo
+>> :set loglevel debug
+loglevel debug is set
+>> hiera('value')
+Debug: hiera(): Looking up value in YAML backend
+Debug: hiera(): Looking for data source nodes/foo.example.com
+Debug: hiera(): Found value in nodes/foo.example.com
+ => foo
+```
 ## Troubleshooting
 
 ## Forward
-I was just playing around and created this simple tool.  Its alpha quality,
+I was just playing around and created this simple tool.  Its beta quality,
 and a ton of features need to be added. Please create a issue if you see a bug or feature that should be added.
 
 Pull requests welcomed.

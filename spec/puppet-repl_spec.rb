@@ -93,6 +93,18 @@ describe "PuppetRepl" do
     end
   end
 
+  describe 'set' do
+    let(:input) do
+      ":set loglevel debug"
+    end
+    it 'should set the loglevel' do
+      output = "loglevel debug is set\n"
+      expect{repl.handle_input(input)}.to output(output).to_stdout
+      expect(Puppet::Util::Log.level).to eq(:debug)
+      expect(Puppet::Util::Log.destinations[:console].name).to eq(:console)
+    end
+  end
+
   describe 'execute functions' do
     let(:input) do
       "md5('hello')"

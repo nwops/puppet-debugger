@@ -27,12 +27,27 @@ module PuppetRepl
       result
     end
 
+    def handle_set(input)
+      args = input.split(' ')
+      args.shift # throw away the set
+      case args.shift
+      when /loglevel/
+        if level = args.shift
+          Puppet::Util::Log.level = level.to_sym
+          Puppet::Util::Log.newdestination(:console)
+          puts "loglevel #{Puppet::Util::Log.level} is set"
+        end
+      end
+    end
+
     def handle_input(input)
       case input
       when 'help'
         PuppetRepl::Cli.print_repl_desc
       when 'functions'
         puts function_map.keys.sort
+      when /^:set/
+        handle_set(input)
       when 'facts'
         puts JSON.pretty_generate(node.facts)
       when '_'
