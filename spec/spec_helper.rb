@@ -25,6 +25,16 @@ require 'puppet-repl'
 # in ./support/ and its subdirectories.
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
 
+def stdlib_path
+  File.join(Puppet[:basemodulepath].split(':').first, 'stdlib')
+end
+
+# def install_stdlib
+#   `bundle exec puppet module install puppetlabs/stdlib` unless File.exists?(stdlib_path)
+# end
+#
+# install_stdlib
+
 RSpec.configure do |config|
 
 end

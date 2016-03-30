@@ -7,7 +7,7 @@ module PuppetRepl
     # returns an array of module directories
     def module_dirs
       dirs = []
-      dirs << File.join(Puppet[:environmentpath],puppet_env_name,'modules')
+      dirs << File.join(Puppet[:environmentpath],puppet_env_name,'modules') unless Puppet[:environmentpath].empty?
       dirs << Puppet.settings[:basemodulepath].split(':')
       dirs.flatten
     end
@@ -76,7 +76,6 @@ module PuppetRepl
 
     # returns a future parser for evaluating code
     def parser
-      Puppet::Parser::ParserFactory.evaluating_parser
       @parser || ::Puppet::Pops::Parser::EvaluatingParser.new
     end
 

@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe "PuppetRepl" do
+
   let(:resource) do
     "service{'httpd': ensure => running}"
   end
@@ -98,7 +99,7 @@ describe "PuppetRepl" do
       ":set loglevel debug"
     end
     it 'should set the loglevel' do
-      output = "loglevel debug is set\n"
+      output = /loglevel debug is set/
       expect{repl.handle_input(input)}.to output(output).to_stdout
       expect(Puppet::Util::Log.level).to eq(:debug)
       expect(Puppet::Util::Log.destinations[:console].name).to eq(:console)
@@ -109,13 +110,13 @@ describe "PuppetRepl" do
     let(:input) do
       "md5('hello')"
     end
-    it 'should be able to print facts' do
+    it 'execute md5' do
       sum = " => 5d41402abc4b2a76b9719d911017c592\n"
       expect{repl.handle_input(input)}.to output(sum).to_stdout
     end
-    it 'should be able to print facts' do
+    it 'execute swapcase' do
       output = " => HELLO\n"
-      expect{repl.handle_input("swapcase(hello)")}.to output(output).to_stdout
+      expect{repl.handle_input("swapcase('hello')")}.to output(output).to_stdout
     end
 
   end
