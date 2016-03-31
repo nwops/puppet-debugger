@@ -15,7 +15,7 @@ describe "PuppetRepl" do
       'help'
     end
     it 'can show the help screen' do
-      repl_output = /Ruby Version: #{RUBY_VERSION}\nPuppet Version: \d.\d.\d\nPuppet Repl Version: \d.\d.\d\nCreated by: NWOps <corey@nwops.io>\nType \"exit\", \"functions\", \"facts\", \"reset\", \"help\" for more information.\n\n/
+      repl_output = /Ruby Version: #{RUBY_VERSION}\nPuppet Version: \d.\d.\d\nPuppet Repl Version: \d.\d.\d\nCreated by: NWOps <corey@nwops.io>\nType \"exit\", \"functions\", \"vars\", \"facts\", \"reset\", \"help\" for more information.\n\n/
       expect{repl.handle_input(input)}.to output(repl_output).to_stdout
     end
   end
@@ -90,7 +90,7 @@ describe "PuppetRepl" do
       "facts"
     end
     it 'should be able to print facts' do
-      expect{repl.handle_input(input)}.to output(/"kernel": "Linux"/).to_stdout
+      expect{repl.handle_input(input)}.to output(/kernel/).to_stdout
     end
   end
 
@@ -103,6 +103,20 @@ describe "PuppetRepl" do
       expect{repl.handle_input(input)}.to output(output).to_stdout
       expect(Puppet::Util::Log.level).to eq(:debug)
       expect(Puppet::Util::Log.destinations[:console].name).to eq(:console)
+    end
+  end
+
+  describe 'vars' do
+    let(:input) do
+      "vars"
+    end
+    it 'display facts variable' do
+      output = /facts/
+      expect{repl.handle_input(input)}.to output(output).to_stdout
+    end
+    it 'dispaly local variable' do
+      repl.handle_input("$var1 = 'value1'")
+      expect{repl.handle_input(input)}.to output(/var1/).to_stdout
     end
   end
 

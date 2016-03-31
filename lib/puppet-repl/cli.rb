@@ -49,9 +49,15 @@ module PuppetRepl
       when /^:set/
         handle_set(input)
       when 'facts'
-        puts JSON.pretty_generate(node.facts)
+        vars = Hash[ node.facts.map { |k, v| [k.to_s, v] } ]
+        ap(vars, {:sort_keys => true, :indent => -1})
       when '_'
         puts(" => #{@last_item}")
+      when 'vars'
+        vars = scope.to_hash.delete_if {| key, value | node.facts.key?(key.to_sym) }
+        vars['facts'] = 'removed by the puppet-repl'
+        ap 'Facts were removed for easier viewing'
+        ap(vars, {:sort_keys => true, :indent => -1})
       when 'environment'
         puts "Puppet Environment: #{puppet_env_name}"
       when 'exit'
@@ -73,7 +79,7 @@ Ruby Version: #{RUBY_VERSION}
 Puppet Version: #{Puppet.version}
 Puppet Repl Version: #{PuppetRepl::VERSION}
 Created by: NWOps <corey@nwops.io>
-Type "exit", "functions", "facts", "reset", "help" for more information.
+Type "exit", "functions", "vars", "facts", "reset", "help" for more information.
 
       EOT
     end
