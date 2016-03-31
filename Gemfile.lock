@@ -3,6 +3,7 @@ GEM
   specs:
     CFPropertyList (2.2.8)
     addressable (2.4.0)
+    awesome_print (1.6.1)
     builder (3.2.2)
     coderay (1.1.0)
     descendants_tracker (0.0.4)
@@ -93,6 +94,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  awesome_print
   bundler
   facterdb
   jeweler (~> 2.0.1)
@@ -102,3 +104,6 @@ DEPENDENCIES
   rdoc (~> 3.12)
   rspec
   simplecov
+
+BUNDLED WITH
+   1.11.2
