@@ -2,8 +2,6 @@ source "http://rubygems.org"
 gem 'puppet', ENV['PUPPET_GEM_VERSION'] || ">= 3.8"
 gem 'facterdb'
 gem 'awesome_print'
-# Add dependencies to develop your gem here.
-# Include everything needed to run rake, tests, features, etc.
 
 group :test do
   gem "rspec"
