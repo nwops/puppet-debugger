@@ -12,6 +12,17 @@ module PuppetRepl
       dirs.flatten
     end
 
+    def known_resource_types
+      {
+        :hostclasses => scope.known_resource_types.hostclasses.keys,
+        :definitions => scope.known_resource_types.definitions.keys,
+        :nodes => scope.known_resource_types.nodes.keys,
+        :capability_mappings => scope.known_resource_types.capability_mappings.keys,
+        :applications => scope.known_resource_types.applications.keys,
+        :site => scope.known_resource_types.instance_variable_get(:@sites)[0] # todo, could be just a binary, this dumps the entire body (good while developing)
+      }
+    end
+
     # this is required in order to load things only when we need them
     def do_initialize
       begin

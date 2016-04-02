@@ -64,8 +64,8 @@ module PuppetRepl
         exit 0
       when 'reset'
         @scope = nil
-      when 'current_resources'
-        compiler.known_resource_types
+      when 'krt'
+        ap(known_resource_types, {:sort_keys => true, :indent => -1})
       else
         result = puppet_eval(input)
         @last_item = result
@@ -79,7 +79,7 @@ Ruby Version: #{RUBY_VERSION}
 Puppet Version: #{Puppet.version}
 Puppet Repl Version: #{PuppetRepl::VERSION}
 Created by: NWOps <corey@nwops.io>
-Type "exit", "functions", "vars", "facts", "reset", "help" for more information.
+Type "exit", "functions", "vars", "krt", "facts", "reset", "help" for more information.
 
       EOT
     end
