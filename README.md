@@ -75,7 +75,36 @@ Type "exit", "functions", "types", "reset", "help" for more information.
  => File['/etc/httpd/httpd.conf']
 >>
 ```
+### Listing variables
+To see the current variables in the scope use the  `vars` keyword.
 
+```
+>> $var1 = 'value'
+=> value
+>> $var2 = {'key1' => 'value1'}
+=> {"key1"=>"value1"}
+>> vars
+"Facts were removed for easier viewing"
+{
+"datacenter"  => "datacenter1",
+"facts"       => "removed by the puppet-repl",
+"module_name" => "",
+"name"        => "main",
+"title"       => "main",
+"trusted"     => {
+      "authenticated" => "local",
+      "certname"      => nil,
+      "domain"        => nil,
+      "extensions"    => {},
+      "hostname"      => nil
+      },
+"var1"        => "value",
+"var2"        => {
+  "key1" => "value1"
+  }
+}
+
+```
 ## Using functions
 Functions will run and produce the desired output.  If you type the word `functions`
 a list of available functions will be displayed on the screen.
