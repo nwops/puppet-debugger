@@ -92,19 +92,22 @@ module PuppetRepl
         ap(known_resource_types, {:sort_keys => true, :indent => -1})
       else
         begin
-          print " => "
           result = puppet_eval(input)
           @last_item = result
+          print " => "
           output = normalize_output(result)
           ap(output)
         rescue ArgumentError => e
-          puts e.message
+          print " => "
+          puts e.message.fatal
         rescue Puppet::ResourceError => e
-          puts e.message
+          print " => "
+          puts e.message.fatal
         rescue Puppet::ParseErrorWithIssue => e
-          puts e.message
+          print " => "
+          puts e.message.fatal
         rescue Exception => e
-          puts e.message
+          puts e.message.fatal
         end
       end
     end

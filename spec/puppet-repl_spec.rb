@@ -73,7 +73,7 @@ describe "PuppetRepl" do
       "Service{"
     end
     it 'can process' do
-      repl_output = " => Syntax error at end of file\n"
+      repl_output = " => \e[31mSyntax error at end of file\e[0m\n"
       expect{repl.handle_input(input)}.to output(repl_output).to_stdout
     end
   end
