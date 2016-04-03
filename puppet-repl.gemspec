@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "puppet-repl"
-  s.version = "0.0.7"
+  s.version = "0.0.8"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Corey Osman"]
-  s.date = "2016-04-02"
+  s.date = "2016-04-03"
   s.description = "A interactive command line tool for evaluating the puppet language"
   s.email = "corey@nwops.io"
   s.executables = ["prepl"]
@@ -33,8 +33,15 @@ Gem::Specification.new do |s|
     "lib/puppet-repl.rb",
     "lib/puppet-repl/cli.rb",
     "lib/puppet-repl/support.rb",
+    "lib/puppet-repl/support/compiler.rb",
+    "lib/puppet-repl/support/environment.rb",
+    "lib/puppet-repl/support/facts.rb",
+    "lib/puppet-repl/support/functions.rb",
+    "lib/puppet-repl/support/node.rb",
+    "lib/puppet-repl/support/scope.rb",
     "lib/version.rb",
     "puppet-repl.gemspec",
+    "spec/fixtures/environments/production/manifests/site.pp",
     "spec/puppet-repl_spec.rb",
     "spec/spec_helper.rb",
     "spec/support_spec.rb"

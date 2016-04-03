@@ -8,6 +8,7 @@
   - [Load path](#load-path)
   - [Usage](#usage)
   - [Using Variables](#using-variables)
+    - [Listing variables](#listing-variables)
   - [Using functions](#using-functions)
   - [Duplicate resource error](#duplicate-resource-error)
   - [Setting the puppet log level](#setting-the-puppet-log-level)
@@ -46,17 +47,18 @@ and try to enforce the catalog. This has a few side affects.
 Example Usage
 ```
 MacBook-Pro-2/tmp % prepl
-Puppet Version: 4.2.2
-Puppet Repl Version: 0.0.1
+Ruby Version: 2.0.0
+Puppet Version: 3.8.5
+Puppet Repl Version: 0.0.7
 Created by: NWOps <corey@nwops.io>
-Type "exit", "functions", "types", "reset", "help" for more information.
+Type "exit", "functions", "vars", "krt", "facts", "reset", "help" for more information.
 
->> file{'/tmp/test2': ensure => present}
- => File['/tmp/test2']
 >> ['/tmp/test3', '/tmp/test4'].each |String $path| { file{$path: ensure => present} }
- =>
-/tmp/test3
-/tmp/test4
+  => [
+     [0] "/tmp/test3",
+     [1] "/tmp/test4"
+ ]
+ >>
 
 ```
 
@@ -64,16 +66,37 @@ Type "exit", "functions", "types", "reset", "help" for more information.
 
 ```
 MacBook-Pro-2/tmp % prepl
-Puppet Version: 4.2.2
-Puppet Repl Version: 0.0.1
+Ruby Version: 2.0.0
+Puppet Version: 3.8.5
+Puppet Repl Version: 0.0.7
 Created by: NWOps <corey@nwops.io>
-Type "exit", "functions", "types", "reset", "help" for more information.
+Type "exit", "functions", "vars", "krt", "facts", "reset", "help" for more information.
+
+>>
 
 >> $config_file = '/etc/httpd/httpd.conf'
- => /etc/httpd/httpd.conf
->> file{$config_file: ensure => present, content => 'hello'}
- => File['/etc/httpd/httpd.conf']
->>
+ => "/etc/httpd/httpd.conf"
+ >> file{$config_file: ensure => present, content => 'hello'}
+  => Puppet::Type::File {
+                        path => "/etc/httpd/httpd.conf",
+                    provider => posix,
+                      ensure => present,
+                     content => "{md5}5d41402abc4b2a76b9719d911017c592",
+                    checksum => nil,
+                      backup => "puppet",
+                     replace => true,
+                       links => manage,
+                       purge => false,
+                sourceselect => first,
+                   show_diff => true,
+        validate_replacement => "%",
+          source_permissions => use,
+     selinux_ignore_defaults => false,
+                    loglevel => notice,
+                        name => "/etc/httpd/httpd.conf",
+                       title => "/etc/httpd/httpd.conf"
+ }
+ >>
 ```
 ### Listing variables
 To see the current variables in the scope use the  `vars` keyword.
