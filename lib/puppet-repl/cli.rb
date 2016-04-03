@@ -7,7 +7,11 @@ module PuppetRepl
   class Cli
     include PuppetRepl::Support
 
-    attr_accessor :settings
+    attr_accessor :settings, :log_level
+
+    def initialize
+      @log_level = 'notice'
+    end
 
     def ap_formatter
       unless @ap_formatter
@@ -49,14 +53,19 @@ module PuppetRepl
       result
     end
 
+    def set_log_level(level)
+      Puppet::Util::Log.level = level.to_sym
+      Puppet::Util::Log.newdestination(:console)
+    end
+
     def handle_set(input)
       args = input.split(' ')
       args.shift # throw away the set
       case args.shift
       when /loglevel/
         if level = args.shift
-          Puppet::Util::Log.level = level.to_sym
-          Puppet::Util::Log.newdestination(:console)
+          @log_level = level
+          set_log_level(level)
           puts "loglevel #{Puppet::Util::Log.level} is set"
         end
       end
@@ -88,6 +97,9 @@ module PuppetRepl
         exit 0
       when 'reset'
         @scope = nil
+        # initilize scope again
+        scope
+        set_log_level(log_level)
       when 'krt'
         ap(known_resource_types, {:sort_keys => true, :indent => -1})
       else
@@ -96,7 +108,11 @@ module PuppetRepl
           @last_item = result
           print " => "
           output = normalize_output(result)
-          ap(output)
+          if output.nil?
+            puts ""
+          else
+            ap(output)
+          end
         rescue ArgumentError => e
           print " => "
           puts e.message.fatal
