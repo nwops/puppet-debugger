@@ -1,10 +1,5 @@
 require 'simplecov'
 require_relative '../lib/puppet-repl'
-begin
-  require 'pry'
-rescue LoadError
-  # pry not required unless using interactively
-end
 
 module SimpleCov::Configuration
   def clean_filters

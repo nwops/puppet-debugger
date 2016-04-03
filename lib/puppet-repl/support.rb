@@ -24,14 +24,22 @@ module PuppetRepl
     end
 
     def known_resource_types
-      {
+      res = {
         :hostclasses => scope.known_resource_types.hostclasses.keys,
         :definitions => scope.known_resource_types.definitions.keys,
         :nodes => scope.known_resource_types.nodes.keys,
-        :capability_mappings => scope.known_resource_types.capability_mappings.keys,
-        :applications => scope.known_resource_types.applications.keys,
-        :site => scope.known_resource_types.instance_variable_get(:@sites)[0] # todo, could be just a binary, this dumps the entire body (good while developing)
       }
+      if sites = scope.known_resource_types.instance_variable_get(:@sites)
+        res.merge!(:sites => scope.known_resource_types.instance_variable_get(:@sites).first)
+      end
+      if scope.known_resource_types.respond_to?(:applications)
+        res.merge!(:applications => scope.known_resource_types.applications.keys)
+      end
+      # some versions of puppet do not support capabilities
+      if scope.known_resource_types.respond_to?(:capability_mappings)
+        res.merge!(:capability_mappings => scope.known_resource_types.capability_mappings.keys)
+      end
+      res
     end
 
     # this is required in order to load things only when we need them
