@@ -1,3 +1,7 @@
+## 0.0.8
+  * adds ability to list currently loaded classes
+  * adds formatted output using awesome print 
+  * adds verbose type output when creating resources
 ## 0.0.7
   * Added ability to list scope variables
 ## 0.0.6
