@@ -26,6 +26,10 @@ A interactive command line tool for evaluating the puppet language.
 ## Compatibility
 Requires Puppet 3.8+ and only uses the future parser.
 
+## Production usage
+The puppet repl is a developer tool that should only be used when writing puppet code.  Although it might seem useful
+to install on your production puppet master. Please do not install because of the puppet-repl gem dependencies that might conflict with your existing environment.
+
 ## Installation
 `gem install puppet-repl`
 
@@ -33,7 +37,14 @@ Requires Puppet 3.8+ and only uses the future parser.
 puppet-repl will load all functions from your basemodulepath and environmentpath.
 
 This means if you run `puppet module install puppetlabs-stdlib` and they will be available
-in the repl.
+in the repl.  
+
+## Interactive demo
+I have put together a repo with a few setup instructions that will assist you in setting up a "mock" environment
+for usage with the puppet-repl.  This was originally intended when giving a demo of the repl, but also seems
+useful for other people. 
+
+https://github.com/nwops/puppet-repl-demo
 
 ## Usage
 Puppet-repl will only parse and evaulate your code.  It will not build a catalog
