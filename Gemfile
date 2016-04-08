@@ -5,6 +5,7 @@ gem 'awesome_print'
 
 group :test do
   gem "rspec"
+  gem 'rspec-puppet'
   gem "bundler"
   gem "jeweler", "~> 2.0.1"
   gem "simplecov", ">= 0"

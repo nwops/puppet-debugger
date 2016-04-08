@@ -55,12 +55,17 @@ describe 'support' do
   end
 
   it 'should return module dirs' do
-    expect(repl.module_dirs.count).to be >= 1
+    expect(repl.modules_paths.count).to be >= 1
+  end
+
+  it 'should return a list of default facts' do
+    expect(repl.default_facts.values).to be_instance_of(Hash)
+    expect(repl.default_facts.values['fqdn']).to eq('foo.example.com')
   end
 
   it 'should return a list of facts' do
-    expect(repl.facts).to be_instance_of(Hash)
-    expect(repl.facts[:fqdn]).to eq('foo.example.com')
+    expect(repl.node.facts.values).to be_instance_of(Hash)
+    expect(repl.node.facts.values['fqdn']).to eq('foo.example.com')
   end
 
 end

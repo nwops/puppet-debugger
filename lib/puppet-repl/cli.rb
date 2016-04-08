@@ -80,23 +80,23 @@ module PuppetRepl
       when /^:set/
         handle_set(input)
       when 'facts'
-        vars = Hash[ node.facts.map { |k, v| [k.to_s, v] } ]
+        # convert symbols to keys
+        vars = node.facts.values
         ap(vars, {:sort_keys => true, :indent => -1})
       when '_'
         puts(" => #{@last_item}")
       when 'vars'
-        vars = scope.to_hash.delete_if {| key, value | node.facts.key?(key.to_sym) }
-        vars['facts'] = 'removed by the puppet-repl'
+        # remove duplicate variables that are also in the facts hash
+        vars = scope.to_hash.delete_if {| key, value | node.facts.values.key?(key) }
+        vars['facts'] = 'removed by the puppet-repl' if vars.key?('facts')
         ap 'Facts were removed for easier viewing'
         ap(vars, {:sort_keys => true, :indent => -1})
       when 'environment'
         puts "Puppet Environment: #{puppet_env_name}"
-      when 'vars'
-        ap(scope.to_hash, {:sort_keys => true, :indent => 0})
       when 'exit'
         exit 0
       when 'reset'
-        @scope = nil
+        set_scope(nil)
         # initilize scope again
         scope
         set_log_level(log_level)
@@ -139,9 +139,10 @@ Type "exit", "functions", "vars", "krt", "facts", "reset", "help" for more infor
       EOT
     end
 
-    def self.start
+    def self.start(scope=nil)
       print_repl_desc
       repl_obj = new
+      repl_obj.initialize_from_scope(scope)
       while buf = Readline.readline(">> ", true)
         repl_obj.handle_input(buf)
       end

@@ -7,10 +7,18 @@ module PuppetRepl
         'operatingsystem=RedHat and operatingsystemrelease=/^7/ and architecture=x86_64 and facterversion=/^2.4\./'
       end
 
+      def set_facts(value)
+        @facts = value
+      end
+
       # uses facterdb (cached facts) and retrives the facts given a filter
-      def facts
+      # creates a new facts object
+      # we could also use fact_merge to get real facts from the real system or puppetdb
+      def default_facts
         unless @facts
-          @facts ||= FacterDB.get_facts(facterdb_filter).first
+          node_facts = FacterDB.get_facts(facterdb_filter).first
+          values = Hash[ node_facts.map { |k, v| [k.to_s, v] } ]
+          @facts ||= Puppet::Node::Facts.new(values['fqdn'], values)
         end
         @facts
       end

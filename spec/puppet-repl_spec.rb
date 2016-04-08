@@ -174,9 +174,13 @@ describe "PuppetRepl" do
       output = /facts/
       expect{repl.handle_input(input)}.to output(output).to_stdout
     end
-    it 'dispaly local variable' do
-      repl.handle_input("$var1 = 'value1'")
-      expect{repl.handle_input(input)}.to output(/var1/).to_stdout
+    it 'display local variable' do
+      expect{repl.handle_input("$var1 = 'value1'")}.to output(/value1/).to_stdout
+      expect{repl.handle_input("$var1")}.to output(/value1/).to_stdout
+
+    end
+    it 'display productname variable' do
+      expect{repl.handle_input("$productname")}.to output(/VirtualBox/).to_stdout
     end
   end
 
