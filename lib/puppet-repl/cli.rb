@@ -49,6 +49,8 @@ module PuppetRepl
           return output.first
         end
         return output
+      elsif result.instance_of?(Puppet::Pops::Types::PResourceType)
+        return to_resource_declaration(result)
       end
       result
     end
@@ -72,58 +74,39 @@ module PuppetRepl
     end
 
     def handle_input(input)
-      case input
-      when 'help'
-        PuppetRepl::Cli.print_repl_desc
-      when 'functions'
-        puts function_map.keys.sort
-      when /^:set/
-        handle_set(input)
-      when 'facts'
-        # convert symbols to keys
-        vars = node.facts.values
-        ap(vars, {:sort_keys => true, :indent => -1})
-      when '_'
-        puts(" => #{@last_item}")
-      when 'vars'
-        # remove duplicate variables that are also in the facts hash
-        vars = scope.to_hash.delete_if {| key, value | node.facts.values.key?(key) }
-        vars['facts'] = 'removed by the puppet-repl' if vars.key?('facts')
-        ap 'Facts were removed for easier viewing'
-        ap(vars, {:sort_keys => true, :indent => -1})
-      when 'environment'
-        puts "Puppet Environment: #{puppet_env_name}"
-      when 'exit'
-        exit 0
-      when 'reset'
-        set_scope(nil)
-        # initilize scope again
-        scope
-        set_log_level(log_level)
-      when 'krt'
-        ap(known_resource_types, {:sort_keys => true, :indent => -1})
+      if self.respond_to?(input.to_sym)
+        self.send(input.to_sym)
       else
-        begin
-          result = puppet_eval(input)
-          @last_item = result
-          print " => "
-          output = normalize_output(result)
-          if output.nil?
-            puts ""
-          else
-            ap(output)
+        case input
+        when /exit/
+          exit 0
+        when /^:set/
+          handle_set(input)
+        when '_'
+          puts(" => #{@last_item}")
+        else
+          begin
+            result = puppet_eval(input)
+            @last_item = result
+            print " => "
+            output = normalize_output(result)
+            if output.nil?
+              puts ""
+            else
+              ap(output)
+            end
+          rescue ArgumentError => e
+            print " => "
+            puts e.message.fatal
+          rescue Puppet::ResourceError => e
+            print " => "
+            puts e.message.fatal
+          rescue Puppet::ParseErrorWithIssue => e
+            print " => "
+            puts e.message.fatal
+          rescue Exception => e
+            puts e.message.fatal
           end
-        rescue ArgumentError => e
-          print " => "
-          puts e.message.fatal
-        rescue Puppet::ResourceError => e
-          print " => "
-          puts e.message.fatal
-        rescue Puppet::ParseErrorWithIssue => e
-          print " => "
-          puts e.message.fatal
-        rescue Exception => e
-          puts e.message.fatal
         end
       end
     end
@@ -134,7 +117,8 @@ Ruby Version: #{RUBY_VERSION}
 Puppet Version: #{Puppet.version}
 Puppet Repl Version: #{PuppetRepl::VERSION}
 Created by: NWOps <corey@nwops.io>
-Type "exit", "functions", "vars", "krt", "facts", "reset", "help" for more information.
+Type "exit", "functions", "vars", "krt", "facts", "resources", "classes",
+     "reset", or "help" for more information.
 
       EOT
     end

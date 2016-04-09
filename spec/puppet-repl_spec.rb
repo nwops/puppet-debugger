@@ -33,7 +33,7 @@ describe "PuppetRepl" do
       'help'
     end
     it 'can show the help screen' do
-      repl_output = /Ruby Version: #{RUBY_VERSION}\nPuppet Version: \d.\d.\d\nPuppet Repl Version: \d.\d.\d\nCreated by: NWOps <corey@nwops.io>\nType \"exit\", \"functions\", \"vars\", \"krt\", \"facts\", \"reset\", \"help\" for more information.\n\n/
+      repl_output = /Ruby Version: #{RUBY_VERSION}\nPuppet Version: \d.\d.\d\nPuppet Repl Version: \d.\d.\d\nCreated by: NWOps <corey@nwops.io>\nType \"exit\", \"functions\", \"vars\", \"krt\", \"facts\", \"resources\", \"classes\",\n     \"reset\", or \"help\" for more information.\n\n/
       expect{repl.handle_input(input)}.to output(repl_output).to_stdout
     end
   end
@@ -151,6 +151,24 @@ describe "PuppetRepl" do
     end
     it 'should be able to print facts' do
       expect{repl.handle_input(input)}.to output(/kernel/).to_stdout
+    end
+  end
+
+  describe 'print resources' do
+    let(:input) do
+      'resources'
+    end
+    it 'should be able to print resources' do
+      expect{repl.handle_input(input)}.to output(/main/).to_stdout
+    end
+  end
+
+  describe 'print classes' do
+    let(:input) do
+      'resources'
+    end
+    it 'should be able to print classes' do
+      expect{repl.handle_input(input)}.to output(/Settings/).to_stdout
     end
   end
 

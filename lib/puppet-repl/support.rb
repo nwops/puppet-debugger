@@ -13,6 +13,7 @@ module PuppetRepl
     include PuppetRepl::Support::Scope
     include PuppetRepl::Support::Functions
     include PuppetRepl::Support::Node
+    include PuppetRepl::Support::InputResponders
 
     # returns an array of module directories, generally this is the only place
     # to look for puppet code by default.  This is read from the puppet configuration
