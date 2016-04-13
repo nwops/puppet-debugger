@@ -1,21 +1,21 @@
 module PuppetRepl
   module Support
     module InputResponders
-      def help
+      def help(args=[])
         PuppetRepl::Cli.print_repl_desc
       end
 
-      def facts
+      def facts(args=[])
         # convert symbols to keys
         vars = node.facts.values
         ap(vars, {:sort_keys => true, :indent => -1})
       end
 
-      def functions
+      def functions(args=[])
         puts function_map.keys.sort
       end
 
-      def vars
+      def vars(args=[])
         # remove duplicate variables that are also in the facts hash
         vars = scope.to_hash.delete_if {| key, value | node.facts.values.key?(key) }
         vars['facts'] = 'removed by the puppet-repl' if vars.key?('facts')
@@ -23,30 +23,42 @@ module PuppetRepl
         ap(vars, {:sort_keys => true, :indent => -1})
       end
 
-      def environment
+      def environment(args=[])
         puts "Puppet Environment: #{puppet_env_name}"
       end
 
-      def reset
+      def reset(args=[])
         set_scope(nil)
         # initilize scope again
         scope
         set_log_level(log_level)
       end
 
-      def krt
+      def krt(args=[])
         ap(known_resource_types, {:sort_keys => true, :indent => -1})
       end
 
-      def resources
-        puts "Resources not shown in any specific order".warning
+      def play(args=[])
+        config = {}
+        config[:play] = args.first
+        play_back(config)
+      end
+
+      def resources(args=[])
         res = scope.compiler.catalog.resources.map do |res|
           res.to_s
         end
-        ap res
+        if !args.first.nil?
+          require 'pry'
+          binding.pry
+          ap res[args.first.to_i]
+        else
+          puts "Resources not shown in any specific order".warning
+          ap res
+        end
       end
 
-      def classes
+      def classes(args=[])
         ap scope.compiler.catalog.classes
       end
 

@@ -11,6 +11,8 @@ module AwesomePrint
       cast = cast_without_puppet_resource(object, type)
       if (defined?(::Puppet::Type)) && (object.is_a?(::Puppet::Type))
         cast = :puppet_type
+      elsif (defined?(::Puppet::Pops::Types)) && (object.is_a?(::Puppet::Pops::Types))
+        cast = :puppet_type  
       elsif (defined?(::Puppet::Parser::Resource)) && (object.is_a?(::Puppet::Parser::Resource))
         cast = :puppet_resource
       end
