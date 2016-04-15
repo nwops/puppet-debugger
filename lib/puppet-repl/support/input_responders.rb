@@ -46,7 +46,7 @@ module PuppetRepl
 
       def resources(args=[])
         res = scope.compiler.catalog.resources.map do |res|
-          res.to_s
+          res.to_s.gsub(/\[/, "['").gsub(/\]/, "']") # ensure the title has quotes
         end
         if !args.first.nil?
           ap res[args.first.to_i]
