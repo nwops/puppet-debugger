@@ -33,7 +33,11 @@ describe "PuppetRepl" do
       'help'
     end
     it 'can show the help screen' do
-      repl_output = /Ruby Version: #{RUBY_VERSION}\nPuppet Version: \d.\d.\d\nPuppet Repl Version: \d.\d.\d\nCreated by: NWOps <corey@nwops.io>\nType \"exit\", \"functions\", \"vars\", \"krt\", \"facts\", \"resources\", \"classes\",\n     \"reset\", or \"help\" for more information.\n\n/
+      repl_output = /Type \"exit\", \"functions\", \"vars\", \"krt\", \"facts\", \"resources\", \"classes\",\n     \"play\",\"reset\", or \"help\" for more information.\n\n/
+      expect{repl.handle_input(input)}.to output(/Ruby Version: #{RUBY_VERSION}\n/).to_stdout
+      expect{repl.handle_input(input)}.to output(/Puppet Version: \d.\d.\d\n/).to_stdout
+      expect{repl.handle_input(input)}.to output(/Puppet Repl Version: \d.\d.\d\n/).to_stdout
+      expect{repl.handle_input(input)}.to output(/Created by: NWOps <corey@nwops.io>\n/).to_stdout
       expect{repl.handle_input(input)}.to output(repl_output).to_stdout
     end
   end
@@ -43,7 +47,7 @@ describe "PuppetRepl" do
       ""
     end
     it 'can run' do
-      repl_output = ''
+      repl_output = " => \n"
       expect{repl.handle_input(input)}.to output(repl_output).to_stdout
     end
     describe 'space' do
@@ -51,7 +55,7 @@ describe "PuppetRepl" do
         " "
       end
       it 'can run' do
-        repl_output = ''
+        repl_output = " => \n"
         expect{repl.handle_input(input)}.to output(repl_output).to_stdout
       end
     end
@@ -65,6 +69,23 @@ describe "PuppetRepl" do
       repl_output = /hostclasses/
       expect{repl.handle_input(input)}.to output(repl_output).to_stdout
     end
+  end
+
+  describe 'play' do
+    let(:fixtures_file) do
+      File.join(fixtures_dir, 'sample_manifest.pp')
+    end
+
+    let(:file_url) do
+      'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw'
+    end
+    it 'file' do
+      expect{repl.handle_input("play #{fixtures_file}")}.to output(/Puppet::Type::File/).to_stdout
+    end
+    it 'url' do
+      expect{repl.handle_input("play #{file_url}")}.to output(/Puppet::Type::File/).to_stdout
+    end
+
   end
 
   describe 'variables' do
@@ -108,16 +129,14 @@ describe "PuppetRepl" do
   end
 
   describe 'reset' do
-    before(:each) do
-      repl.handle_input(input)
-    end
     let(:input) do
       "file{'/tmp/reset': ensure => present}"
     end
 
-    it 'can process a each block' do
-      repl.handle_input('reset')
+    it 'can process a file' do
       repl_output = /Puppet::Type::File/
+      expect{repl.handle_input(input)}.to output(repl_output).to_stdout
+      repl.handle_input('reset')
       expect{repl.handle_input(input)}.to output(repl_output).to_stdout
     end
 

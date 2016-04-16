@@ -12,7 +12,6 @@ module PuppetRepl
             puts "puppet-repl can't play #{config[:play]}'"
           end
         end
-        read_loop
       end
 
       def play_back_url(url)
@@ -24,7 +23,7 @@ module PuppetRepl
         elsif url[/github.com.*blob/]
           url.sub!('blob', 'raw')
         end
-        play_back_string open(url).string
+        play_back_string open(url).read
       rescue SocketError
         abort "puppet-repl can't play `#{url}'"
       end
