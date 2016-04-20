@@ -12,20 +12,26 @@ module AwesomePrint
       if (defined?(::Puppet::Type)) && (object.is_a?(::Puppet::Type))
         cast = :puppet_type
       elsif (defined?(::Puppet::Pops::Types)) && (object.is_a?(::Puppet::Pops::Types))
-        cast = :puppet_type  
+        cast = :puppet_type
+      elsif (defined?(::Puppet::Pops::Types::PHostClassType)) && (object.is_a?(::Puppet::Pops::Types::PHostClassType))
+        cast = :puppet_class
       elsif (defined?(::Puppet::Parser::Resource)) && (object.is_a?(::Puppet::Parser::Resource))
         cast = :puppet_resource
       end
       cast
     end
 
+    def awesome_puppet_class(object)
+      res = {:name => object.class_name}
+      res_str = awesome_hash(res)
+      "#{object.class} #{res_str.gsub(/\:name/, 'name')}"
+    end
+
     def awesome_puppet_resource(object)
-      return '' if object.nil?
       awesome_puppet_type(object.to_ral)
     end
 
     def awesome_puppet_type(object)
-      return '' if object.nil?
       h = object.to_hash.merge(:name => object.name, :title => object.title)
       res_str = awesome_hash(h)
       "#{object.class} #{res_str.gsub(':', '')}"

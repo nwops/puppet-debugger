@@ -255,4 +255,15 @@ describe "PuppetRepl" do
     end
 
   end
+
+  describe 'process Puppet::Pops::Types::PHostClassType' do
+    let(:input) do
+      "include stdlib"
+    end
+    it do
+      output = " => Puppet::Pops::Types::PHostClassType {\n    name\e[0;37m => \e[0m\e[0;33m\"stdlib::stages\"\e[0m\n}\n"
+      repl.handle_input(input)
+      expect{repl.handle_input("Class['Stdlib::Stages']")}.to output(output).to_stdout
+    end
+  end
 end
