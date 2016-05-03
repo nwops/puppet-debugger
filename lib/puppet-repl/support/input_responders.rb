@@ -17,10 +17,10 @@ module PuppetRepl
 
       def vars(args=[])
         # remove duplicate variables that are also in the facts hash
-        vars = scope.to_hash.delete_if {| key, value | node.facts.values.key?(key) }
-        vars['facts'] = 'removed by the puppet-repl' if vars.key?('facts')
+        variables = scope.to_hash.delete_if {| key, value | node.facts.values.key?(key) }
+        variables['facts'] = 'removed by the puppet-repl' if variables.key?('facts')
         ap 'Facts were removed for easier viewing'
-        ap(vars, {:sort_keys => true, :indent => -1})
+        ap(variables, {:sort_keys => true, :indent => -1})
       end
 
       def environment(args=[])
