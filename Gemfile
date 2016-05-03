@@ -2,7 +2,7 @@ source "http://rubygems.org"
 gem 'puppet', ENV['PUPPET_GEM_VERSION'] || ">= 3.8"
 gem 'facterdb'
 gem 'awesome_print'
-
+gem 'pry'
 group :test do
   gem "rspec"
   gem 'rspec-puppet'
@@ -13,6 +13,6 @@ group :test do
 end
 
 group :development do
-  gem 'pry'
+  #gem 'pry'
   gem "rdoc", "~> 3.12"
 end

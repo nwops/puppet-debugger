@@ -1,5 +1,5 @@
 require 'spec_helper'
-
+require 'stringio'
 describe "PuppetRepl" do
 
   let(:resource) do
@@ -10,8 +10,12 @@ describe "PuppetRepl" do
     repl.handle_input('reset')
   end
 
+  let(:output) do
+    StringIO.new('', 'w')
+  end
+
   let(:repl) do
-    PuppetRepl::Cli.new
+    PuppetRepl::Cli.new(:out_buffer => output)
   end
 
   let(:input) do
@@ -33,12 +37,13 @@ describe "PuppetRepl" do
       'help'
     end
     it 'can show the help screen' do
-      repl_output = /Type \"exit\", \"functions\", \"vars\", \"krt\", \"facts\", \"resources\", \"classes\",\n     \"play\",\"reset\", or \"help\" for more information.\n\n/
-      expect{repl.handle_input(input)}.to output(/Ruby Version: #{RUBY_VERSION}\n/).to_stdout
-      expect{repl.handle_input(input)}.to output(/Puppet Version: \d.\d.\d\n/).to_stdout
-      expect{repl.handle_input(input)}.to output(/Puppet Repl Version: \d.\d.\d\n/).to_stdout
-      expect{repl.handle_input(input)}.to output(/Created by: NWOps <corey@nwops.io>\n/).to_stdout
-      expect{repl.handle_input(input)}.to output(repl_output).to_stdout
+      expected_repl_output = /Type \"exit\", \"functions\", \"vars\", \"krt\", \"facts\", \"resources\", \"classes\",\n     \"play\",\"reset\", or \"help\" for more information.\n\n/
+      repl.handle_input(input)
+      expect(output.string).to match(/Ruby Version: #{RUBY_VERSION}\n/)
+      expect(output.string).to match(/Puppet Version: \d.\d.\d\n/)
+      expect(output.string).to match(/Puppet Repl Version: \d.\d.\d\n/)
+      expect(output.string).to match(/Created by: NWOps <corey@nwops.io>\n/)
+      expect(output.string).to match(expected_repl_output)
     end
   end
 
@@ -47,16 +52,18 @@ describe "PuppetRepl" do
       ""
     end
     it 'can run' do
-      repl_output = " => \n"
-      expect{repl.handle_input(input)}.to output(repl_output).to_stdout
+      repl_output = "\n => \n"
+      repl.handle_input(input)
+      expect(output.string).to eq(repl_output)
     end
     describe 'space' do
       let(:input) do
         " "
       end
       it 'can run' do
-        repl_output = " => \n"
-        expect{repl.handle_input(input)}.to output(repl_output).to_stdout
+        repl_output = "\n => \n"
+        repl.handle_input(input)
+        expect(output.string).to eq(repl_output)
       end
     end
   end
@@ -67,7 +74,8 @@ describe "PuppetRepl" do
     end
     it 'can run' do
       repl_output = /hostclasses/
-      expect{repl.handle_input(input)}.to output(repl_output).to_stdout
+      repl.handle_input(input)
+      expect(output.string).to match(repl_output)
     end
   end
 
@@ -80,12 +88,13 @@ describe "PuppetRepl" do
       'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw'
     end
     it 'file' do
-      expect{repl.handle_input("play #{fixtures_file}")}.to output(/Puppet::Type::File/).to_stdout
+      repl.handle_input("play #{fixtures_file}")
+      expect(output.string).to match(/Puppet::Type::File/)
     end
     it 'url' do
-      expect{repl.handle_input("play #{file_url}")}.to output(/Puppet::Type::File/).to_stdout
+      repl.handle_input("play #{file_url}")
+      expect(output.string).to match(/Puppet::Type::File/)
     end
-
   end
 
   describe 'variables' do
@@ -93,8 +102,9 @@ describe "PuppetRepl" do
       "$file_path = '/tmp/test2.txt'"
     end
     it 'can process a variable' do
-      repl_output = " => \e[0;33m\"/tmp/test2.txt\"\e[0m\n"
-      expect{repl.handle_input(input)}.to output(repl_output).to_stdout
+      repl_output = "\n => \e[0;33m\"/tmp/test2.txt\"\e[0m\n"
+      repl.handle_input(input)
+      expect(output.string).to eq(repl_output)
     end
   end
 
@@ -104,7 +114,8 @@ describe "PuppetRepl" do
     end
     it 'can process a resource' do
       repl_output = /Puppet::Type::File/
-      expect{repl.handle_input(input)}.to output(repl_output).to_stdout
+      repl.handle_input(input)
+      expect(output.string).to match(repl_output)
     end
   end
 
@@ -113,8 +124,9 @@ describe "PuppetRepl" do
       "Service{"
     end
     it 'can process' do
-      repl_output = " => \e[31mSyntax error at end of file\e[0m\n"
-      expect{repl.handle_input(input)}.to output(repl_output).to_stdout
+      repl_output = "\n => \e[31mSyntax error at end of file\e[0m\n"
+      repl.handle_input(input)
+      expect(output.string).to eq(repl_output)
     end
   end
 
@@ -124,7 +136,8 @@ describe "PuppetRepl" do
     end
     xit 'can process' do  #this fails with puppet 3.8 and passes with others
       repl_output = /must be a string/
-      expect{repl.handle_input(input)}.to output(repl_output).to_stdout
+      repl.handle_input(input)
+      expect(output.string).to match(repl_output)
     end
   end
 
@@ -135,19 +148,22 @@ describe "PuppetRepl" do
 
     it 'can process a file' do
       repl_output = /Puppet::Type::File/
-      expect{repl.handle_input(input)}.to output(repl_output).to_stdout
+      repl.handle_input(input)
+      expect(output.string).to match(repl_output)
       repl.handle_input('reset')
-      expect{repl.handle_input(input)}.to output(repl_output).to_stdout
+      repl.handle_input(input)
+      expect(output.string).to match(repl_output)
+
     end
 
     describe 'loglevel' do
       it 'has not changed' do
         repl.handle_input(":set loglevel debug")
         expect(Puppet::Util::Log.level).to eq(:debug)
-        expect(Puppet::Util::Log.destinations[:console].name).to eq(:console)
+        expect(Puppet::Util::Log.destinations[:buffer].name).to eq(:buffer)
         repl.handle_input('reset')
         expect(Puppet::Util::Log.level).to eq(:debug)
-        expect(Puppet::Util::Log.destinations[:console].name).to eq(:console)
+        expect(Puppet::Util::Log.destinations[:buffer].name).to eq(:buffer)
       end
     end
   end
@@ -158,7 +174,8 @@ describe "PuppetRepl" do
     end
     it 'can process a each block' do
       repl_output = /Puppet::Type::File/
-      expect{repl.handle_input(input)}.to output(repl_output).to_stdout
+      repl.handle_input(input)
+      expect(output.string).to match(repl_output)
     end
   end
 
@@ -167,10 +184,11 @@ describe "PuppetRepl" do
       "['/tmp/test3', '/tmp/test4'].each |String $path| { file{$path: ensure => present} }"
     end
     let(:repl_output) do
-      " => [\n    \e[1;37m[0] \e[0m\e[0;33m\"/tmp/test3\"\e[0m,\n    \e[1;37m[1] \e[0m\e[0;33m\"/tmp/test4\"\e[0m\n]\n"
+      "\n => [\n  \e[1;37m[0] \e[0m\e[0;33m\"/tmp/test3\"\e[0m,\n  \e[1;37m[1] \e[0m\e[0;33m\"/tmp/test4\"\e[0m\n]\n"
     end
     it 'can process a each block' do
-      expect{repl.handle_input(input)}.to output(repl_output).to_stdout
+      repl.handle_input(input)
+      expect(output.string).to eq(repl_output)
     end
   end
 
@@ -179,8 +197,9 @@ describe "PuppetRepl" do
       "$::fqdn"
     end
     it 'should be able to resolve fqdn' do
-      repl_output = " => \e[0;33m\"foo.example.com\"\e[0m\n"
-      expect{repl.handle_input(input)}.to output(repl_output).to_stdout
+      repl_output = "\n => \e[0;33m\"foo.example.com\"\e[0m\n"
+      repl.handle_input(input)
+      expect(output.string).to eq(repl_output)
     end
   end
 
@@ -189,7 +208,9 @@ describe "PuppetRepl" do
       "facts"
     end
     it 'should be able to print facts' do
-      expect{repl.handle_input(input)}.to output(/kernel/).to_stdout
+      repl_output = /kernel/
+      repl.handle_input(input)
+      expect(output.string).to match(repl_output)
     end
   end
 
@@ -198,7 +219,9 @@ describe "PuppetRepl" do
       'resources'
     end
     it 'should be able to print resources' do
-      expect{repl.handle_input(input)}.to output(/main/).to_stdout
+      repl_output = /main/
+      repl.handle_input(input)
+      expect(output.string).to match(repl_output)
     end
   end
 
@@ -207,7 +230,9 @@ describe "PuppetRepl" do
       'resources'
     end
     it 'should be able to print classes' do
-      expect{repl.handle_input(input)}.to output(/Settings/).to_stdout
+      repl_output = /Settings/
+      repl.handle_input(input)
+      expect(output.string).to match(repl_output)
     end
   end
 
@@ -216,10 +241,11 @@ describe "PuppetRepl" do
       ":set loglevel debug"
     end
     it 'should set the loglevel' do
-      output = /loglevel debug is set/
-      expect{repl.handle_input(input)}.to output(output).to_stdout
+      repl_output = /loglevel debug is set/
+      repl.handle_input(input)
+      expect(output.string).to match(repl_output)
       expect(Puppet::Util::Log.level).to eq(:debug)
-      expect(Puppet::Util::Log.destinations[:console].name).to eq(:console)
+      expect(Puppet::Util::Log.destinations[:buffer].name).to eq(:buffer)
     end
   end
 
@@ -228,16 +254,19 @@ describe "PuppetRepl" do
       "vars"
     end
     it 'display facts variable' do
-      output = /facts/
-      expect{repl.handle_input(input)}.to output(output).to_stdout
+      repl_output = /facts/
+      repl.handle_input(input)
+      expect(output.string).to match(repl_output)
     end
     it 'display local variable' do
-      expect{repl.handle_input("$var1 = 'value1'")}.to output(/value1/).to_stdout
-      expect{repl.handle_input("$var1")}.to output(/value1/).to_stdout
-
+      repl.handle_input("$var1 = 'value1'")
+      expect(output.string).to match(/value1/)
+      repl.handle_input("$var1")
+      expect(output.string).to match(/value1/)
     end
     it 'display productname variable' do
-      expect{repl.handle_input("$productname")}.to output(/VirtualBox/).to_stdout
+      repl.handle_input("$productname")
+      expect(output.string).to match(/VirtualBox/)
     end
   end
 
@@ -246,12 +275,14 @@ describe "PuppetRepl" do
       "md5('hello')"
     end
     it 'execute md5' do
-      sum = " => \e[0;33m\"5d41402abc4b2a76b9719d911017c592\"\e[0m\n"
-      expect{repl.handle_input(input)}.to output(sum).to_stdout
+      repl_output =  "\n => \e[0;33m\"5d41402abc4b2a76b9719d911017c592\"\e[0m\n"
+      repl.handle_input(input)
+      expect(output.string).to eq(repl_output)
     end
     it 'execute swapcase' do
-      output = /HELLO/
-      expect{repl.handle_input("swapcase('hello')")}.to output(output).to_stdout
+      repl_output =  /HELLO/
+      repl.handle_input("swapcase('hello')")
+      expect(output.string).to match(repl_output)
     end
 
   end

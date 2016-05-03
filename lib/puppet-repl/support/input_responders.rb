@@ -13,25 +13,24 @@ module PuppetRepl
       end
 
       def facts(args=[])
-        # convert symbols to keys
         variables = node.facts.values
-        ap(variables, {:sort_keys => true, :indent => -1})
+        variables.ai({:sort_keys => true, :indent => -1})
       end
 
       def functions(args=[])
-        puts function_map.keys.sort
+        function_map.keys.sort
       end
 
       def vars(args=[])
         # remove duplicate variables that are also in the facts hash
         variables = scope.to_hash.delete_if {| key, value | node.facts.values.key?(key) }
         variables['facts'] = 'removed by the puppet-repl' if variables.key?('facts')
-        ap 'Facts were removed for easier viewing'
-        ap(variables, {:sort_keys => true, :indent => -1})
+        output = "Facts were removed for easier viewing".ai + "\n"
+        output += variables.ai({:sort_keys => true, :indent => -1})
       end
 
       def environment(args=[])
-        puts "Puppet Environment: #{puppet_env_name}"
+        "Puppet Environment: #{puppet_env_name}"
       end
 
       def reset(args=[])
@@ -42,7 +41,7 @@ module PuppetRepl
       end
 
       def krt(args=[])
-        ap(known_resource_types, {:sort_keys => true, :indent => -1})
+        known_resource_types.ai({:sort_keys => true, :indent => -1})
       end
 
       def play(args=[])
@@ -56,15 +55,15 @@ module PuppetRepl
           res.to_s.gsub(/\[/, "['").gsub(/\]/, "']") # ensure the title has quotes
         end
         if !args.first.nil?
-          ap res[args.first.to_i]
+          res[args.first.to_i].ai
         else
-          puts "Resources not shown in any specific order".warning
-          ap res
+          output = "Resources not shown in any specific order\n".warning
+          output += res.ai
         end
       end
 
       def classes(args=[])
-        ap scope.compiler.catalog.classes
+        scope.compiler.catalog.classes.ai
       end
 
     end
