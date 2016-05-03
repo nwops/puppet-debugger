@@ -7,13 +7,23 @@ module PuppetRepl
   class Cli
     include PuppetRepl::Support
 
-    attr_accessor :settings, :log_level
+    attr_accessor :settings, :log_level, :in_buffer, :out_buffer, :html_mode
 
-    def initialize
+    def initialize(options={})
       @log_level = 'notice'
+      @out_buffer = options[:out_buffer] || $stdout
+      @html_mode = options[:html_mode] || false
+      @in_buffer = options[:in_buffer] || $stdin
       comp = Proc.new {|s| key_words.grep(/^#{Regexp.escape(s)}/) }
       Readline.completion_append_character = ""
       Readline.completion_proc = comp
+      AwesomePrint.defaults = {
+        :html => @html_mode,
+        :sort_keys => true,
+        :indent => 2
+      }
+      #Readline.output = out_buffer
+      #Readline.input = in_buffer
     end
 
     # returns a cached list of key words
@@ -26,14 +36,6 @@ module PuppetRepl
       # append a () to functions so we know they are functions
       funcs = function_map.keys.map { |k| "#{k.split('::').last}()"}
       (scoped_vars + funcs + static_responder_list).uniq.sort
-    end
-
-    def ap_formatter
-      unless @ap_formatter
-        inspector = AwesomePrint::Inspector.new({:sort_keys => true, :indent => 2})
-        @ap_formatter = AwesomePrint::Formatter.new(inspector)
-      end
-      @ap_formatter
     end
 
     def puppet_eval(input)
@@ -83,7 +85,7 @@ module PuppetRepl
         if level = args.shift
           @log_level = level
           set_log_level(level)
-          puts "loglevel #{Puppet::Util::Log.level} is set"
+          out_buffer.puts "loglevel #{Puppet::Util::Log.level} is set"
         end
       end
     end
@@ -101,35 +103,31 @@ module PuppetRepl
       when /^:set/
         handle_set(input)
       when '_'
-        puts(" => #{@last_item}")
+        out_buffer.puts(" => #{@last_item}")
       else
         begin
           result = puppet_eval(input)
           @last_item = result
-          print " => "
           output = normalize_output(result)
           if output.nil?
-            puts ""
+            out_buffer.puts ""
           else
-            ap(output)
+            out_buffer.puts output.ai
           end
         rescue ArgumentError => e
-          print " => "
-          puts e.message.fatal
+          out_buffer.puts e.message.fatal
         rescue Puppet::ResourceError => e
-          print " => "
-          puts e.message.fatal
+          out_buffer.puts e.message.fatal
         rescue Puppet::ParseErrorWithIssue => e
-          print " => "
-          puts e.message.fatal
+          out_buffer.puts e.message.fatal
         rescue Exception => e
-          puts e.message.fatal
+          out_buffer.puts e.message.fatal
         end
       end
     end
 
     def self.print_repl_desc
-      puts(<<-EOT)
+      output = <<-EOT
 Ruby Version: #{RUBY_VERSION}
 Puppet Version: #{Puppet.version}
 Puppet Repl Version: #{PuppetRepl::VERSION}
@@ -138,8 +136,11 @@ Type "exit", "functions", "vars", "krt", "facts", "resources", "classes",
      "play","reset", or "help" for more information.
 
       EOT
+      output
     end
 
+    # reads input from stdin, since readline requires a tty
+    # we cannot read from other sources
     def read_loop
       while buf = Readline.readline(">> ", true)
         handle_input(buf)
@@ -156,7 +157,7 @@ Type "exit", "functions", "vars", "krt", "facts", "resources", "classes",
         opt :run_once, "Evaulate and quit", :required => false, :default => false
       end
       options = opts.merge(options)
-      print_repl_desc
+      puts print_repl_desc
       repl_obj = new
       repl_obj.initialize_from_scope(options[:scope])
       if options[:play]

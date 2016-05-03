@@ -9,7 +9,7 @@ module PuppetRepl
           elsif File.exists? config[:play]
             play_back_string(File.read(config[:play]))
           else config[:play]
-            puts "puppet-repl can't play #{config[:play]}'"
+            out_buffer.puts "puppet-repl can't play #{config[:play]}'"
           end
         end
       end
