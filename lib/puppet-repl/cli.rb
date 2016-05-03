@@ -11,6 +11,21 @@ module PuppetRepl
 
     def initialize
       @log_level = 'notice'
+      comp = Proc.new {|s| key_words.grep(/^#{Regexp.escape(s)}/) }
+      Readline.completion_append_character = ""
+      Readline.completion_proc = comp
+    end
+
+    # returns a cached list of key words
+    def key_words
+      # because dollar signs don't work we can't display a $ sign in the keyword
+      # list so its not explicitly clear what the keyword
+      variables = scope.to_hash.keys
+      # prepend a :: to topscope variables
+      scoped_vars = variables.map { |k,v| scope.compiler.topscope.exist?(k) ? "::#{k}" : k }
+      # append a () to functions so we know they are functions
+      funcs = function_map.keys.map { |k| "#{k.split('::').last}()"}
+      (scoped_vars + funcs + static_responder_list).uniq.sort
     end
 
     def ap_formatter

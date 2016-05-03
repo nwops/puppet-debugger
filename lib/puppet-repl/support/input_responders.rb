@@ -1,14 +1,21 @@
 module PuppetRepl
   module Support
     module InputResponders
+
+      def static_responder_list
+        ["exit", "functions", "vars", "krt", "facts",
+         "resources", "classes", "play","reset", "help"
+        ]
+      end
+
       def help(args=[])
         PuppetRepl::Cli.print_repl_desc
       end
 
       def facts(args=[])
         # convert symbols to keys
-        vars = node.facts.values
-        ap(vars, {:sort_keys => true, :indent => -1})
+        variables = node.facts.values
+        ap(variables, {:sort_keys => true, :indent => -1})
       end
 
       def functions(args=[])
