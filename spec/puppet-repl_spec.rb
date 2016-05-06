@@ -1,5 +1,5 @@
 require 'spec_helper'
-
+require 'stringio'
 describe "PuppetRepl" do
 
   let(:resource) do
@@ -10,8 +10,12 @@ describe "PuppetRepl" do
     repl.handle_input('reset')
   end
 
+  let(:output) do
+    StringIO.new('', 'w')
+  end
+
   let(:repl) do
-    PuppetRepl::Cli.new
+    PuppetRepl::Cli.new(:out_buffer => output)
   end
 
   let(:input) do
@@ -33,12 +37,13 @@ describe "PuppetRepl" do
       'help'
     end
     it 'can show the help screen' do
-      repl_output = /Type \"exit\", \"functions\", \"vars\", \"krt\", \"facts\", \"resources\", \"classes\",\n     \"play\",\"reset\", or \"help\" for more information.\n\n/
-      expect{repl.handle_input(input)}.to output(/Ruby Version: #{RUBY_VERSION}\n/).to_stdout
-      expect{repl.handle_input(input)}.to output(/Puppet Version: \d.\d.\d\n/).to_stdout
-      expect{repl.handle_input(input)}.to output(/Puppet Repl Version: \d.\d.\d\n/).to_stdout
-      expect{repl.handle_input(input)}.to output(/Created by: NWOps <corey@nwops.io>\n/).to_stdout
-      expect{repl.handle_input(input)}.to output(repl_output).to_stdout
+      expected_repl_output = /Type \"exit\", \"functions\", \"vars\", \"krt\", \"facts\", \"resources\", \"classes\",\n     \"play\",\"reset\", or \"help\" for more information.\n\n/
+      repl.handle_input(input)
+      expect(output.string).to match(/Ruby Version: #{RUBY_VERSION}\n/)
+      expect(output.string).to match(/Puppet Version: \d.\d.\d\n/)
+      expect(output.string).to match(/Puppet Repl Version: \d.\d.\d\n/)
+      expect(output.string).to match(/Created by: NWOps <corey@nwops.io>\n/)
+      expect(output.string).to match(expected_repl_output)
     end
   end
 
@@ -48,7 +53,8 @@ describe "PuppetRepl" do
     end
     it 'can run' do
       repl_output = " => \n"
-      expect{repl.handle_input(input)}.to output(repl_output).to_stdout
+      repl.handle_input(input)
+      expect(output.string).to eq(repl_output)
     end
     describe 'space' do
       let(:input) do
@@ -56,7 +62,8 @@ describe "PuppetRepl" do
       end
       it 'can run' do
         repl_output = " => \n"
-        expect{repl.handle_input(input)}.to output(repl_output).to_stdout
+        repl.handle_input(input)
+        expect(output.string).to eq(repl_output)
       end
     end
   end

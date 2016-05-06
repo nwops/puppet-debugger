@@ -9,28 +9,28 @@ module PuppetRepl
       end
 
       def help(args=[])
-        out_buffer.puts PuppetRepl::Cli.print_repl_desc
+        PuppetRepl::Cli.print_repl_desc
       end
 
       def facts(args=[])
         variables = node.facts.values
-        out_buffer.puts variables.ai({:sort_keys => true, :indent => -1})
+        variables.ai({:sort_keys => true, :indent => -1})
       end
 
       def functions(args=[])
-        out_buffer.puts function_map.keys.sort
+        function_map.keys.sort
       end
 
       def vars(args=[])
         # remove duplicate variables that are also in the facts hash
         variables = scope.to_hash.delete_if {| key, value | node.facts.values.key?(key) }
         variables['facts'] = 'removed by the puppet-repl' if variables.key?('facts')
-        out_buffer.puts 'Facts were removed for easier viewing'.ai
-        out_buffer.puts variables.ai({:sort_keys => true, :indent => -1})
+        output = "Facts were removed for easier viewing".ai + "\n"
+        output += variables.ai({:sort_keys => true, :indent => -1})
       end
 
       def environment(args=[])
-        out_buffer.puts "Puppet Environment: #{puppet_env_name}"
+        "Puppet Environment: #{puppet_env_name}"
       end
 
       def reset(args=[])
@@ -41,7 +41,7 @@ module PuppetRepl
       end
 
       def krt(args=[])
-        out_buffer.puts known_resource_types.ai({:sort_keys => true, :indent => -1})
+        known_resource_types.ai({:sort_keys => true, :indent => -1})
       end
 
       def play(args=[])
@@ -55,15 +55,15 @@ module PuppetRepl
           res.to_s.gsub(/\[/, "['").gsub(/\]/, "']") # ensure the title has quotes
         end
         if !args.first.nil?
-          out_buffer.puts res[args.first.to_i].ai
+          res[args.first.to_i].ai
         else
-          puts "Resources not shown in any specific order".warning
-          out_buffer.puts res.ai
+          output = "Resources not shown in any specific order\n".warning
+          output += res.ai
         end
       end
 
       def classes(args=[])
-        out_buffer.puts scope.compiler.catalog.classes.ai
+        scope.compiler.catalog.classes.ai
       end
 
     end

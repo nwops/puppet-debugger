@@ -22,8 +22,6 @@ module PuppetRepl
         :sort_keys => true,
         :indent => 2
       }
-      #Readline.output = out_buffer
-      #Readline.input = in_buffer
     end
 
     # returns a cached list of key words
@@ -74,10 +72,16 @@ module PuppetRepl
 
     def set_log_level(level)
       Puppet::Util::Log.level = level.to_sym
-      Puppet::Util::Log.newdestination(:console)
+      buffer_log = Puppet::Util::Log.newdestination(:buffer)
+      if buffer_log
+        # if this is already set the buffer_log is nil
+        buffer_log.out_buffer = out_buffer
+        buffer_log.err_buffer = out_buffer
+      end
     end
 
     def handle_set(input)
+      output = ''
       args = input.split(' ')
       args.shift # throw away the set
       case args.shift
@@ -85,45 +89,50 @@ module PuppetRepl
         if level = args.shift
           @log_level = level
           set_log_level(level)
-          out_buffer.puts "loglevel #{Puppet::Util::Log.level} is set"
+          output = "loglevel #{Puppet::Util::Log.level} is set"
         end
       end
+      output
     end
 
     def handle_input(input)
+      output = ''
       case input
       when /^play|^facts|^vars|^functions|^classes|^resources|^krt|^environment|^reset|^help/
         args = input.split(' ')
         command = args.shift.to_sym
         if self.respond_to?(command)
-          self.send(command, args)
+          output = self.send(command, args)
         end
+        return out_buffer.puts output
       when /exit/
         exit 0
       when /^:set/
-        handle_set(input)
+        output = handle_set(input)
       when '_'
-        out_buffer.puts(" => #{@last_item}")
+        output = " => #{@last_item}"
       else
         begin
           result = puppet_eval(input)
           @last_item = result
           output = normalize_output(result)
           if output.nil?
-            out_buffer.puts ""
+            output = ""
           else
-            out_buffer.puts output.ai
+            output = output.ai
           end
         rescue ArgumentError => e
-          out_buffer.puts e.message.fatal
+          output = e.message.fatal
         rescue Puppet::ResourceError => e
-          out_buffer.puts e.message.fatal
+          output = e.message.fatal
         rescue Puppet::ParseErrorWithIssue => e
-          out_buffer.puts e.message.fatal
+          output = e.message.fatal
         rescue Exception => e
-          out_buffer.puts e.message.fatal
+          output = e.message.fatal
         end
       end
+      out_buffer.print " => "
+      out_buffer.puts output
     end
 
     def self.print_repl_desc
