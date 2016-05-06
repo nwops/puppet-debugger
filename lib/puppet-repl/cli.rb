@@ -44,15 +44,30 @@ module PuppetRepl
       parser.evaluate_string(scope, input)
     end
 
+    # looks up the type in the catalog by using the type and title
+    # and returns the resource in ral format
     def to_resource_declaration(type)
-      res = scope.catalog.resource(type.type_name, type.title)
-      res.to_ral
+      if type.respond_to?(:type_name) and type.respond_to?(:title)
+        title = type.title
+        type_name = type.type_name
+      else
+        # not all types have a type_name and title so we
+        # output to a string and parse the results
+        type_result = /(\w+)\['?(\w+)'?\]/.match(type.to_s)
+        title = type_result[2]
+        type_name = type_result[1]
+      end
+      res = scope.catalog.resource(type_name, title)
+      if res
+        return res.to_ral
+      end
+      # don't return anything or returns nil if item is not in the catalog
     end
 
     # ruturns a formatted array
     def expand_resource_type(types)
       output = [types].flatten.map do |t|
-        if t.class.to_s == 'Puppet::Pops::Types::PResourceType'
+        if t.class.to_s =~ /Puppet::Pops::Types/
           to_resource_declaration(t)
         else
           t
@@ -68,20 +83,10 @@ module PuppetRepl
           return output.first
         end
         return output
-      elsif result.instance_of?(Puppet::Pops::Types::PResourceType)
+      elsif result.class.to_s =~ /Puppet::Pops::Types/
         return to_resource_declaration(result)
       end
       result
-    end
-
-    def set_log_level(level)
-      Puppet::Util::Log.level = level.to_sym
-      buffer_log = Puppet::Util::Log.newdestination(:buffer)
-      if buffer_log
-        # if this is already set the buffer_log is nil
-        buffer_log.out_buffer = out_buffer
-        buffer_log.err_buffer = out_buffer
-      end
     end
 
     def handle_set(input)

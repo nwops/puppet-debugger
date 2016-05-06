@@ -9,11 +9,12 @@ module AwesomePrint
     # about printing different puppet objects
     def cast_with_puppet_resource(object, type)
       cast = cast_without_puppet_resource(object, type)
-      if (defined?(::Puppet::Type)) && (object.is_a?(::Puppet::Type))
+      # check the object to see if it has an acestor (< ) of the specified type
+      if (defined?(::Puppet::Type)) && (object.class < ::Puppet::Type)
         cast = :puppet_type
-      elsif (defined?(::Puppet::Pops::Types)) && (object.is_a?(::Puppet::Pops::Types))
-        cast = :puppet_type  
-      elsif (defined?(::Puppet::Parser::Resource)) && (object.is_a?(::Puppet::Parser::Resource))
+      elsif (defined?(::Puppet::Pops::Types)) && (object.class < ::Puppet::Pops::Types)
+        cast = :puppet_type
+      elsif (defined?(::Puppet::Parser::Resource)) && (object.class < ::Puppet::Parser::Resource)
         cast = :puppet_resource
       end
       cast

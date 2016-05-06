@@ -40,6 +40,17 @@ module PuppetRepl
         set_log_level(log_level)
       end
 
+      def set_log_level(level)
+        Puppet::Util::Log.level = level.to_sym
+        buffer_log = Puppet::Util::Log.newdestination(:buffer)
+        if buffer_log
+          # if this is already set the buffer_log is nil
+          buffer_log.out_buffer = out_buffer
+          buffer_log.err_buffer = out_buffer
+        end
+        nil
+      end
+
       def krt(args=[])
         known_resource_types.ai({:sort_keys => true, :indent => -1})
       end

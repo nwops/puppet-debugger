@@ -225,6 +225,17 @@ describe "PuppetRepl" do
     end
   end
 
+  describe 'print class' do
+    let(:input) do
+      "Class['settings']"
+    end
+    it 'should be able to print classes' do
+      repl_output = /Settings/
+      repl.handle_input(input)
+      expect(output.string).to match(repl_output)
+    end
+  end
+
   describe 'print classes' do
     let(:input) do
       'resources'
@@ -286,4 +297,30 @@ describe "PuppetRepl" do
     end
 
   end
+
+  describe 'unidentified object' do
+    let(:repl_output) { "\n => \n" }
+    describe "Node['foot']" do
+      let(:input) { subject }
+      it 'returns string' do
+        repl.handle_input(input)
+        expect(output.string).to eq(repl_output)
+      end
+    end
+    describe "Puppet::Pops::Types::PStringType" do
+      let(:input) { subject }
+      it 'returns string' do
+        repl.handle_input(input)
+        expect(output.string).to eq(repl_output)
+      end
+    end
+    describe 'Facts' do
+      let(:input) { subject }
+      it 'returns string' do
+        repl.handle_input(input)
+        expect(output.string).to eq(repl_output)
+      end
+    end
+  end
+
 end
