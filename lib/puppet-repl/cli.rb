@@ -14,8 +14,12 @@ module PuppetRepl
       @out_buffer = options[:out_buffer] || $stdout
       @html_mode = options[:html_mode] || false
       @in_buffer = options[:in_buffer] || $stdin
-      comp = Proc.new {|s| key_words.grep(/^#{Regexp.escape(s)}/) }
+      comp = Proc.new do |s|
+        key_words.grep(/^#{Regexp.escape(s)}/)
+      end
       Readline.completion_append_character = ""
+      Readline.basic_word_break_characters = " "
+
       Readline.completion_proc = comp
       AwesomePrint.defaults = {
         :html => @html_mode,
@@ -30,7 +34,7 @@ module PuppetRepl
       # list so its not explicitly clear what the keyword
       variables = scope.to_hash.keys
       # prepend a :: to topscope variables
-      scoped_vars = variables.map { |k,v| scope.compiler.topscope.exist?(k) ? "::#{k}" : k }
+      scoped_vars = variables.map { |k,v| scope.compiler.topscope.exist?(k) ? "$::#{k}" : "$#{k}" }
       # append a () to functions so we know they are functions
       funcs = function_map.keys.map { |k| "#{k.split('::').last}()"}
       (scoped_vars + funcs + static_responder_list).uniq.sort
