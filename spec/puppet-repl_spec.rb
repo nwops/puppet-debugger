@@ -37,7 +37,7 @@ describe "PuppetRepl" do
       'help'
     end
     it 'can show the help screen' do
-      expected_repl_output = /Type \"exit\", \"functions\", \"vars\", \"krt\", \"facts\", \"resources\", \"classes\",\n     \"play\",\"reset\", or \"help\" for more information.\n\n/
+      expected_repl_output = /Type \"exit\", \"functions\", \"vars\", \"krt\", \"facts\", \"resources\", \"classes\",\n     \"play\", \"classification\", \"reset\", or \"help\" for more information.\n\n/
       repl.handle_input(input)
       expect(output.string).to match(/Ruby Version: #{RUBY_VERSION}\n/)
       expect(output.string).to match(/Puppet Version: \d.\d.\d\n/)
@@ -141,6 +141,17 @@ describe "PuppetRepl" do
     end
   end
 
+  describe 'classification' do
+    let(:input) do
+      "classification"
+    end
+
+    it 'can process a file' do
+      repl.handle_input(input)
+      expect(output.string).to eq("\n[]\n")
+    end
+  end
+
   describe 'reset' do
     let(:input) do
       "file{'/tmp/reset': ensure => present}"
@@ -153,7 +164,6 @@ describe "PuppetRepl" do
       repl.handle_input('reset')
       repl.handle_input(input)
       expect(output.string).to match(repl_output)
-
     end
 
     describe 'loglevel' do
@@ -295,7 +305,6 @@ describe "PuppetRepl" do
       repl.handle_input("swapcase('hello')")
       expect(output.string).to match(repl_output)
     end
-
   end
 
   describe 'unidentified object' do
@@ -323,4 +332,104 @@ describe "PuppetRepl" do
     end
   end
 
+  describe 'remote node' do
+    let(:node_obj) do
+      YAML.load_file(File.join(fixtures_dir, 'node_obj.yaml'))
+    end
+    before :each do
+      allow(repl).to receive(:get_remote_node).and_return(node_obj)
+      allow(repl).to receive(:remote_node_name).and_return('puppetdev.localdomain')
+    end
+
+    it 'set node name' do
+      require 'pry'
+      expect(repl.remote_node_name = 'puppetdev.localdomain').to eq("puppetdev.localdomain")
+    end
+
+    describe 'print classes' do
+      let(:input) do
+        'resources'
+      end
+      it 'should be able to print classes' do
+        repl_output = /Settings/
+        repl.handle_input(input)
+        expect(output.string).to match(repl_output)
+      end
+    end
+
+    describe 'vars' do
+      let(:input) do
+        "vars"
+      end
+      it 'display facts variable' do
+        repl_output = /facts/
+        repl.handle_input(input)
+        expect(output.string).to match(repl_output)
+      end
+      it 'display local variable' do
+        repl.handle_input("$var1 = 'value1'")
+        expect(output.string).to match(/value1/)
+        repl.handle_input("$var1")
+        expect(output.string).to match(/value1/)
+      end
+      it 'display productname variable' do
+        repl.handle_input("$productname")
+        expect(output.string).to match(/VirtualBox/)
+      end
+    end
+
+    describe 'execute functions' do
+      let(:input) do
+        "md5('hello')"
+      end
+      it 'execute md5' do
+        repl_output =  "\n => \e[0;33m\"5d41402abc4b2a76b9719d911017c592\"\e[0m\n"
+        repl.handle_input(input)
+        expect(output.string).to eq(repl_output)
+      end
+      it 'execute swapcase' do
+        repl_output =  /HELLO/
+        repl.handle_input("swapcase('hello')")
+        expect(output.string).to match(repl_output)
+      end
+    end
+
+    describe 'set node' do
+      let(:input) do
+        ":set node 'puppetdev.localdomain'"
+      end
+
+      it 'puppetdev.localdomain' do
+        repl_output = "\nFetching node puppetdev.localdomain\n => \n"
+        repl.handle_input(input)
+        expect(output.string).to eq(repl_output)
+      end
+    end
+
+    describe 'reset' do
+      let(:input) do
+        "file{'/tmp/reset': ensure => present}"
+      end
+
+      it 'can process a file' do
+        repl_output = /Puppet::Type::File/
+        repl.handle_input(input)
+        expect(output.string).to match(repl_output)
+        repl.handle_input('reset')
+        repl.handle_input(input)
+        expect(output.string).to match(repl_output)
+      end
+    end
+
+    describe 'classification' do
+      let(:input) do
+        "classification"
+      end
+
+      it 'can process a file' do
+        repl.handle_input(input)
+        expect(output.string).to eq("\n[]\n")
+      end
+    end
+  end
 end

@@ -1,6 +1,6 @@
 require 'simplecov'
 require_relative '../lib/puppet-repl'
-
+require 'yaml'
 module SimpleCov::Configuration
   def clean_filters
     @filters = []
@@ -10,6 +10,7 @@ end
 SimpleCov.configure do
   clean_filters
   load_adapter 'test_frameworks'
+  add_filter "/vendor/"
 end
 
 ENV["COVERAGE"] && SimpleCov.start do

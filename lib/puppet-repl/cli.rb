@@ -26,6 +26,7 @@ module PuppetRepl
         :sort_keys => true,
         :indent => 2
       }
+      do_initialize
     end
 
     # returns a cached list of key words
@@ -89,39 +90,24 @@ module PuppetRepl
       result
     end
 
-    def handle_set(input)
-      output = ''
-      args = input.split(' ')
-      args.shift # throw away the set
-      case args.shift
-      when /loglevel/
-        if level = args.shift
-          @log_level = level
-          set_log_level(level)
-          output = "loglevel #{Puppet::Util::Log.level} is set"
-        end
-      end
-      output
-    end
-
     def handle_input(input)
-      output = ''
-      case input
-      when /^play|^facts|^vars|^functions|^classes|^resources|^krt|^environment|^reset|^help/
-        args = input.split(' ')
-        command = args.shift.to_sym
-        if self.respond_to?(command)
-          output = self.send(command, args)
-        end
-        return out_buffer.puts output
-      when /exit/
-        exit 0
-      when /^:set/
-        output = handle_set(input)
-      when '_'
-        output = " => #{@last_item}"
-      else
-        begin
+      begin
+        output = ''
+        case input
+        when /^play|^classification|^facts|^vars|^functions|^classes|^resources|^krt|^environment|^reset|^help/
+          args = input.split(' ')
+          command = args.shift.to_sym
+          if self.respond_to?(command)
+            output = self.send(command, args)
+          end
+          return out_buffer.puts output
+        when /exit/
+          exit 0
+        when /^:set/
+          output = handle_set(input)
+        when '_'
+          output = " => #{@last_item}"
+        else
           result = puppet_eval(input)
           @last_item = result
           output = normalize_output(result)
@@ -130,15 +116,21 @@ module PuppetRepl
           else
             output = output.ai
           end
-        rescue ArgumentError => e
-          output = e.message.fatal
-        rescue Puppet::ResourceError => e
-          output = e.message.fatal
-        rescue Puppet::ParseErrorWithIssue => e
-          output = e.message.fatal
-        rescue Exception => e
-          output = e.message.fatal
         end
+      rescue Errno::ETIMEDOUT => e
+        output = e.message.fatal
+      rescue ArgumentError => e
+        output = e.message.fatal
+      rescue Puppet::ResourceError => e
+        output = e.message.fatal
+      rescue Puppet::ParseErrorWithIssue => e
+        output = e.message.fatal
+      rescue PuppetRepl::Exception::FatalError => e
+        output = e.message.fatal
+        out_buffer.puts output
+        exit 1
+      rescue PuppetRepl::Exception::Error => e
+        output = e.message.fatal
       end
       out_buffer.print " => "
       out_buffer.puts output
@@ -151,7 +143,7 @@ Puppet Version: #{Puppet.version}
 Puppet Repl Version: #{PuppetRepl::VERSION}
 Created by: NWOps <corey@nwops.io>
 Type "exit", "functions", "vars", "krt", "facts", "resources", "classes",
-     "play","reset", or "help" for more information.
+     "play", "classification", "reset", or "help" for more information.
 
       EOT
       output
@@ -172,11 +164,19 @@ Type "exit", "functions", "vars", "krt", "facts", "resources", "classes",
     def self.start(options={:scope => nil})
       opts = Trollop::options do
         opt :play, "Url or file to load from", :required => false, :type => String
-        opt :run_once, "Evaulate and quit", :required => false, :default => false
+        opt :run_once, "Evaluate and quit", :required => false, :default => false
+        opt :node_name, "Remote Node to grab facts from", :required => false, :type => String
       end
       options = opts.merge(options)
       puts print_repl_desc
       repl_obj = new
+      begin
+        repl_obj.remote_node_name = opts[:node_name] if opts[:node_name]
+      rescue StandardError => e
+        err = parse_error(e)
+        puts err.message.fatal
+        exit 1
+      end
       repl_obj.initialize_from_scope(options[:scope])
       if options[:play]
         repl_obj.play_back(opts)

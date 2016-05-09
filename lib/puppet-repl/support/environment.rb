@@ -4,15 +4,15 @@ module PuppetRepl
       # creates a puppet environment given a module path and environment name
       # this is cached
       def puppet_environment
-        unless @puppet_environment
-          do_initialize
-          @puppet_environment = Puppet::Node::Environment.create(
+        @puppet_environment ||= create_environment
+      end
+
+      def create_environment
+        @puppet_environment = Puppet::Node::Environment.create(
           default_puppet_env_name,
           default_modules_paths,
           default_manifests_dir
-          )
-        end
-        @puppet_environment
+        )
       end
 
       def set_environment(value)

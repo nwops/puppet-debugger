@@ -9,7 +9,6 @@ module PuppetRepl
       # @return [Scope] puppet scope object
       def scope
         unless @scope
-          do_initialize
           @scope ||= create_scope(node)
         end
         @scope
@@ -24,7 +23,12 @@ module PuppetRepl
         load_lib_dirs
         # compiling will load all the facts into the scope
         # without this step facts will not get resolved
-        scope.compiler.compile # this will load everything into the scope
+        begin
+          scope.compiler.compile # this will load everything into the scope
+        rescue StandardError => e
+          err = parse_error(e)
+          raise err
+        end
         scope
       end
 

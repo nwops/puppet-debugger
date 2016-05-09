@@ -16,6 +16,29 @@ module PuppetRepl
     include PuppetRepl::Support::InputResponders
     include PuppetRepl::Support::Play
 
+    # parses the error type into a more useful error message defined in errors.rb
+    # returns new error object or the original if error cannot be parsed
+    def self.parse_error(error)
+      case error
+      when Net::HTTPError
+        PuppetRepl::Exception::AuthError.new(:message => error.message)
+      when Errno::ECONNREFUSED
+        PuppetRepl::Exception::ConnectError.new(:message => error.message)
+      when Puppet::Error
+        if error.message =~ /could\ not\ find\ class/i
+          PuppetRepl::Exception::NoClassError.new(:default_modules_paths => default_modules_paths,
+           :message => error.message)
+        elsif error.message =~ /default\ node/i
+          PuppetRepl::Exception::NodeDefinitionError.new(:default_site_manifest => default_site_manifest,
+           :message => error.message)
+        else
+          error
+        end
+      else
+        error
+      end
+    end
+
     # returns an array of module directories, generally this is the only place
     # to look for puppet code by default.  This is read from the puppet configuration
     def default_modules_paths
@@ -90,6 +113,10 @@ module PuppetRepl
 
     def default_manifests_dir
       File.join(Puppet[:environmentpath],default_puppet_env_name,'manifests')
+    end
+
+    def default_site_manifest
+      File.join(default_manifests_dir, 'site.pp')
     end
 
   end
