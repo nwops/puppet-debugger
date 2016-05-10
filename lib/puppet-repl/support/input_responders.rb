@@ -48,7 +48,8 @@ module PuppetRepl
       end
 
       def functions(args=[])
-        function_map.keys.sort
+        filter = args.first || ''
+        function_map.keys.sort.grep(/^#{Regexp.escape(filter)}/)
       end
 
       def vars(args=[])
