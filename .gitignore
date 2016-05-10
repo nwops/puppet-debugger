@@ -1,4 +1,6 @@
 # rcov generated
+bundler
+vendor
 coverage
 coverage.data
 
