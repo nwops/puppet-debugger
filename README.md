@@ -42,9 +42,13 @@ in the repl.
 ## Interactive demo
 I have put together a repo with a few setup instructions that will assist you in setting up a "mock" environment
 for usage with the puppet-repl.  This was originally intended when giving a demo of the repl, but also seems
-useful for other people. 
+useful for other people.
 
 https://github.com/nwops/puppet-repl-demo
+
+## Web demo
+There is a demo of the [puppet-repl](https://www.puppet-repl.com) online but is somewhat
+limited at this time. In the future we will be adding lots of awesome features to the web repl.
 
 ## Usage
 Puppet-repl will only parse and evaulate your code.  It will not build a catalog
@@ -141,7 +145,7 @@ To see the current variables in the scope use the  `vars` keyword.
 ```
 ## Using functions
 Functions will run and produce the desired output.  If you type the word `functions`
-a list of available functions will be displayed on the screen.
+a list of available functions will be displayed on the screen along with a namespace to help you identify where they came from.
 
 ```
 >> split('hello/there/one/two/three','/')
@@ -177,11 +181,10 @@ Debug: hiera(): Looking for data source nodes/foo.example.com
 Debug: hiera(): Found value in nodes/foo.example.com
  => foo
 ```
-## Troubleshooting
 
-## Forward
-I was just playing around and created this simple tool.  Its beta quality,
-and a ton of features need to be added. Please create a issue if you see a bug or feature that should be added.
+## Troubleshooting
+Please file an issue so we can track bugs.
+
 
 Pull requests welcomed.
 
