@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "puppet-repl"
-  s.version = "0.1.1"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Corey Osman"]
-  s.date = "2016-04-17"
+  s.date = "2016-05-10"
   s.description = "A interactive command line tool for evaluating the puppet language"
   s.email = "corey@nwops.io"
   s.executables = ["prepl"]
@@ -35,6 +35,7 @@ Gem::Specification.new do |s|
     "lib/puppet-repl/support.rb",
     "lib/puppet-repl/support/compiler.rb",
     "lib/puppet-repl/support/environment.rb",
+    "lib/puppet-repl/support/errors.rb",
     "lib/puppet-repl/support/facts.rb",
     "lib/puppet-repl/support/functions.rb",
     "lib/puppet-repl/support/input_responders.rb",
@@ -45,6 +46,7 @@ Gem::Specification.new do |s|
     "lib/version.rb",
     "puppet-repl.gemspec",
     "spec/fixtures/environments/production/manifests/site.pp",
+    "spec/fixtures/node_obj.yaml",
     "spec/fixtures/sample_manifest.pp",
     "spec/prepl_spec.rb",
     "spec/puppet-repl_spec.rb",
@@ -64,7 +66,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<puppet>, [">= 3.8"])
       s.add_runtime_dependency(%q<facterdb>, [">= 0"])
       s.add_runtime_dependency(%q<awesome_print>, [">= 0"])
-      s.add_development_dependency(%q<pry>, [">= 0"])
+      s.add_runtime_dependency(%q<pry>, [">= 0"])
       s.add_development_dependency(%q<rdoc>, ["~> 3.12"])
     else
       s.add_dependency(%q<puppet>, [">= 3.8"])
