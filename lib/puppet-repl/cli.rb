@@ -117,6 +117,8 @@ module PuppetRepl
             output = output.ai
           end
         end
+      rescue LoadError => e
+        output = e.message.fatal
       rescue Errno::ETIMEDOUT => e
         output = e.message.fatal
       rescue ArgumentError => e
@@ -170,13 +172,7 @@ Type "exit", "functions", "vars", "krt", "facts", "resources", "classes",
       options = opts.merge(options)
       puts print_repl_desc
       repl_obj = new
-      begin
-        repl_obj.remote_node_name = opts[:node_name] if opts[:node_name]
-      rescue StandardError => e
-        err = parse_error(e)
-        puts err.message.fatal
-        exit 1
-      end
+      repl_obj.remote_node_name = opts[:node_name] if opts[:node_name]
       repl_obj.initialize_from_scope(options[:scope])
       if options[:play]
         repl_obj.play_back(opts)

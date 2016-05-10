@@ -332,17 +332,35 @@ describe "PuppetRepl" do
     end
   end
 
+
+
   describe 'remote node' do
     let(:node_obj) do
       YAML.load_file(File.join(fixtures_dir, 'node_obj.yaml'))
     end
+    let(:node_name) do
+      'puppetdev.localdomain'
+    end
     before :each do
-      allow(repl).to receive(:get_remote_node).and_return(node_obj)
-      allow(repl).to receive(:remote_node_name).and_return('puppetdev.localdomain')
+      repl.set_node(nil)
+      repl.set_scope(nil)
+      repl.remote_node_name = node_name
+      allow(repl).to receive(:get_remote_node).with(node_name).and_return(node_obj)
+    end
+
+    describe 'use defaults when invalid name' do
+      let(:node_obj) do
+        YAML.load_file(File.join(fixtures_dir, 'invalid_node_obj.yaml'))
+      end
+      let(:node_name) do
+        'invalid.localdomain'
+      end
+      it 'name' do
+        expect(repl.node.name).to eq('foo.example.com')
+      end
     end
 
     it 'set node name' do
-      require 'pry'
       expect(repl.remote_node_name = 'puppetdev.localdomain').to eq("puppetdev.localdomain")
     end
 
@@ -374,7 +392,7 @@ describe "PuppetRepl" do
       end
       it 'display productname variable' do
         repl.handle_input("$productname")
-        expect(output.string).to match(/VirtualBox/)
+        expect(output.string).to match(/VMware Virtual Platform/)
       end
     end
 
@@ -383,9 +401,9 @@ describe "PuppetRepl" do
         "md5('hello')"
       end
       it 'execute md5' do
-        repl_output =  "\n => \e[0;33m\"5d41402abc4b2a76b9719d911017c592\"\e[0m\n"
+        repl_output =  /5d41402abc4b2a76b9719d911017c592/
         repl.handle_input(input)
-        expect(output.string).to eq(repl_output)
+        expect(output.string).to match(repl_output)
       end
       it 'execute swapcase' do
         repl_output =  /HELLO/
@@ -426,9 +444,9 @@ describe "PuppetRepl" do
         "classification"
       end
 
-      it 'can process a file' do
+      it 'shows certificate_authority_host' do
         repl.handle_input(input)
-        expect(output.string).to eq("\n[]\n")
+        expect(output.string).to match(/certificate_authority_host/)
       end
     end
   end

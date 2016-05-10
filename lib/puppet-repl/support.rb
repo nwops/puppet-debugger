@@ -18,7 +18,7 @@ module PuppetRepl
 
     # parses the error type into a more useful error message defined in errors.rb
     # returns new error object or the original if error cannot be parsed
-    def self.parse_error(error)
+    def parse_error(error)
       case error
       when Net::HTTPError
         PuppetRepl::Exception::AuthError.new(:message => error.message)

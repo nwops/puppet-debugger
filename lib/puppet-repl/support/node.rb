@@ -7,15 +7,17 @@ module PuppetRepl
       def create_node
         if remote_node_name
           # refetch
-          set_node_from_name(remote_node_name)
-        else
+          node_obj = set_node_from_name(remote_node_name)
+        end
+        unless node_obj
           options = {}
           options[:parameters] = default_facts.values
           options[:facts] = default_facts
           options[:classes] = []
           options[:environment] = puppet_environment
-          Puppet::Node.new(default_facts.values['fqdn'], options)
+          node_obj = Puppet::Node.new(default_facts.values['fqdn'], options)
         end
+        node_obj
       end
 
       def remote_node_name=(name)
@@ -40,10 +42,15 @@ module PuppetRepl
       def set_node_from_name(name)
         out_buffer.puts ("Fetching node #{name}")
         node_object = get_remote_node(name)
-        # remove trusted data as it will later get populated during compilation
-        node_object.trusted_data = node_object.parameters.delete('trusted')
-        remote_node_name = node_object.name
-        set_node(node_object)
+        if node_object && node_object.parameters
+          # remove trusted data as it will later get populated during compilation
+          node_object.trusted_data = node_object.parameters.delete('trusted')
+          remote_node_name = node_object.name
+          set_node(node_object)
+        else
+          out_buffer.puts "Remote node with name #{name} was not found, using defaults"
+          remote_node_name = nil  # clear out the remote name
+        end
       end
 
       def set_node(value)
