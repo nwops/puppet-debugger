@@ -332,8 +332,6 @@ describe "PuppetRepl" do
     end
   end
 
-
-
   describe 'remote node' do
     let(:node_obj) do
       YAML.load_file(File.join(fixtures_dir, 'node_obj.yaml'))
@@ -348,15 +346,36 @@ describe "PuppetRepl" do
       allow(repl).to receive(:get_remote_node).with(node_name).and_return(node_obj)
     end
 
+    describe 'set' do
+      before :each do
+        repl.reset
+        repl.remote_node_name = nil
+        allow(repl).to receive(:get_remote_node).with(node_name).and_return(node_obj)
+      end
+      let(:input) do
+        ":set node #{node_name}"
+      end
+      it "return node name" do
+        repl.handle_input(input)
+        repl.handle_input('$::hostname')
+        expect(output.string).to match(/puppetdev.localdomain/)
+      end
+
+      it "return classification" do
+        repl.handle_input(input)
+        repl.handle_input('classification')
+        expect(output.string).to match(/certificate_authority_host/)
+      end
+    end
+
     describe 'facts' do
       let(:input) do
         "$::facts['os']['family'].downcase == 'debian'"
       end
-
       it 'fact evaulation should return false' do
-        repl_output = 'false'
+        repl_output = /false/
         repl.handle_input(input)
-        expect(output.string).to eq(repl_output)
+        expect(output.string).to match(repl_output)
       end
 
     end
@@ -426,13 +445,13 @@ describe "PuppetRepl" do
 
     describe 'set node' do
       let(:input) do
-        ":set node 'puppetdev.localdomain'"
+        ":set node puppetdev.localdomain"
       end
 
       it 'puppetdev.localdomain' do
         repl_output = "\nFetching node puppetdev.localdomain\n => \n"
         repl.handle_input(input)
-        expect(output.string).to eq(repl_output)
+        expect(output.string).to match('puppetdev.localdomain')
       end
     end
 
@@ -461,5 +480,14 @@ describe "PuppetRepl" do
         expect(output.string).to match(/certificate_authority_host/)
       end
     end
+  end
+
+  it 'reset does not change node name' do
+    repl.remote_node_name = 'sample_name'
+    before = repl.remote_node_name
+    expect(before).to eq('sample_name')
+    repl.reset
+    after = repl.remote_node_name
+    expect(after).to eq('sample_name')
   end
 end

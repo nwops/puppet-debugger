@@ -20,6 +20,10 @@ module PuppetRepl
         node_obj
       end
 
+      def set_remote_node_name(name)
+        @remote_node_name = name
+      end
+
       def remote_node_name=(name)
         @remote_node_name = name
       end
@@ -39,13 +43,30 @@ module PuppetRepl
         indirection.find(name, :environment => puppet_environment)
       end
 
+      # this is a hack to get around that the puppet node fact face does not return
+      # a proper node object with the facts hash populated
+      # returns a node object with a proper facts hash
+      def convert_remote_node(node)
+        options = {}
+        trusted_data = node.parameters.delete('trusted')
+        options[:parameters] = node.parameters || {}
+        options[:facts] = Puppet::Node::Facts.new(node.name,node.parameters)
+        options[:classes] = node.classes
+        options[:environment] = puppet_environment
+        node_object = Puppet::Node.new(node.name, options)
+        node_object.trusted_data = trusted_data
+        node_object
+      end
+
+      # query the remote puppet server and retrieve the node object
+      #
       def set_node_from_name(name)
         out_buffer.puts ("Fetching node #{name}")
         node_object = get_remote_node(name)
         if node_object && node_object.parameters
           # remove trusted data as it will later get populated during compilation
-          node_object.trusted_data = node_object.parameters.delete('trusted')
           remote_node_name = node_object.name
+          node_object = convert_remote_node(node_object)
           set_node(node_object)
         else
           out_buffer.puts "Remote node with name #{name} was not found, using defaults"
