@@ -348,6 +348,18 @@ describe "PuppetRepl" do
       allow(repl).to receive(:get_remote_node).with(node_name).and_return(node_obj)
     end
 
+    describe 'facts' do
+      let(:input) do
+        "$::facts['os']['family'].downcase == 'debian'"
+      end
+
+      it 'fact evaulation should return false' do
+        repl_output = 'false'
+        repl.handle_input(input)
+        expect(output.string).to eq(repl_output)
+      end
+
+    end
     describe 'use defaults when invalid name' do
       let(:node_obj) do
         YAML.load_file(File.join(fixtures_dir, 'invalid_node_obj.yaml'))
