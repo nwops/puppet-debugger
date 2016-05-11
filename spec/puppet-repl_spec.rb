@@ -130,17 +130,6 @@ describe "PuppetRepl" do
     end
   end
 
-  describe 'bad resources' do
-    let(:input) do
-      "file{'/tmp/test': ensure => present, mode => 755}"
-    end
-    xit 'can process' do  #this fails with puppet 3.8 and passes with others
-      repl_output = /must be a string/
-      repl.handle_input(input)
-      expect(output.string).to match(repl_output)
-    end
-  end
-
   describe 'classification' do
     let(:input) do
       "classification"

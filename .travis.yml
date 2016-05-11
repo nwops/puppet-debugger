@@ -21,3 +21,9 @@ matrix:
   exclude:
     - rvm: 2.2.1
       env: PUPPET_GEM_VERSION="~> 3.8"
+    - rvm: 1.9.3
+      env: PUPPET_GEM_VERSION="~> 4.4"
+    - rvm: 1.9.3
+      env: PUPPET_GEM_VERSION="~> 4.3"
+    - rvm: 1.9.3
+      env: PUPPET_GEM_VERSION="~> 4.2"    

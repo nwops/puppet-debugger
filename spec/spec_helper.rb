@@ -9,12 +9,13 @@ end
 
 SimpleCov.configure do
   clean_filters
-  load_adapter 'test_frameworks'
-  add_filter "/vendor/"
+  load_profile 'test_frameworks'
 end
 
-ENV["COVERAGE"] && SimpleCov.start do
+SimpleCov.start do
   add_filter "/.rvm/"
+  add_filter "vendor"
+  add_filter "bundler"
 end
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
