@@ -35,16 +35,8 @@ module PuppetRepl
         output
       end
 
-      def node_facts
-        if node.facts
-          node.facts.values
-        else
-          node.parameters
-        end
-      end
-
       def facts(args=[])
-        variables = node_facts
+        variables = node.facts.values
         variables.ai({:sort_keys => true, :indent => -1})
       end
 
@@ -55,7 +47,7 @@ module PuppetRepl
 
       def vars(args=[])
         # remove duplicate variables that are also in the facts hash
-        variables = scope.to_hash.delete_if {| key, value | node_facts.key?(key) }
+        variables = scope.to_hash.delete_if {| key, value | node.facts.values.key?(key) }
         variables['facts'] = 'removed by the puppet-repl' if variables.key?('facts')
         output = "Facts were removed for easier viewing".ai + "\n"
         output += variables.ai({:sort_keys => true, :indent => -1})
