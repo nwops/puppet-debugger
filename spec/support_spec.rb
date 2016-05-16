@@ -68,4 +68,85 @@ describe 'support' do
     expect(repl.node.facts.values['fqdn']).to eq('foo.example.com')
   end
 
+  describe 'play url' do
+
+    describe 'unsupported' do
+      let(:url) { 'https://bitbuck.com/master/lib/log_helper.rb'}
+      let(:converted) { 'https://bitbuck.com/master/lib/log_helper.rb' }
+      it do
+        expect(repl.convert_to_text(url)).to eq(converted)
+      end
+    end
+    describe 'gitlab' do
+      describe 'blob' do
+        let(:url) { 'https://gitlab.com/nwops/prepl-web/blob/master/lib/log_helper.rb'}
+        let(:converted) { 'https://gitlab.com/nwops/prepl-web/raw/master/lib/log_helper.rb' }
+        it do
+          expect(repl.convert_to_text(url)).to eq(converted)
+        end
+      end
+
+      describe 'raw' do
+        let(:url) { 'https://gitlab.com/nwops/prepl-web/raw/master/lib/log_helper.rb'}
+        let(:converted) { 'https://gitlab.com/nwops/prepl-web/raw/master/lib/log_helper.rb' }
+        it do
+          expect(repl.convert_to_text(url)).to eq(converted)
+        end
+      end
+
+      describe 'snippet' do
+
+        describe 'not raw' do
+          let(:url) { 'https://gitlab.com/snippets/19471'}
+          let(:converted) { 'https://gitlab.com/snippets/19471/raw'}
+          it do
+            expect(repl.convert_to_text(url)).to eq(converted)
+          end
+        end
+
+        describe 'raw' do
+          let(:url) { 'https://gitlab.com/snippets/19471/raw'}
+          let(:converted) { 'https://gitlab.com/snippets/19471/raw'}
+          it do
+            expect(repl.convert_to_text(url)).to eq(converted)
+          end
+        end
+      end
+    end
+
+    describe 'github' do
+      describe 'raw' do
+        let(:url) { 'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw'}
+        let(:converted) { 'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw' }
+        it do
+          expect(repl.convert_to_text(url)).to eq(converted)
+        end
+      end
+      describe 'raw non gist' do
+        let(:url) { 'https://raw.githubusercontent.com/nwops/puppet-repl/master/lib/puppet-repl.rb'}
+        let(:converted) { 'https://raw.githubusercontent.com/nwops/puppet-repl/master/lib/puppet-repl.rb' }
+        it do
+          expect(repl.convert_to_text(url)).to eq(converted)
+        end
+
+      end
+
+      describe 'blob' do
+        let(:url) { 'https://github.com/nwops/puppet-repl/blob/master/lib/puppet-repl.rb'}
+        let(:converted) { 'https://github.com/nwops/puppet-repl/raw/master/lib/puppet-repl.rb' }
+        it do
+          expect(repl.convert_to_text(url)).to eq(converted)
+        end
+      end
+
+      describe 'gist' do
+        let(:url) { 'https://gist.github.com/logicminds/f9b1ac65a3a440d562b0'}
+        let(:converted) { 'https://gist.github.com/logicminds/f9b1ac65a3a440d562b0.txt' }
+        it do
+          expect(repl.convert_to_text(url)).to eq(converted)
+        end
+      end
+    end
+  end
+
 end
