@@ -14,18 +14,39 @@ module PuppetRepl
         end
       end
 
-      def play_back_url(url)
-        require 'open-uri'
-        require 'net/http'
-
-        if url[/gist.github.com\/[a-z\d]+$/]
-          url += '.txt'
-        elsif url[/github.com.*blob/]
-          url.sub!('blob', 'raw')
+      def convert_to_text(url)
+        require 'uri'
+        url_data = URI(url)
+        case url_data.host
+        when /^github.com/
+          if url_data.path =~ /blob/
+            url.gsub('blob', 'raw')
+          end
+        when /^gist.github.com/
+          unless url_data.path =~ /raw/
+            url = url += '.txt'
+          end
+        when /^gitlab.com/
+          if url_data.path =~ /snippets/
+            url += '/raw' unless url_data.path =~ /raw/
+            url
+          else
+            url.gsub('blob', 'raw')
+          end
+        else
+          url
         end
-        play_back_string open(url).read
-      rescue SocketError
-        abort "puppet-repl can't play `#{url}'"
+      end
+
+      def play_back_url(url)
+        begin
+          require 'open-uri'
+          require 'net/http'
+          converted_url = convert_to_text(url)
+          play_back_string open(converted_url).read
+        rescue SocketError
+          abort "puppet-repl can't play `#{converted_url}'"
+        end
       end
 
       def play_back_string(str)
