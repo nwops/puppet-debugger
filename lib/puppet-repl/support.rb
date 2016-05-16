@@ -20,6 +20,8 @@ module PuppetRepl
     # returns new error object or the original if error cannot be parsed
     def parse_error(error)
       case error
+      when SocketError
+        PuppetRepl::Exception::ConnectError.new(:message => "Unknown host: #{Puppet[:server]}")
       when Net::HTTPError
         PuppetRepl::Exception::AuthError.new(:message => error.message)
       when Errno::ECONNREFUSED

@@ -99,7 +99,7 @@ DEPENDENCIES
   facterdb (>= 0.3.5)
   jeweler (~> 2.0.1)
   pry
-  puppet (= 4.4.2)
+  puppet (>= 3.8)
   rake
   rdoc (~> 3.12)
   rspec

@@ -22,6 +22,15 @@ module PuppetRepl
         end
         @facts
       end
+
+      def server_facts
+        data = {}
+        data["servername"] = Facter.value("fqdn")
+        data['serverip'] = Facter.value("ipaddress")
+        data["serverversion"] = Puppet.version.to_s
+        data
+      end
+
     end
   end
 end

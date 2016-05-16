@@ -29,7 +29,7 @@ describe 'support' do
 
     it do
       repl.handle_input(input)
-      expect(output.string).to match(/server_facts/)
+      expect(output.string).to match(/server_facts/) if Puppet.version.to_f >= 4.1
       expect(output.string).to match(/test/)
       expect(output.string).to match(/Puppet::Type::File/)
     end
