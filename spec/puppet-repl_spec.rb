@@ -268,6 +268,16 @@ describe "PuppetRepl" do
       repl.handle_input(input)
       expect(output.string).to match(repl_output)
     end
+    it 'display server facts variable' do
+      repl_output = /server_facts/
+      repl.handle_input(input)
+      expect(output.string).to match(repl_output)
+    end
+    it 'display serverversion variable' do
+      repl_output = /serverversion/
+      repl.handle_input(input)
+      expect(output.string).to match(repl_output)
+    end
     it 'display local variable' do
       repl.handle_input("$var1 = 'value1'")
       expect(output.string).to match(/value1/)
@@ -329,29 +339,23 @@ describe "PuppetRepl" do
       'puppetdev.localdomain'
     end
     before :each do
-      repl.set_node(nil)
-      repl.set_scope(nil)
-      repl.remote_node_name = node_name
       allow(repl).to receive(:get_remote_node).with(node_name).and_return(node_obj)
+      repl.handle_input(":set node #{node_name}")
     end
 
     describe 'set' do
-      before :each do
-        repl.reset
-        repl.remote_node_name = nil
-        allow(repl).to receive(:get_remote_node).with(node_name).and_return(node_obj)
+      it 'sends message about resetting' do
+        expect(output.string).to eq("\n => Resetting to use node puppetdev.localdomain\n")
       end
-      let(:input) do
-        ":set node #{node_name}"
-      end
+
       it "return node name" do
-        repl.handle_input(input)
+        output.reopen # removes previous message
         repl.handle_input('$::hostname')
         expect(output.string).to match(/puppetdev.localdomain/)
       end
 
       it "return classification" do
-        repl.handle_input(input)
+        output.reopen # removes previous message
         repl.handle_input('classification')
         expect(output.string).to match(/certificate_authority_host/)
       end
@@ -368,7 +372,7 @@ describe "PuppetRepl" do
       end
 
     end
-    describe 'use defaults when invalid name' do
+    describe 'use defaults when invalid' do
       let(:node_obj) do
         YAML.load_file(File.join(fixtures_dir, 'invalid_node_obj.yaml'))
       end
@@ -376,7 +380,7 @@ describe "PuppetRepl" do
         'invalid.localdomain'
       end
       it 'name' do
-        expect(repl.node.name).to eq('foo.example.com')
+        expect{repl.node.name}.to raise_error(PuppetRepl::Exception::UndefinedNode)
       end
     end
 
@@ -401,6 +405,16 @@ describe "PuppetRepl" do
       end
       it 'display facts variable' do
         repl_output = /facts/
+        repl.handle_input(input)
+        expect(output.string).to match(repl_output)
+      end
+      it 'display server facts variable' do
+        repl_output = /server_facts/
+        repl.handle_input(input)
+        expect(output.string).to match(repl_output)
+      end
+      it 'display server facts variable' do
+        repl_output = /server_facts/
         repl.handle_input(input)
         expect(output.string).to match(repl_output)
       end
@@ -432,18 +446,6 @@ describe "PuppetRepl" do
       end
     end
 
-    describe 'set node' do
-      let(:input) do
-        ":set node puppetdev.localdomain"
-      end
-
-      it 'puppetdev.localdomain' do
-        repl_output = "\nFetching node puppetdev.localdomain\n => \n"
-        repl.handle_input(input)
-        expect(output.string).to match('puppetdev.localdomain')
-      end
-    end
-
     describe 'reset' do
       let(:input) do
         "file{'/tmp/reset': ensure => present}"
@@ -469,14 +471,5 @@ describe "PuppetRepl" do
         expect(output.string).to match(/certificate_authority_host/)
       end
     end
-  end
-
-  it 'reset does not change node name' do
-    repl.remote_node_name = 'sample_name'
-    before = repl.remote_node_name
-    expect(before).to eq('sample_name')
-    repl.reset
-    after = repl.remote_node_name
-    expect(after).to eq('sample_name')
   end
 end

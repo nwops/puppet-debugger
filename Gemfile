@@ -8,9 +8,9 @@ group :test do
   gem "jeweler", "~> 2.0.1"
   gem "simplecov", ">= 0"
   gem 'rake'
+  gem 'pry'
 end
 
 group :development do
-  gem 'pry'
   gem "rdoc", "~> 3.12"
 end

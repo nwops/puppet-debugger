@@ -19,6 +19,14 @@ EOF
       end
     end
 
+    class UndefinedNode < FatalError
+      def message
+        out = <<-EOF
+Cannot find node with name: #{data[:name]} on remote server
+    EOF
+      end
+    end
+
     class TimeOutError < Error
       #Errno::ETIMEDOUT
     end
@@ -52,9 +60,8 @@ EOF
       def message
         out = <<-EOF
 #{data[:message]}
-You will need to edit your auth.conf or conf.d/auth/conf (puppetserver) to allow
-node calls.
-      EOF
+You will need to edit your auth.conf or conf.d/auth.conf (puppetserver) to allow node calls.
+EOF
     end
     end
 

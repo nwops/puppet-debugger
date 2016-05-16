@@ -19,9 +19,9 @@ module PuppetRepl
         case args.shift
         when /node/
           if name = args.shift
-            output = "Resetting to use node #{name} from #{remote_node_name}"
-            set_remote_node_name(name)
+            output = "Resetting to use node #{name}"
             reset
+            set_remote_node_name(name)
           else
             out_buffer.puts "Must supply a valid node name"
           end
@@ -59,9 +59,9 @@ module PuppetRepl
 
       def reset(args=[])
         set_scope(nil)
+        set_remote_node_name(nil)
         set_node(nil)
-        # initilize scope again
-        scope
+        set_facts(nil)
         set_log_level(log_level)
       end
 
