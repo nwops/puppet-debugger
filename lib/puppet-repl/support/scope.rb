@@ -14,6 +14,7 @@ module PuppetRepl
       end
 
       def create_scope
+        do_initialize
         begin
           @compiler = create_compiler(node) # creates a new compiler for each scope
           scope = Puppet::Parser::Scope.new(@compiler)
