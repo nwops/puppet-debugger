@@ -2,7 +2,7 @@ language: ruby
 cache: bundler
 install: "bundle install --without development"
 before_script: "bundle exec puppet module install puppetlabs-stdlib"
-script: "bundle exec rake spec SPEC_OPTS='--format documentation'"
+script: "bundle exec rspec"
 rvm:
   - 1.9.3
   - 2.0.0
