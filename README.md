@@ -4,21 +4,30 @@
 
 - [puppet-repl](#puppet-repl)
   - [Compatibility](#compatibility)
+  - [Production usage](#production-usage)
   - [Installation](#installation)
   - [Load path](#load-path)
+  - [Interactive demo](#interactive-demo)
+  - [Web demo](#web-demo)
   - [Usage](#usage)
   - [Using Variables](#using-variables)
     - [Listing variables](#listing-variables)
+  - [Listing functions](#listing-functions)
   - [Using functions](#using-functions)
   - [Duplicate resource error](#duplicate-resource-error)
   - [Setting the puppet log level](#setting-the-puppet-log-level)
+  - [Remote nodes](#remote-nodes)
+    - [Setup](#setup)
+    - [Usage](#usage-1)
+      - [Command line:](#command-line)
+      - [From repl session:](#from-repl-session)
+  - [Auto Complete](#auto-complete)
+  - [Playback support](#playback-support)
   - [Troubleshooting](#troubleshooting)
-  - [Forward](#forward)
   - [Copyright](#copyright)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-[![Build Status](https://travis-ci.org/nwops/puppet-repl.png)](https://travis-ci.org/nwops/puppet-repl)[![Gem Version](https://badge.fury.io/rb/puppet-repl.svg)](https://badge.fury.io/rb/puppet-repl)
+[![BuildStatus](https://travis-ci.org/nwops/puppet-repl.svg?branch=master)](https://travis-ci.org/nwops/puppet-repl?branch=master)[![Gem Version](https://badge.fury.io/rb/puppet-repl.svg)](https://badge.fury.io/rb/puppet-repl)
 # puppet-repl
 
 A interactive command line tool for evaluating the puppet language.
@@ -47,7 +56,7 @@ useful for other people.
 https://github.com/nwops/puppet-repl-demo
 
 ## Web demo
-There is a demo of the [puppet-repl](https://www.puppet-repl.com) online but is somewhat
+There is a web version of the [puppet-repl](https://www.puppet-repl.com) online but is somewhat
 limited at this time. In the future we will be adding lots of awesome features to the web repl.
 
 ## Usage
@@ -116,33 +125,13 @@ Type "exit", "functions", "vars", "krt", "facts", "reset", "help" for more infor
 ### Listing variables
 To see the current variables in the scope use the  `vars` keyword.
 
-```
->> $var1 = 'value'
-=> value
->> $var2 = {'key1' => 'value1'}
-=> {"key1"=>"value1"}
->> vars
-"Facts were removed for easier viewing"
-{
-"datacenter"  => "datacenter1",
-"facts"       => "removed by the puppet-repl",
-"module_name" => "",
-"name"        => "main",
-"title"       => "main",
-"trusted"     => {
-      "authenticated" => "local",
-      "certname"      => nil,
-      "domain"        => nil,
-      "extensions"    => {},
-      "hostname"      => nil
-      },
-"var1"        => "value",
-"var2"        => {
-  "key1" => "value1"
-  }
-}
+![variables](resources/variables.png)
 
-```
+## Listing functions
+Knowing what functions are available and where they come from is extremely helpful especially in a repl session.  Run the `functions` keyword to get a name spaced list of functions.  You can further filter out functions by passing in a filter argument. `functions stdlib`
+
+![functions](resources/functions.png)
+
 ## Using functions
 Functions will run and produce the desired output.  If you type the word `functions`
 a list of available functions will be displayed on the screen along with a namespace to help you identify where they came from.
@@ -170,17 +159,76 @@ If you want to see what puppet is doing behind the scenes you can set the log le
 via `:set loglevel debug`.  Valid log levels are `debug`, `info`, `warning` and other
 levels defined in puppet [config reference](https://docs.puppetlabs.com/puppet/4.4/reference/configuration.html#loglevel) .
 
-```
->> hiera('value')
- => foo
->> :set loglevel debug
-loglevel debug is set
->> hiera('value')
-Debug: hiera(): Looking up value in YAML backend
-Debug: hiera(): Looking for data source nodes/foo.example.com
-Debug: hiera(): Found value in nodes/foo.example.com
- => foo
-```
+![hiera](resources/hiera.png)
+
+## Remote nodes
+This is new for 0.2.0.  The puppet-repl now has the ability to pull in remote node information. Instead of mocking facts you can pull in real information!  Get real facts and real node classification from the puppet master and then play with the info in the repl session. This is made possible by using the puppet node indirector interface.
+
+ie.  `puppet node find hostname --terminus rest --render-as yaml`
+
+In order to use this feature you will need to setup a few things.
+
+### Setup
+1. Allow node rest calls to your workstation on the puppet master(s)
+See https://github.com/nwops/puppet-repl/issues/17 for more info on allowing this rule.  
+
+2. Ensure you have the same code that your puppet master does.  Since this pulls in classification you will need to have all the puppet modules defined in your
+environmentpath or basemodulepath.   The simple thing to do is to point your basemodulepath to your fixtures directory if using rspec-puppet or some other high level modules directory.   For PE users you will want to ensure you have all the
+pe specific modules in your development environment.  Not doing this step will result in class not found errors.
+
+3. Set the server config in your local puppet.conf. (on your development machine)
+
+    a. Find your puppet config file `puppet config print config`
+
+    b. edit the config file with an editor
+
+    c. add `server = <hostname>` to your main block
+
+4. If using hiera you also need to set the path to your hiera config file since
+   the puppet-repl will be compiling puppet code which could in turn call hiera
+   functions.  Additionally, make sure your hiera config points to the correct
+   data location.
+
+  ```
+  [main]
+    server = pe-puppet.localdomain
+    basemodulepath = /Users/cosman/github/puppet-repl-demo/modules:/Users/cosman/Downloads/pe_modules
+    hiera_config = /Users/cosman/github/puppet-repl-demo/hieradata/hiera.yaml
+
+
+  ```
+
+
+### Usage
+There are two ways of using the remote node feature.  You can either
+pass in the node name from the command line or set the node name from the repl session.
+
+#### Command line:
+`prepl -n node_name`
+
+![command line](resources/command_line_node.png)
+
+#### From repl session:
+`:set node node_name`
+
+![command line](resources/set_node.png)
+
+
+This is also extremely useful to check classification rules and variables by your ENC. So instead of running your ENC script manually we get the puppet master to run this indirectly and return the results to you.
+
+## Auto Complete
+The puppet-repl uses readline internally.  So any variable or function is also available for auto completion.
+Press the tab key to engage the auto complete functionality.
+
+## Playback support
+Puppet-repl now supports playing back files or urls and loading the content into the repl session.  This means if you want to start a repl session from an existing file or url you can play the content back in the repl.  Support for this functionality is extremely limited due to #2.  However, if you list things on a single line
+you "could" overcome this limitation.
+
+`play https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw`
+
+or
+
+`prepl -p https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw`
 
 ## Troubleshooting
 Please file an issue so we can track bugs.
