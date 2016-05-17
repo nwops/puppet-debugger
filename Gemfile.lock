@@ -94,9 +94,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  awesome_print (>= 1.6)
+  awesome_print (~> 1.6)
   bundler
-  facterdb (>= 0.3.5)
+  facterdb (~> 0.3)
   jeweler (~> 2.0.1)
   pry
   puppet (>= 3.8)
