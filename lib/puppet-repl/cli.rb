@@ -90,52 +90,54 @@ module PuppetRepl
       result
     end
 
-    def handle_input(input)
-      begin
-        output = ''
-        case input
-        when /^play|^classification|^facts|^vars|^functions|^classes|^resources|^krt|^environment|^reset|^help/
-          args = input.split(' ')
-          command = args.shift.to_sym
-          if self.respond_to?(command)
-            output = self.send(command, args)
-          end
-          return out_buffer.puts output
-        when /exit/
-          exit 0
-        when /^:set/
-          output = handle_set(input)
-        when '_'
-          output = " => #{@last_item}"
-        else
-          result = puppet_eval(input)
-          @last_item = result
-          output = normalize_output(result)
-          if output.nil?
-            output = ""
+    def handle_input(input_text)
+      input_text.split("\n").each do |input|
+        begin
+          output = ''
+          case input
+          when /^play|^classification|^facts|^vars|^functions|^classes|^resources|^krt|^environment|^reset|^help/
+            args = input.split(' ')
+            command = args.shift.to_sym
+            if self.respond_to?(command)
+              output = self.send(command, args)
+            end
+            return out_buffer.puts output
+          when /exit/
+            exit 0
+          when /^:set/
+            output = handle_set(input)
+          when '_'
+            output = " => #{@last_item}"
           else
-            output = output.ai
+            result = puppet_eval(input)
+            @last_item = result
+            output = normalize_output(result)
+            if output.nil?
+              output = ""
+            else
+              output = output.ai
+            end
           end
+        rescue LoadError => e
+          output = e.message.fatal
+        rescue Errno::ETIMEDOUT => e
+          output = e.message.fatal
+        rescue ArgumentError => e
+          output = e.message.fatal
+        rescue Puppet::ResourceError => e
+          output = e.message.fatal
+        rescue Puppet::ParseErrorWithIssue => e
+          output = e.message.fatal
+        rescue PuppetRepl::Exception::FatalError => e
+          output = e.message.fatal
+          out_buffer.puts output
+          exit 1
+        rescue PuppetRepl::Exception::Error => e
+          output = e.message.fatal
         end
-      rescue LoadError => e
-        output = e.message.fatal
-      rescue Errno::ETIMEDOUT => e
-        output = e.message.fatal
-      rescue ArgumentError => e
-        output = e.message.fatal
-      rescue Puppet::ResourceError => e
-        output = e.message.fatal
-      rescue Puppet::ParseErrorWithIssue => e
-        output = e.message.fatal
-      rescue PuppetRepl::Exception::FatalError => e
-        output = e.message.fatal
+        out_buffer.print " => "
         out_buffer.puts output
-        exit 1
-      rescue PuppetRepl::Exception::Error => e
-        output = e.message.fatal
       end
-      out_buffer.print " => "
-      out_buffer.puts output
     end
 
     def self.print_repl_desc

@@ -43,7 +43,8 @@ module PuppetRepl
           require 'open-uri'
           require 'net/http'
           converted_url = convert_to_text(url)
-          play_back_string open(converted_url).read
+          str = open(converted_url).read
+          play_back_string(str)
         rescue SocketError
           abort "puppet-repl can't play `#{converted_url}'"
         end

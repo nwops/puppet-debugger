@@ -3,12 +3,36 @@ require 'tempfile'
 
 describe 'support' do
 
+  let(:output) do
+    StringIO.new('', 'w')
+  end
+
   let(:repl) do
-    PuppetRepl::Cli.new
+    PuppetRepl::Cli.new(:out_buffer => output)
   end
 
   let(:scope) do
     repl.scope
+  end
+
+  describe 'play' do
+    let(:url) do
+      'https://gist.github.com/logicminds/f9b1ac65a3a440d562b0'
+    end
+    let(:input) do
+      "play #{url}"
+    end
+
+    let(:expected) do
+      ''
+    end
+
+    it do
+      repl.handle_input(input)
+      expect(output.string).to match(/server_facts/)
+      expect(output.string).to match(/test/)
+      expect(output.string).to match(/Puppet::Type::File/)
+    end
   end
 
   let(:puppet_version) do
@@ -29,7 +53,6 @@ describe 'support' do
     service{'httpd': ensure => running}\n
 
     EOF
-
   end
 
   after(:each) do
@@ -68,7 +91,7 @@ describe 'support' do
     expect(repl.node.facts.values['fqdn']).to eq('foo.example.com')
   end
 
-  describe 'play url' do
+  describe 'convert  url' do
 
     describe 'unsupported' do
       let(:url) { 'https://bitbuck.com/master/lib/log_helper.rb'}
@@ -118,6 +141,14 @@ describe 'support' do
       describe 'raw' do
         let(:url) { 'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw'}
         let(:converted) { 'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw' }
+        it do
+          expect(repl.convert_to_text(url)).to eq(converted)
+        end
+      end
+
+      describe 'raw gist' do
+        let(:url) {'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw/c8f6be52da5b2b0eeaabb9aa75832b75793d35d1/controls.pp'}
+        let(:converted) {'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw/c8f6be52da5b2b0eeaabb9aa75832b75793d35d1/controls.pp'}
         it do
           expect(repl.convert_to_text(url)).to eq(converted)
         end

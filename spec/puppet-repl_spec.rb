@@ -26,6 +26,39 @@ describe "PuppetRepl" do
     repl.parser.evaluate_string(repl.scope, input)
   end
 
+  describe 'multiple lines of input' do
+    describe '3 lines' do
+      let(:input) do
+        "$var1 = 'test'\nfile{\"/tmp/${var1}.txt\": ensure => present, mode => '0755'}\nvars"
+      end
+      it do
+        repl.handle_input(input)
+        expect(output.string).to match(/server_facts/)
+        expect(output.string).to match(/test/)
+        expect(output.string).to match(/Puppet::Type::File/)
+      end
+    end
+    describe '2 lines' do
+      let(:input) do
+        "$var1 = 'test'\n $var2 = 'test2'"
+      end
+      it do
+        repl.handle_input(input)
+        expect(output.string).to eq("\n => \e[0;33m\"test\"\e[0m\n => \e[0;33m\"test2\"\e[0m\n")
+      end
+    end
+    describe '1 lines' do
+      let(:input) do
+        "$var1 = 'test'"
+      end
+      it do
+        repl.handle_input(input)
+        expect(output.string).to eq("\n => \e[0;33m\"test\"\e[0m\n")
+      end
+    end
+
+  end
+
   describe 'returns a array of resource_types' do
     it 'returns resource type' do
       expect(resource_types.first.class.to_s).to eq('Puppet::Pops::Types::PResourceType')
@@ -52,7 +85,7 @@ describe "PuppetRepl" do
       ""
     end
     it 'can run' do
-      repl_output = "\n => \n"
+      repl_output = "\n"
       repl.handle_input(input)
       expect(output.string).to eq(repl_output)
     end
