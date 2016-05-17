@@ -38,7 +38,7 @@ GEM
       nokogiri (>= 1.5.10)
       rake
       rdoc
-    jgrep (1.4.0)
+    jgrep (1.4.1)
       json
     json (1.8.3)
     json_pure (1.8.3)
@@ -94,12 +94,12 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  awesome_print (~> 1.6.1)
+  awesome_print (>= 1.6)
   bundler
-  facterdb (~> 0.3.5)
+  facterdb (>= 0.3.5)
   jeweler (~> 2.0.1)
   pry
-  puppet (>= 3.8)
+  puppet (= 4.4.2)
   rake
   rdoc (~> 3.12)
   rspec
