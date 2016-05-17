@@ -48,6 +48,14 @@ Gem::Specification.new do |s|
     "lib/trollop.rb",
     "lib/version.rb",
     "puppet-repl.gemspec",
+    "resources/classes.png",
+    "resources/classification.png",
+    "resources/command_line_node.png",
+    "resources/functions.png",
+    "resources/hiera.png",
+    "resources/set_node.png",
+    "resources/tab_complete.png",
+    "resources/variables.png",
     "spec/fixtures/environments/production/manifests/site.pp",
     "spec/fixtures/invalid_node_obj.yaml",
     "spec/fixtures/node_obj.yaml",
@@ -83,3 +91,4 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<rdoc>, ["~> 3.12"])
   end
 end
+
