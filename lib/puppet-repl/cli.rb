@@ -153,11 +153,29 @@ Type "exit", "functions", "vars", "krt", "facts", "resources", "classes",
       output
     end
 
+    def multiline_input?(e)
+      e.message =~ /Syntax error at end of file/
+    end
+
     # reads input from stdin, since readline requires a tty
     # we cannot read from other sources as readline requires a file object
+    # we parse the string after each input to determine if the input is a multiline_input
+    # entry.  If it is multiline we run through the loop again and concatenate the
+    # input
     def read_loop
+      full_buffer = ''
       while buf = Readline.readline(">> ", true)
-        handle_input(buf)
+        begin
+          full_buffer += buf
+          parser.parse_string(full_buffer)
+        rescue Puppet::ParseErrorWithIssue => e
+          if multiline_input?(e)
+            print '  '
+            next
+          end
+        end
+        handle_input(full_buffer)
+        full_buffer = ''
       end
     end
 
