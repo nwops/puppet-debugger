@@ -1,3 +1,6 @@
+## 0.2.1
+  * Fixes #2 - adds support for multiline input
+
 ## 0.2.0
   * Fixes #19 - lock down dependency versions
   * fixes #18 - add ability to filter out functions based on namespace
