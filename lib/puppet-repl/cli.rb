@@ -137,8 +137,10 @@ module PuppetRepl
         rescue PuppetRepl::Exception::Error => e
           output = e.message.fatal
         end
-        out_buffer.print " => "
-        out_buffer.puts output
+        unless output.empty?
+          out_buffer.print " => "
+          out_buffer.puts output unless output.empty?
+        end
     end
 
     def self.print_repl_desc

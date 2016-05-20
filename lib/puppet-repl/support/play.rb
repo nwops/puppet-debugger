@@ -55,6 +55,8 @@ module PuppetRepl
         end
       end
 
+      # plays back the string to the output stream
+      # puts the input to the output as well as the produced output
       def play_back_string(str)
         full_buffer = ''
         str.split("\n").each do |buf|
