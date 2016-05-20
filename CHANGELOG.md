@@ -1,3 +1,7 @@
+## 0.2.2
+  * adds better support for playing back puppet code
+      * this now allows playback of any manifest
+      * allows mixed puppet code and repl commands
 ## 0.2.1
   * Fixes #2 - adds support for multiline input
 

@@ -221,14 +221,29 @@ The puppet-repl uses readline internally.  So any variable or function is also a
 Press the tab key to engage the auto complete functionality.
 
 ## Playback support
-Puppet-repl now supports playing back files or urls and loading the content into the repl session.  This means if you want to start a repl session from an existing file or url you can play the content back in the repl.  Support for this functionality is extremely limited due to #2.  However, if you list things on a single line
-you "could" overcome this limitation.
+Puppet-repl now supports playing back files or urls and loading the content into the repl session.  This means if you want to start a repl session from an existing file or url you can play the content back in the repl.
+You can also playback a file that contains puppet code and repl commands.
 
 `play https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw`
 
 or
 
 `prepl -p https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw`
+
+
+### Web based playback support
+If using the [web based repl](https://www.puppet-repl.com) you can playback a shared url
+which would start a repl session and then load the content from the url or parameter.
+
+Example:
+https://www.puppet-repl.com/play?url=https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0
+
+or for single commands
+
+https://www.puppet-repl.com/play?content=vars
+
+Please note the web based repl only contains a minimal amount of puppet modules.  So its likely
+that your code may not work if using third party modules.  This may change in the future though.
 
 ## Troubleshooting
 Please file an issue so we can track bugs.
