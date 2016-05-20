@@ -51,7 +51,27 @@ module PuppetRepl
       end
 
       def play_back_string(str)
-        handle_input(str)
+        full_buffer = ''
+        str.split("\n").each do |buf|
+          begin
+            full_buffer += buf
+            # unless this is puppet code, otherwise skip repl keywords
+            if keyword_expression.match(buf)
+              out_buffer.write(">> ")
+            else
+              parser.parse_string(full_buffer)
+              out_buffer.write(">>\n")
+            end
+          rescue Puppet::ParseErrorWithIssue => e
+            if multiline_input?(e)
+              full_buffer += "\n"
+              next
+            end
+          end
+          out_buffer.puts(full_buffer)
+          handle_input(full_buffer)
+          full_buffer = ''
+        end
       end
     end
   end
