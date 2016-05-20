@@ -16,20 +16,23 @@ describe 'support' do
   end
 
   describe 'play' do
-    let(:url) do
+    before(:each) do
+      allow(repl).to receive(:fetch_url_data).with(file_url + ".txt").and_return(File.read(fixtures_file))
+    end
+
+    let(:fixtures_file) do
+      File.join(fixtures_dir, 'sample_manifest.pp')
+    end
+
+    let(:file_url) do
       'https://gist.github.com/logicminds/f9b1ac65a3a440d562b0'
     end
     let(:input) do
-      "play #{url}"
-    end
-
-    let(:expected) do
-      ''
+      "play #{file_url}"
     end
 
     it do
       repl.handle_input(input)
-      expect(output.string).to match(/server_facts/) if Puppet.version.to_f >= 4.1
       expect(output.string).to match(/test/)
       expect(output.string).to match(/Puppet::Type::File/)
     end

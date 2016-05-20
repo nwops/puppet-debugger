@@ -90,8 +90,10 @@ module PuppetRepl
       result
     end
 
-    def handle_input(input_text)
-      input_text.split("\n").each do |input|
+    # this method handles all input and expects a string of text.
+    #
+    def handle_input(input)
+        raise ArgumentError unless input.instance_of?(String)
         begin
           output = ''
           case input
@@ -137,7 +139,6 @@ module PuppetRepl
         end
         out_buffer.print " => "
         out_buffer.puts output
-      end
     end
 
     def self.print_repl_desc
@@ -174,9 +175,12 @@ Type "exit", "functions", "vars", "krt", "facts", "resources", "classes",
       full_buffer = ''
       while buf = Readline.readline("#{line_number}:>> ", true)
         begin
-          line_number = line_number.next
           full_buffer += buf
-          parser.parse_string(full_buffer)
+          # unless this is puppet code, otherwise skip repl keywords
+          unless keyword_expression.match(buf)
+            line_number = line_number.next
+            parser.parse_string(full_buffer)
+          end
         rescue Puppet::ParseErrorWithIssue => e
           if multiline_input?(e)
             out_buffer.print '  '

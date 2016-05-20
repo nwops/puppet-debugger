@@ -32,7 +32,7 @@ describe "PuppetRepl" do
         "$var1 = 'test'\nfile{\"/tmp/${var1}.txt\": ensure => present, mode => '0755'}\nvars"
       end
       it do
-        repl.handle_input(input)
+        repl.play_back_string(input)
         expect(output.string).to match(/server_facts/) if Puppet.version.to_f >= 4.1
         expect(output.string).to match(/test/)
         expect(output.string).to match(/Puppet::Type::File/)
@@ -43,8 +43,8 @@ describe "PuppetRepl" do
         "$var1 = 'test'\n $var2 = 'test2'"
       end
       it do
-        repl.handle_input(input)
-        expect(output.string).to eq("\n => \e[0;33m\"test\"\e[0m\n => \e[0;33m\"test2\"\e[0m\n")
+        repl.play_back_string(input)
+        expect(output.string).to eq("\n>> $var1 = 'test'\n => \e[0;33m\"test\"\e[0m\n>>  $var2 = 'test2'\n => \e[0;33m\"test2\"\e[0m\n")
       end
     end
     describe '1 lines' do
@@ -52,8 +52,8 @@ describe "PuppetRepl" do
         "$var1 = 'test'"
       end
       it do
-        repl.handle_input(input)
-        expect(output.string).to eq("\n => \e[0;33m\"test\"\e[0m\n")
+        repl.play_back_string(input)
+        expect(output.string).to eq("\n>> $var1 = 'test'\n => \e[0;33m\"test\"\e[0m\n")
       end
     end
 
@@ -94,7 +94,7 @@ describe "PuppetRepl" do
         " "
       end
       it 'can run' do
-        repl_output = "\n => \n"
+        repl_output = "\n"
         repl.handle_input(input)
         expect(output.string).to eq(repl_output)
       end
@@ -115,6 +115,10 @@ describe "PuppetRepl" do
   describe 'play' do
     let(:fixtures_file) do
       File.join(fixtures_dir, 'sample_manifest.pp')
+    end
+
+    before(:each) do
+      allow(repl).to receive(:fetch_url_data).with(file_url).and_return(File.read(fixtures_file))
     end
 
     let(:file_url) do
@@ -340,7 +344,7 @@ describe "PuppetRepl" do
   end
 
   describe 'unidentified object' do
-    let(:repl_output) { "\n => \n" }
+    let(:repl_output) { "\n" }
     describe "Node['foot']" do
       let(:input) { subject }
       it 'returns string' do

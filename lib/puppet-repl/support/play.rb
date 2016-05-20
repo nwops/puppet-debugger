@@ -38,12 +38,17 @@ module PuppetRepl
         end
       end
 
+      # opens the url and reads the data
+      def fetch_url_data(url)
+        open(url).read
+      end
+
       def play_back_url(url)
         begin
           require 'open-uri'
           require 'net/http'
           converted_url = convert_to_text(url)
-          str = open(converted_url).read
+          str = fetch_url_data(converted_url)
           play_back_string(str)
         rescue SocketError
           abort "puppet-repl can't play `#{converted_url}'"
@@ -51,7 +56,27 @@ module PuppetRepl
       end
 
       def play_back_string(str)
-        handle_input(str)
+        full_buffer = ''
+        str.split("\n").each do |buf|
+          begin
+            full_buffer += buf
+            # unless this is puppet code, otherwise skip repl keywords
+            if keyword_expression.match(buf)
+              out_buffer.write(">> ")
+            else
+              parser.parse_string(full_buffer)
+              out_buffer.write(">> ")
+            end
+          rescue Puppet::ParseErrorWithIssue => e
+            if multiline_input?(e)
+              full_buffer += "\n"
+              next
+            end
+          end
+          out_buffer.puts(full_buffer)
+          handle_input(full_buffer)
+          full_buffer = ''
+        end
       end
     end
   end

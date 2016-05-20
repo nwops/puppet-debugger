@@ -84,6 +84,7 @@ module PuppetRepl
         config = {}
         config[:play] = args.first
         play_back(config)
+        return nil  # we don't want to return anything
       end
 
       def classification(args=[])

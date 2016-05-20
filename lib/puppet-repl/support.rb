@@ -73,6 +73,10 @@ module PuppetRepl
       end
     end
 
+     def keyword_expression
+       @keyword_expression ||= Regexp.new(/^exit|^:set|^play|^classification|^facts|^vars|^functions|^classes|^resources|^krt|^environment|^reset|^help/)
+     end
+
     def known_resource_types
       res = {
         :hostclasses => scope.known_resource_types.hostclasses.keys,
