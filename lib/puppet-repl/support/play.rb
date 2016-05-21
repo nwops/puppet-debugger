@@ -18,6 +18,10 @@ module PuppetRepl
         require 'uri'
         url_data = URI(url)
         case url_data.host
+        when /^gist\.github*/
+          unless url_data.path =~ /raw/
+            url = url += '.txt'
+          end
         when /^github.com/
           if url_data.path =~ /blob/
             url.gsub('blob', 'raw')

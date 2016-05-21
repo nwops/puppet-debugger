@@ -139,7 +139,6 @@ describe 'support' do
         end
       end
     end
-
     describe 'github' do
       describe 'raw' do
         let(:url) { 'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw'}
@@ -148,7 +147,13 @@ describe 'support' do
           expect(repl.convert_to_text(url)).to eq(converted)
         end
       end
-
+      describe 'raw' do
+        let(:url) { 'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0'}
+        let(:converted) { 'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0.txt' }
+        it do
+          expect(repl.convert_to_text(url)).to eq(converted)
+        end
+      end
       describe 'raw gist' do
         let(:url) {'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw/c8f6be52da5b2b0eeaabb9aa75832b75793d35d1/controls.pp'}
         let(:converted) {'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw/c8f6be52da5b2b0eeaabb9aa75832b75793d35d1/controls.pp'}
