@@ -1,3 +1,5 @@
+## 0.2.3
+  * fixes #21 - type display causes error
 ## 0.2.2
   * adds better support for playing back puppet code
       * this now allows playback of any manifest
