@@ -22,6 +22,7 @@ module PuppetRepl
           unless url_data.path =~ /raw/
             url = url += '.txt'
           end
+          url
         when /^github.com/
           if url_data.path =~ /blob/
             url.gsub('blob', 'raw')
@@ -30,6 +31,7 @@ module PuppetRepl
           unless url_data.path =~ /raw/
             url = url += '.txt'
           end
+          url
         when /^gitlab.com/
           if url_data.path =~ /snippets/
             url += '/raw' unless url_data.path =~ /raw/
