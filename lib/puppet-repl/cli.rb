@@ -51,12 +51,13 @@ module PuppetRepl
       if type.respond_to?(:type_name) and type.respond_to?(:title)
         title = type.title
         type_name = type.type_name
-      else
+      elsif type_result = /(\w+)\['?(\w+)'?\]/.match(type.to_s)
         # not all types have a type_name and title so we
         # output to a string and parse the results
-        type_result = /(\w+)\['?(\w+)'?\]/.match(type.to_s)
         title = type_result[2]
         type_name = type_result[1]
+      else
+        return type
       end
       res = scope.catalog.resource(type_name, title)
       if res

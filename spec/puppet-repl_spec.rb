@@ -26,6 +26,29 @@ describe "PuppetRepl" do
     repl.parser.evaluate_string(repl.scope, input)
   end
 
+  describe 'types' do
+
+    describe 'string' do
+      let(:input) do
+        "String"
+      end
+      it 'shows type' do
+        repl.handle_input(input)
+        expect(output.string).to eq("\n => String\n")
+      end
+    end
+    describe 'Array' do
+      let(:input) do
+        "type_of([1,2,3,4])"
+      end
+      it 'shows type' do
+        repl.handle_input(input)
+        expect(output.string).to eq("\n => Tuple[Integer[1, 1], Integer[2, 2], Integer[3, 3], Integer[4, 4]]\n")
+      end
+    end
+
+  end
+
   describe 'multiple lines of input' do
     describe '3 lines' do
       let(:input) do
@@ -118,11 +141,11 @@ describe "PuppetRepl" do
     end
 
     before(:each) do
-      allow(repl).to receive(:fetch_url_data).with(file_url).and_return(File.read(fixtures_file))
+      allow(repl).to receive(:fetch_url_data).with(file_url + '.txt').and_return(File.read(fixtures_file))
     end
 
     let(:file_url) do
-      'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw'
+      'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0'
     end
     it 'file' do
       repl.handle_input("play #{fixtures_file}")
