@@ -27,7 +27,8 @@
   - [Copyright](#copyright)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-[![BuildStatus](https://travis-ci.org/nwops/puppet-repl.svg?branch=master)](https://travis-ci.org/nwops/puppet-repl?branch=master)[![Gem Version](https://badge.fury.io/rb/puppet-repl.svg)](https://badge.fury.io/rb/puppet-repl)
+![Build Status](https://gitlab.com/nwops/puppet-repl/badges/master/build.svg)
+[![Gem Version](https://badge.fury.io/rb/puppet-repl.svg)](https://badge.fury.io/rb/puppet-repl)
 # puppet-repl
 
 A interactive command line tool for evaluating the puppet language.
