@@ -29,7 +29,7 @@ module AwesomePrint
 
     def awesome_puppet_type(object)
       return '' if object.nil?
-      return object.to_s unless object.respond_to?(:name)
+      return object.to_s unless object.respond_to?(:name) && object.respond_to?(:title)
       h = object.to_hash.merge(:name => object.name, :title => object.title)
       res_str = awesome_hash(h)
       "#{object.class} #{res_str.gsub(':', '')}"
