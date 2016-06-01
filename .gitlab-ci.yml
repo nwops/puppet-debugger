@@ -6,6 +6,7 @@ stages:
 .puppet_def: &puppet_job_def
   stage: test
   script:
+
     - bundle install --without development
     - bundle exec puppet module install puppetlabs-stdlib
     - bundle exec rake spec
@@ -42,60 +43,60 @@ gem_production:
 
 puppet_38_ruby193:
   variables:
-    PUPPET_GEM_VERSION: '3.8'
+    PUPPET_GEM_VERSION: "~> 3.8"
   <<: *puppet_job_def
   <<: *ruby193
 
 puppet_38_ruby20:
   variables:
-    PUPPET_GEM_VERSION: '3.8'
+    PUPPET_GEM_VERSION: "~> 3.8"
   <<: *puppet_job_def
   <<: *ruby20
 
 puppet_38_ruby21:
   variables:
-    PUPPET_GEM_VERSION: '3.8'
+    PUPPET_GEM_VERSION: "~> 3.8"
   <<: *puppet_job_def
   <<: *ruby21
 
 puppet_43_ruby20:
   variables:
-    PUPPET_GEM_VERSION: '4.4'
+    PUPPET_GEM_VERSION: "~> 4.3"
   <<: *puppet_job_def
   <<: *ruby20
 
 puppet_43_ruby21:
   variables:
-    PUPPET_GEM_VERSION: '4.4'
+    PUPPET_GEM_VERSION: "~> 4.3"
   <<: *puppet_job_def
   <<: *ruby21
 
 puppet_43_ruby22:
   variables:
-    PUPPET_GEM_VERSION: '4.4'
+    PUPPET_GEM_VERSION: "~> 4.3"
   <<: *puppet_job_def
   <<: *ruby22
 
 puppet_44_ruby21:
   variables:
-    PUPPET_GEM_VERSION: '4.4'
+    PUPPET_GEM_VERSION: "~> 4.4"
   <<: *puppet_job_def
   <<: *ruby21
 
 puppet_44_ruby22:
   variables:
-    PUPPET_GEM_VERSION: '4.4'
+    PUPPET_GEM_VERSION: "~> 4.4"
   <<: *puppet_job_def
   <<: *ruby22
 
 puppet_45_ruby21:
   variables:
-    PUPPET_GEM_VERSION: '4.5'
+    PUPPET_GEM_VERSION: "~> 4.5"
   <<: *puppet_job_def
   <<: *ruby21
 
 puppet_45_ruby22:
   variables:
-    PUPPET_GEM_VERSION: '4.5'
+    PUPPET_GEM_VERSION: "~> 4.5"
   <<: *puppet_job_def
   <<: *ruby22
