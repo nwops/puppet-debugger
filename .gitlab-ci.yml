@@ -6,7 +6,8 @@ stages:
 .puppet_def: &puppet_job_def
   stage: test
   script:
-
+    - gem update --system
+    - gem install bundler
     - bundle install --without development
     - bundle exec puppet module install puppetlabs-stdlib
     - bundle exec rake spec
