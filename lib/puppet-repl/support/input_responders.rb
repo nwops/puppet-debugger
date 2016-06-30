@@ -62,6 +62,7 @@ module PuppetRepl
         set_remote_node_name(nil)
         set_node(nil)
         set_facts(nil)
+        set_environment(nil)
         set_log_level(log_level)
       end
 
