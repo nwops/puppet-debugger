@@ -31,7 +31,7 @@
 [![Gem Version](https://badge.fury.io/rb/puppet-repl.svg)](https://badge.fury.io/rb/puppet-repl)
 # puppet-repl
 
-A interactive command line tool for evaluating the puppet language.
+A interactive command line tool for evaluating and debugging the puppet language.
 
 ## Compatibility
 Requires Puppet 3.8+ and only uses the future parser.
@@ -47,7 +47,7 @@ to install on your production puppet master. Please do not install because of th
 puppet-repl will load all functions from your basemodulepath and environmentpath.
 
 This means if you run `puppet module install puppetlabs-stdlib` and they will be available
-in the repl.  
+in the repl.
 
 ## Interactive demo
 I have put together a repo with a few setup instructions that will assist you in setting up a "mock" environment
@@ -220,6 +220,8 @@ This is also extremely useful to check classification rules and variables by you
 ## Auto Complete
 The puppet-repl uses readline internally.  So any variable or function is also available for auto completion.
 Press the tab key to engage the auto complete functionality.
+
+Currently native functions are not available in auto complete. See #24
 
 ## Playback support
 Puppet-repl now supports playing back files or urls and loading the content into the repl session.  This means if you want to start a repl session from an existing file or url you can play the content back in the repl.
