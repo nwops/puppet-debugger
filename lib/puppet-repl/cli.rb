@@ -41,10 +41,6 @@ module PuppetRepl
       (scoped_vars + funcs + static_responder_list).uniq.sort
     end
 
-    def puppet_eval(input)
-      parser.evaluate_string(scope, input)
-    end
-
     # looks up the type in the catalog by using the type and title
     # and returns the resource in ral format
     def to_resource_declaration(type)
@@ -207,7 +203,7 @@ Type "exit", "functions", "vars", "krt", "facts", "resources", "classes",
       end
       options = opts.merge(options)
       puts print_repl_desc
-      repl_obj = new
+      repl_obj = PuppetRepl::Cli.new
       repl_obj.remote_node_name = opts[:node_name] if opts[:node_name]
       repl_obj.initialize_from_scope(options[:scope])
       if options[:play]

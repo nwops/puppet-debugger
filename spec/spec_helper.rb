@@ -49,4 +49,5 @@ def environments_dir
 end
 
 RSpec.configure do |config|
+  config.filter_run_excluding :native_functions => ! supports_native_functions?
 end

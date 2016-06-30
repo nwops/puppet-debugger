@@ -100,9 +100,49 @@ module PuppetRepl
     def do_initialize
       begin
         Puppet.initialize_settings
+        Puppet[:parser] = 'future'  # this is required in order to work with puppet 3.8
         Puppet[:trusted_node_data] = true
-      rescue
+      rescue ArgumentError => e
+
+      rescue Puppet::DevError => e
         # do nothing otherwise calling init twice raises an error
+      end
+    end
+
+    # @param String - any valid puppet language code
+    # @return Hostclass - a puppet Program object which is considered the main class
+    def generate_ast(string = nil)
+      parse_result = parser.parse_string(string, '')
+      # the parse_result may be
+      # * empty / nil (no input)
+      # * a Model::Program
+      # * a Model::Expression
+      #
+      model = parse_result.nil? ? nil : parse_result.current
+      args = {}
+      ::Puppet::Pops::Model::AstTransformer.new('').merge_location(args, model)
+
+      ast_code =
+      if model.is_a? ::Puppet::Pops::Model::Program
+        ::Puppet::Parser::AST::PopsBridge::Program.new(model, args)
+      else
+        args[:value] = model
+        ::Puppet::Parser::AST::PopsBridge::Expression.new(args)
+      end
+      # Create the "main" class for the content - this content will get merged with all other "main" content
+      ::Puppet::Parser::AST::Hostclass.new('', :code => ast_code)
+    end
+
+    # @param String - any valid puppet language code
+    # @return Object - returns either a string of the result or object from puppet evaulation
+    def puppet_eval(input)
+      # in order to add functions to the scope the loaders must be created
+      # in order to call native functions we need to set the global_scope
+      ast = generate_ast(input)
+      Puppet.override( {:global_scope => scope, :loaders => scope.compiler.loaders } , 'For puppet-repl') do
+         # because the repl is not a module we leave the modname blank
+         scope.known_resource_types.import_ast(ast, '')
+         parser.evaluate_string(scope, input)
       end
     end
 
@@ -114,7 +154,7 @@ module PuppetRepl
 
     # returns a future parser for evaluating code
     def parser
-      @parser || ::Puppet::Pops::Parser::EvaluatingParser.new
+      @parser ||= ::Puppet::Pops::Parser::EvaluatingParser.new
     end
 
     def default_manifests_dir
