@@ -76,7 +76,7 @@ describe "PuppetRepl" do
     end
   end
 
-  describe 'native functions' do
+  describe 'native functions', :native_functions => true do
     let(:func) do
       <<-EOF
       function repl::bool2http($arg) {

@@ -200,9 +200,10 @@ Type "exit", "functions", "vars", "krt", "facts", "resources", "classes",
         opt :play, "Url or file to load from", :required => false, :type => String
         opt :run_once, "Evaluate and quit", :required => false, :default => false
         opt :node_name, "Remote Node to grab facts from", :required => false, :type => String
+        opt :quiet, "Do not display banner", :required => false, :default => false
       end
       options = opts.merge(options)
-      puts print_repl_desc
+      puts print_repl_desc unless options[:quiet]
       repl_obj = PuppetRepl::Cli.new
       repl_obj.remote_node_name = opts[:node_name] if opts[:node_name]
       repl_obj.initialize_from_scope(options[:scope])

@@ -48,6 +48,10 @@ def environments_dir
   File.join(fixtures_dir, 'environments')
 end
 
+def supports_native_functions?
+  Gem::Version.new(Puppet.version) >= Gem::Version.new('4.3')
+end
+
 RSpec.configure do |config|
   config.filter_run_excluding :native_functions => ! supports_native_functions?
 end
