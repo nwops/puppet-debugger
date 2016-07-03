@@ -91,6 +91,7 @@ module PuppetRepl
     #
     def handle_input(input)
         raise ArgumentError unless input.instance_of?(String)
+
         begin
           output = ''
           case input
@@ -130,7 +131,7 @@ module PuppetRepl
         rescue PuppetRepl::Exception::FatalError => e
           output = e.message.fatal
           out_buffer.puts output
-          exit 1
+          exit 1 # this can sometimes causes tests to fail
         rescue PuppetRepl::Exception::Error => e
           output = e.message.fatal
         end

@@ -1,25 +1,8 @@
 --- !ruby/object:Puppet::Node
   name: puppetdev.localdomain
-  classes: 
-    puppet_enterprise: 
-      mcollective_middleware_hosts: 
-        - pe-puppet.localdomain
-      use_application_services: false
-      database_host: pe-puppet.localdomain
-      puppetdb_host: pe-puppet.localdomain
-      database_port: "5432"
-      database_ssl: true
-      puppet_master_host: pe-puppet.localdomain
-      certificate_authority_host: pe-puppet.localdomain
-      console_port: "443"
-      puppetdb_database_name: pe-puppetdb
-      puppetdb_database_user: pe-puppetdb
-      pcp_broker_host: pe-puppet.localdomain
-      puppetdb_port: "8081"
-      console_host: pe-puppet.localdomain
-    "puppet_enterprise::profile::agent": {}
-    "puppet_enterprise::profile::mcollective::agent": {}
-  parameters: 
+  classes:
+    stdlib: 
+  parameters:
     kernel: Linux
     ipaddress6_lo: "::1"
     network6_lo: "::1"
@@ -47,16 +30,16 @@
     boardmanufacturer: "Intel Corporation"
     timezone: UTC
     bios_vendor: "Phoenix Technologies LTD"
-    os: 
+    os:
       architecture: x86_64
       family: RedHat
       hardware: x86_64
       name: CentOS
-      release: 
+      release:
         full: "7.2.1511"
         major: "7"
         minor: "2"
-      selinux: 
+      selinux:
         enabled: false
     osfamily: RedHat
     operatingsystem: CentOS
@@ -92,7 +75,7 @@
     swapsize: "1.08 GiB"
     uptime: "0:34 hours"
     mtu_eth0: 1500
-    identity: 
+    identity:
       gid: 0
       group: root
       uid: 0
@@ -106,33 +89,33 @@
     mtu_lo: 65536
     macaddress: "02:42:ac:11:00:02"
     macaddress_eth0: "02:42:ac:11:00:02"
-    augeas: 
+    augeas:
       version: "1.4.0"
     netmask6_lo: "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff"
-    ruby: 
+    ruby:
       platform: x86_64-linux
       sitedir: /opt/puppetlabs/puppet/lib/ruby/site_ruby/2.1.0
       version: "2.1.8"
     blockdevice_sda_model: "VMware Virtual S"
     blockdevice_sda_vendor: "VMware,"
-    processors: 
+    processors:
       count: 1
       isa: x86_64
-      models: 
+      models:
         - "Intel(R) Core(TM) i7-4850HQ CPU @ 2.30GHz"
       physicalcount: 1
     blockdevices: "fd0,sda,sr0"
     boardproductname: "440BX Desktop Reference Platform"
-    networking: 
+    networking:
       mac: "02:42:ac:11:00:02"
       ip6: "fe80::42:acff:fe11:2"
       hostname: puppetdev
       netmask6: "ffff:ffff:ffff:ffff::"
-      interfaces: 
-        eth0: 
+      interfaces:
+        eth0:
           mac: "02:42:ac:11:00:02"
           ip6: "fe80::42:acff:fe11:2"
-          bindings: 
+          bindings:
             - address: "172.17.0.2"
               netmask: "255.255.0.0"
               network: "172.17.0.0"
@@ -141,14 +124,14 @@
           network: "172.17.0.0"
           mtu: 1500
           ip: "172.17.0.2"
-          bindings6: 
+          bindings6:
             - address: "fe80::42:acff:fe11:2"
               netmask: "ffff:ffff:ffff:ffff::"
               network: "fe80::"
           network6: "fe80::"
-        lo: 
+        lo:
           ip6: "::1"
-          bindings: 
+          bindings:
             - address: "127.0.0.1"
               netmask: "255.0.0.0"
               network: "127.0.0.0"
@@ -157,7 +140,7 @@
           network: "127.0.0.0"
           mtu: 65536
           ip: "127.0.0.1"
-          bindings6: 
+          bindings6:
             - address: "::1"
               netmask: "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff"
               network: "::1"
@@ -171,15 +154,15 @@
       domain: localdomain
       network6: "fe80::"
     memoryfree: "788.06 MiB"
-    system_uptime: 
+    system_uptime:
       days: 0
       hours: 0
       seconds: 2069
       uptime: "0:34 hours"
     uptime_seconds: 2069
     memoryfree_mb: 788.0625
-    memory: 
-      swap: 
+    memory:
+      swap:
         available: "1.08 GiB"
         available_bytes: 1162366976
         capacity: "0%"
@@ -187,7 +170,7 @@
         total_bytes: 1162366976
         used: "0 bytes"
         used_bytes: 0
-      system: 
+      system:
         available: "788.06 MiB"
         available_bytes: 826343424
         capacity: "20.89%"
@@ -204,7 +187,7 @@
     blockdevice_sr0_model: "VMware SATA CD01"
     netmask: "255.255.0.0"
     netmask_eth0: "255.255.0.0"
-    trusted: 
+    trusted:
       authenticated: remote
       certname: puppetdev.localdomain
       domain: localdomain
@@ -221,95 +204,95 @@
     blockdevice_sda_size: 20971520000
     kernelmajversion: "4.1"
     filesystems: "cramfs,ext2,ext3,ext4,iso9660,squashfs,vfat"
-    mountpoints: 
-      /etc/hostname: 
+    mountpoints:
+      /etc/hostname:
         filesystem: ext4
         device: /dev/sda1
         used_bytes: 5667684352
         available_bytes: 13854396416
         used: "5.28 GiB"
         size: "18.18 GiB"
-        options: 
+        options:
           - rw
           - relatime
           - "data=ordered"
         size_bytes: 19522080768
         available: "12.90 GiB"
         capacity: "29.03%"
-      /etc/hosts: 
+      /etc/hosts:
         filesystem: ext4
         device: /dev/sda1
         used_bytes: 5667684352
         available_bytes: 13854396416
         used: "5.28 GiB"
         size: "18.18 GiB"
-        options: 
+        options:
           - rw
           - relatime
           - "data=ordered"
         size_bytes: 19522080768
         available: "12.90 GiB"
         capacity: "29.03%"
-      /etc/resolv.conf: 
+      /etc/resolv.conf:
         filesystem: ext4
         device: /dev/sda1
         used_bytes: 5667684352
         available_bytes: 13854396416
         used: "5.28 GiB"
         size: "18.18 GiB"
-        options: 
+        options:
           - rw
           - relatime
           - "data=ordered"
         size_bytes: 19522080768
         available: "12.90 GiB"
         capacity: "29.03%"
-    partitions: 
-      /dev/sda1: 
+    partitions:
+      /dev/sda1:
         mount: /etc/resolv.conf
         size: "18.60 GiB"
         size_bytes: 19970129920
-      /dev/sda2: 
+      /dev/sda2:
         size: "954.98 MiB"
         size_bytes: 1001373696
-    load_averages: 
+    load_averages:
       "15m": 0.06
       "1m": 0.06
       "5m": 0.05
-    disks: 
-      fd0: 
+    disks:
+      fd0:
         size: "0 bytes"
         size_bytes: 0
-      sda: 
+      sda:
         model: "VMware Virtual S"
         size: "19.53 GiB"
         size_bytes: 20971520000
         vendor: "VMware,"
-      sr0: 
+      sr0:
         model: "VMware SATA CD01"
         size: "30.00 MiB"
         size_bytes: 31457280
         vendor: NECVMWar
-    dmi: 
-      bios: 
+    dmi:
+      bios:
         release_date: "05/20/2014"
         vendor: "Phoenix Technologies LTD"
         version: "6.00"
-      board: 
+      board:
         manufacturer: "Intel Corporation"
         product: "440BX Desktop Reference Platform"
         serial_number: None
-      chassis: 
+      chassis:
         asset_tag: "No Asset Tag"
         type: Other
       manufacturer: "VMware, Inc."
-      product: 
+      product:
         name: "VMware Virtual Platform"
         serial_number: "VMware-56 4d 25 bb 6b 40 eb bf-38 b3 07 cc d4 45 59 18"
         uuid: "564D25BB-6B40-EBBF-38B3-07CCD4455918"
     serialnumber: "VMware-56 4d 25 bb 6b 40 eb bf-38 b3 07 cc d4 45 59 18"
     environment: production
-  facts: 
+  facts:
   time: 2016-05-10 13:14:57.080352 -07:00
   environment_name: production
   expiration: 2016-05-10 13:44:57.080364 -07:00
