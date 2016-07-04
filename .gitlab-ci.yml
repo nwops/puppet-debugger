@@ -12,10 +12,21 @@ stages:
     - bundle exec puppet module install puppetlabs-stdlib
     - bundle exec rake spec
 
-web_trigger:
+web_trigger_staging:
   type: web_deploy
+  variables:
+    REF: staging
+  only:
+    - tags
   script:
-    - "curl -X POST -F token=PREPL_BUILD_TRIGGER_TOKEN -F ref=master https://gitlab.com/api/v3/projects/1146764/trigger/builds"
+    - "curl -X POST -F token=$PREPL_BUILD_TRIGGER_TOKEN -F ref=$REF https://gitlab.com/api/v3/projects/1146764/trigger/builds"
+
+web_trigger_production:
+  type: web_deploy
+  variables:
+    REF: production
+  script:
+    - "curl -X POST -F token=$PREPL_BUILD_TRIGGER_TOKEN -F ref=$REF https://gitlab.com/api/v3/projects/1146764/trigger/builds"
 
 .ruby_193: &ruby193
   image: ruby:1.9.3
