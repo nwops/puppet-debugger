@@ -11,19 +11,18 @@ GEM
     facterdb (0.3.5)
       facter
       jgrep
-    hiera (3.1.2)
+    hiera (3.2.0)
       json_pure
     jgrep (1.4.1)
       json
     json (1.8.3)
-    json_pure (1.8.3)
+    json_pure (2.0.1)
     method_source (0.8.2)
     pry (0.10.3)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
-    puppet (4.4.2)
-      CFPropertyList (~> 2.2.6)
+    puppet (4.5.2)
       facter (> 2.0, < 4)
       hiera (>= 2.0, < 4)
       json_pure
