@@ -239,7 +239,7 @@ If using the [web based repl](https://www.puppet-repl.com) you can playback a sh
 which would start a repl session and then load the content from the url or parameter.
 
 Example:
-https://www.puppet-repl.com/play?url=https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0.txt
+https://murmuring-plateau-62715.herokuapp.com/play?url=https://gist.github.com/logicminds/64f0fe9f64339f18f097a9f42acd6276
 
 or for single commands
 

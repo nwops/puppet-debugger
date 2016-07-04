@@ -1,3 +1,6 @@
+## 0.3.0
+  * Fixes #23 - add quiet flag to suppress banner
+  * Fixes #11 - cannot declare and use a class or define
 ## 0.2.3
   * fixes #21 - type display causes error
 ## 0.2.2

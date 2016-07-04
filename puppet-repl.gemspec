@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Corey Osman"]
-  s.date = "2016-06-01"
+  s.date = "2016-07-03"
   s.description = "A interactive command line tool for evaluating the puppet language"
   s.email = "corey@nwops.io"
   s.extra_rdoc_files = [
