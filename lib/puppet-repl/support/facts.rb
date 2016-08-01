@@ -3,8 +3,35 @@ module PuppetRepl
     module Facts
       # in the future we will want to grab real facts from real systems via puppetdb
       # or enc data
-      def facterdb_filter
-        'operatingsystem=RedHat and operatingsystemrelease=/^7/ and architecture=x86_64 and facterversion=/^2.4\./'
+
+      # allow the user to specify the facterdb filter
+      def dynamic_facterdb_filter
+        ENV['REPL_FACTERDB_FILTER'] || default_facterdb_filter
+      end
+
+      def default_facterdb_filter
+        "operatingsystem=#{facter_os_name} and operatingsystemrelease=#{facter_os_version} and architecture=x86_64 and facterversion=#{facter_version}"
+      end
+
+      def facter_version
+        ENV['REPL_FACTER_VERSION'] || default_facter_version
+      end
+
+      # return the correct supported version of facter facts
+      def default_facter_version
+        if Gem::Version.new(Puppet.version) >= Gem::Version.new(4.4)
+          '/^3\.1/'
+        else
+          '/^2\.4/'
+        end
+      end
+
+      def facter_os_name
+        ENV['REPL_FACTER_OS_NAME'] || 'Fedora'
+      end
+
+      def facter_os_version
+        ENV['REPL_FACTER_OS_VERSION'] || '23'
       end
 
       def set_facts(value)
@@ -16,7 +43,15 @@ module PuppetRepl
       # we could also use fact_merge to get real facts from the real system or puppetdb
       def default_facts
         unless @facts
-          node_facts = FacterDB.get_facts(facterdb_filter).first
+          node_facts = FacterDB.get_facts(dynamic_facterdb_filter).first
+          if node_facts.nil?
+            message = <<-EOS
+Using filter: #{facterdb_filter}
+Bad FacterDB filter, please change the filter so it returns a result set.
+See https://github.com/camptocamp/facterdb/#with-a-string-filter
+            EOS
+            raise PuppetRepl::Exception::BadFilter.new(:message => message)
+          end
           values = Hash[ node_facts.map { |k, v| [k.to_s, v] } ]
           @facts ||= Puppet::Node::Facts.new(values['fqdn'], values)
         end

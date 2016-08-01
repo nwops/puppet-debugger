@@ -95,7 +95,7 @@ module PuppetRepl
         begin
           output = ''
           case input
-          when /^play|^classification|^facts|^vars|^functions|^classes|^resources|^krt|^environment|^reset|^help/
+          when /^play|^classification|^facterdb_filter|^facts|^vars|^functions|^classes|^resources|^krt|^environment|^reset|^help/
             args = input.split(' ')
             command = args.shift.to_sym
             if self.respond_to?(command)

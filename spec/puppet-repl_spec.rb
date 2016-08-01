@@ -428,10 +428,7 @@ describe "PuppetRepl" do
       repl.handle_input("$var1")
       expect(output.string).to match(/value1/)
     end
-    it 'display productname variable' do
-      repl.handle_input("$productname")
-      expect(output.string).to match(/VirtualBox/)
-    end
+    
   end
 
   describe 'execute functions' do

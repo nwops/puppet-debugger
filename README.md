@@ -223,6 +223,20 @@ Press the tab key to engage the auto complete functionality.
 
 Currently native functions are not available in auto complete. See #24
 
+## FacterDB and using different fact sets
+The puppet-repl internally leverages the [facterdb](https://github.com/camptocamp/facterdb/) gem to load pre-cached facts into the repl session.  At some point you
+may need to override the repl's default fact set with something of your own choosing.  You can do this by setting one of the environment variables below.
+
+* `REPL_FACTERDB_FILTER`  Sets the entire filter
+* `REPL_FACTER_OS_VERSION` Sets the OS version (only works with RHEL clones and Fedora)
+* `REPL_FACTER_OS_NAME` Sets the OS name (only works with RHEL clones and Fedora)
+* `REPL_FACTER_VERSION` Sets the facter version to use in the repl session (uses 3.1 for puppet 4.4+ and 2.4 for 3.8-4.4)
+
+By default it looks something like `operatingsystem=Fedora and operatingsystemrelease=23 and architecture=x86_64 and facterversion=/^3\\.1/`
+depending on the puppet version currently running.
+
+You can display the current facterdb filter by running `facterdb_filter` from the repl session.
+
 ## Playback support
 Puppet-repl now supports playing back files or urls and loading the content into the repl session.  This means if you want to start a repl session from an existing file or url you can play the content back in the repl.
 You can also playback a file that contains puppet code and repl commands.

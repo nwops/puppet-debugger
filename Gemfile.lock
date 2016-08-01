@@ -2,7 +2,7 @@ GEM
   remote: http://rubygems.org/
   specs:
     CFPropertyList (2.2.8)
-    awesome_print (1.6.1)
+    awesome_print (1.7.0)
     coderay (1.1.1)
     diff-lcs (1.2.5)
     docile (1.1.5)
@@ -16,35 +16,36 @@ GEM
     jgrep (1.4.1)
       json
     json (1.8.3)
-    json_pure (2.0.1)
+    json_pure (2.0.2)
     method_source (0.8.2)
-    pry (0.10.3)
+    pry (0.10.4)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
-    puppet (4.5.2)
+    puppet (4.5.3)
+      CFPropertyList (~> 2.2.6)
       facter (> 2.0, < 4)
       hiera (>= 2.0, < 4)
       json_pure
-    rake (11.1.2)
-    rdoc (3.12.2)
+    rake (11.2.2)
+    rdoc (3.12.1)
       json (~> 1.4)
-    rspec (3.4.0)
-      rspec-core (~> 3.4.0)
-      rspec-expectations (~> 3.4.0)
-      rspec-mocks (~> 3.4.0)
-    rspec-core (3.4.4)
-      rspec-support (~> 3.4.0)
-    rspec-expectations (3.4.0)
+    rspec (3.5.0)
+      rspec-core (~> 3.5.0)
+      rspec-expectations (~> 3.5.0)
+      rspec-mocks (~> 3.5.0)
+    rspec-core (3.5.2)
+      rspec-support (~> 3.5.0)
+    rspec-expectations (3.5.0)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.4.0)
-    rspec-mocks (3.4.1)
+      rspec-support (~> 3.5.0)
+    rspec-mocks (3.5.0)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.4.0)
-    rspec-support (3.4.1)
-    simplecov (0.11.2)
+      rspec-support (~> 3.5.0)
+    rspec-support (3.5.0)
+    simplecov (0.12.0)
       docile (~> 1.1.0)
-      json (~> 1.8)
+      json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.0)
     slop (3.6.0)
@@ -57,11 +58,8 @@ DEPENDENCIES
   bundler
   facterdb (~> 0.3)
   pry
-  puppet (>= 3.8)
+  puppet (= 4.5.3)
   rake
   rdoc (~> 3.12)
   rspec
   simplecov
-
-BUNDLED WITH
-   1.12.5

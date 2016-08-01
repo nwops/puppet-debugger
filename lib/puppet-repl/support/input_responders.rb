@@ -3,9 +3,13 @@ module PuppetRepl
     module InputResponders
 
       def static_responder_list
-        ["exit", "functions", "classification","vars", "krt", "facts",
+        ["exit", "functions", "classification","vars", 'facterdb_filter', "krt", "facts",
          "resources", "classes", "play","reset", "help"
         ]
+      end
+
+      def facterdb_filter(args=[])
+        dynamic_facterdb_filter.ai
       end
 
       def help(args=[])

@@ -19,6 +19,12 @@ EOF
       end
     end
 
+    class BadFilter < FatalError
+      def message
+        data[:message]
+      end
+    end
+
     class UndefinedNode < FatalError
       def message
         out = <<-EOF
