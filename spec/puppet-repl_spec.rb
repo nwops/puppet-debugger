@@ -428,7 +428,7 @@ describe "PuppetRepl" do
       repl.handle_input("$var1")
       expect(output.string).to match(/value1/)
     end
-    
+
   end
 
   describe 'execute functions' do
@@ -447,30 +447,25 @@ describe "PuppetRepl" do
     end
   end
 
-  # this code no longer works in puppet 4.5+
-  # describe 'unidentified object' do
-  #   let(:repl_output) { "\n" }
-  #   describe "Node['foot']" do
-  #     let(:input) { subject }
-  #     it 'returns string' do
-  #       repl.handle_input(input)
-  #       expect(output.string).to eq(repl_output)
-  #     end
-  #   end
-  #   describe "Puppet::Pops::Types::PStringType" do
-  #     let(:input) { subject }
-  #     it 'returns string' do
-  #       repl.handle_input(input)
-  #       expect(output.string).to eq(repl_output)
-  #     end
-  #   end
-  #   describe 'Facts' do
-  #     let(:input) { subject }
-  #     it 'returns string' do
-  #       repl.handle_input(input)
-  #       expect(output.string).to eq(repl_output)
-  #     end
-  #   end
-  # end
+  describe 'error message' do
+    let(:input) do
+      "file{'/tmp/test': ensure => present, contact => 'blah'}"
+    end
+    p_version = ENV['PUPPET_GEM_VERSION'].split(' ').last
+    if Gem::Version.new(p_version) >= Gem::Version.new('4.0')
+      it 'show error message' do
+        repl_output =  /no\ parameter\ named\ 'contact'/
+        repl.handle_input(input)
+        expect(output.string).to match(repl_output)
+      end
+    else
+      it 'show error message' do
+        repl_output =  /Invalid\ parameter\ contact/
+        repl.handle_input(input)
+        expect(output.string).to match(repl_output)
+      end
+    end
+
+  end
 
 end

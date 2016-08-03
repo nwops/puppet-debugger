@@ -18,7 +18,8 @@ module PuppetRepl
           options[:facts] = default_facts
           options[:classes] = []
           options[:environment] = puppet_environment
-          node_obj = Puppet::Node.new(default_facts.values['fqdn'], options)
+          name = default_facts.values['fqdn']
+          node_obj = Puppet::Node.new(name, options)
           node_obj.add_server_facts(server_facts) if node_obj.respond_to?(:add_server_facts)
           node_obj
         end

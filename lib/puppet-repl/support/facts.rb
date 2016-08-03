@@ -41,26 +41,33 @@ module PuppetRepl
       # uses facterdb (cached facts) and retrives the facts given a filter
       # creates a new facts object
       # we could also use fact_merge to get real facts from the real system or puppetdb
-      def default_facts
-        unless @facts
-          node_facts = FacterDB.get_facts(dynamic_facterdb_filter).first
-          if node_facts.nil?
-            message = <<-EOS
+      def node_facts
+        node_facts = FacterDB.get_facts(dynamic_facterdb_filter).first
+        if node_facts.nil?
+          message = <<-EOS
 Using filter: #{facterdb_filter}
 Bad FacterDB filter, please change the filter so it returns a result set.
 See https://github.com/camptocamp/facterdb/#with-a-string-filter
-            EOS
-            raise PuppetRepl::Exception::BadFilter.new(:message => message)
-          end
+          EOS
+          raise PuppetRepl::Exception::BadFilter.new(:message => message)
+        end
+        # fix for when --show-legacy facts are not part of the facter 3 fact set
+        node_facts[:fqdn] = node_facts[:networking].fetch('fqdn',nil) unless node_facts[:fqdn]
+        node_facts
+      end
+
+      def default_facts
+        unless @facts
           values = Hash[ node_facts.map { |k, v| [k.to_s, v] } ]
-          @facts ||= Puppet::Node::Facts.new(values['fqdn'], values)
+          name = values['fqdn']
+          @facts ||= Puppet::Node::Facts.new(name, values)
         end
         @facts
       end
 
       def server_facts
         data = {}
-        data["servername"] = Facter.value("fqdn")
+        data["servername"] = Facter.value("fqdn") || Facter.value('networking')['fqdn']
         data['serverip'] = Facter.value("ipaddress")
         data["serverversion"] = Puppet.version.to_s
         data

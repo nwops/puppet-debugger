@@ -126,6 +126,8 @@ module PuppetRepl
           output = e.message.fatal
         rescue Puppet::ResourceError => e
           output = e.message.fatal
+        rescue Puppet::Error => e
+          output = e.message.fatal
         rescue Puppet::ParseErrorWithIssue => e
           output = e.message.fatal
         rescue PuppetRepl::Exception::FatalError => e
