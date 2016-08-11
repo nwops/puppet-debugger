@@ -1,3 +1,8 @@
+## 0.3.1
+  * Fixes #27 - repl should throw puppet error message instead of stacktrace
+  * adds support for customizing facterdb filter
+  * adds support for puppet 4.6
+  * Fixes #26 - allow configuration of facter version and facterdb filter
 ## 0.3.0
   * Fixes #23 - add quiet flag to suppress banner
   * Fixes #11 - cannot declare and use a class or define

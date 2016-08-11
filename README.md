@@ -199,7 +199,6 @@ pe specific modules in your development environment.  Not doing this step will r
 
   ```
 
-
 ### Usage
 There are two ways of using the remote node feature.  You can either
 pass in the node name from the command line or set the node name from the repl session.
@@ -230,12 +229,14 @@ may need to override the repl's default fact set with something of your own choo
 * `REPL_FACTERDB_FILTER`  Sets the entire filter
 * `REPL_FACTER_OS_VERSION` Sets the OS version (only works with RHEL clones and Fedora)
 * `REPL_FACTER_OS_NAME` Sets the OS name (only works with RHEL clones and Fedora)
-* `REPL_FACTER_VERSION` Sets the facter version to use in the repl session (uses 3.1 for puppet 4.4+ and 2.4 for 3.8-4.4)
+* `REPL_FACTER_VERSION` Sets the facter version to use in the repl session (uses facter 3.1 for puppet 4.4+ and facter 2.4 for 3.8-4.4)
 
 By default it looks something like `operatingsystem=Fedora and operatingsystemrelease=23 and architecture=x86_64 and facterversion=/^3\\.1/`
 depending on the puppet version currently running.
 
 You can display the current facterdb filter by running `facterdb_filter` from the repl session.
+
+Why do facter versions matter? While facter and puppet work independently just fine, newer forge modules utilize certain data structures found only in newer versions of facter. So its really up to the puppet code you use. With facter 3, almost every fact is now a data structure.  So if you are having issues with facts not existing in the repl you may need to change the facter version `REPL_FACTER_VERSION` to something different.
 
 ## Playback support
 Puppet-repl now supports playing back files or urls and loading the content into the repl session.  This means if you want to start a repl session from an existing file or url you can play the content back in the repl.
@@ -247,13 +248,14 @@ or
 
 `prepl -p https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw`
 
+or just use STDIN  `prepl <some_file>` or `echo "abs(-3)" | prepl`
 
 ### Web based playback support
 If using the [web based repl](https://www.puppet-repl.com) you can playback a shared url
 which would start a repl session and then load the content from the url or parameter.
 
 Example:
-https://murmuring-plateau-62715.herokuapp.com/play?url=https://gist.github.com/logicminds/64f0fe9f64339f18f097a9f42acd6276
+https://puppet-repl.com/play?url=https://gist.github.com/logicminds/64f0fe9f64339f18f097a9f42acd6276
 
 or for single commands
 
