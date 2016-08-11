@@ -22,7 +22,6 @@ GEM
       method_source (~> 0.8.1)
       slop (~> 3.4)
     puppet (4.6.0)
-      CFPropertyList (~> 2.2.6)
       facter (> 2.0, < 4)
       hiera (>= 2.0, < 4)
       json_pure (~> 1.8)
@@ -58,7 +57,7 @@ DEPENDENCIES
   facterdb (~> 0.3)
   json_pure (<= 2.0.1)
   pry
-  puppet (= 4.6)
+  puppet (>= 3.8)
   rake
   rdoc (~> 3.12)
   rspec

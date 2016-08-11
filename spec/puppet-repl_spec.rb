@@ -37,19 +37,17 @@ describe "PuppetRepl" do
       it do
         repl.handle_input(input)
         expect(output.string).to eq("\n")
-        expect(repl.scope.known_resource_types.hostclasses).to include('testfoo')
-      end
-      it do
-        repl.handle_input(input)
-        repl.handle_input("class{'testfoo':}")
-        expect(repl.scope.compiler.catalog.classes).to include('testfoo')
-        # expect(output.string).to include("\n => Puppet::Type::Component")
-        # expect(output.string).to include("name => \"Testfoo\"")
+        expect(repl.known_resource_types[:hostclasses]).to include('testfoo')
       end
       it do
         repl.handle_input(input)
         repl.handle_input("include testfoo")
         expect(repl.scope.compiler.catalog.classes).to include('testfoo')
+      end
+      it do
+        repl.handle_input(input)
+        repl.handle_input('include testfoo')
+        expect(repl.scope.compiler.catalog.resources.map(&:name)).to include('Testfoo')
       end
     end
   end
@@ -64,7 +62,7 @@ describe "PuppetRepl" do
       end
       it do
         repl.handle_input(input)
-        expect(repl.scope.known_resource_types.definitions.keys).to include('testfoo')
+        expect(repl.scope.environment.known_resource_types.definitions.keys).to include('testfoo')
         expect(output.string).to eq("\n")
       end
       it do

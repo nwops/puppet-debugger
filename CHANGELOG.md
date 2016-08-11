@@ -1,8 +1,10 @@
 ## 0.3.1
+  * Fixes #28 - puppet 4.6 support
   * Fixes #27 - repl should throw puppet error message instead of stacktrace
   * adds support for customizing facterdb filter
   * adds support for puppet 4.6
   * Fixes #26 - allow configuration of facter version and facterdb filter
+
 ## 0.3.0
   * Fixes #23 - add quiet flag to suppress banner
   * Fixes #11 - cannot declare and use a class or define
@@ -10,8 +12,8 @@
   * fixes #21 - type display causes error
 ## 0.2.2
   * adds better support for playing back puppet code
-      * this now allows playback of any manifest
-      * allows mixed puppet code and repl commands
+    * this now allows playback of any manifest
+    * allows mixed puppet code and repl commands
 ## 0.2.1
   * Fixes #2 - adds support for multiline input
 

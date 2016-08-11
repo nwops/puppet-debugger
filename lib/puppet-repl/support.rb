@@ -79,19 +79,19 @@ module PuppetRepl
 
     def known_resource_types
       res = {
-        :hostclasses => scope.known_resource_types.hostclasses.keys,
-        :definitions => scope.known_resource_types.definitions.keys,
-        :nodes => scope.known_resource_types.nodes.keys,
+        :hostclasses => scope.environment.known_resource_types.hostclasses.keys,
+        :definitions => scope.environment.known_resource_types.definitions.keys,
+        :nodes => scope.environment.known_resource_types.nodes.keys,
       }
-      if sites = scope.known_resource_types.instance_variable_get(:@sites)
-        res.merge!(:sites => scope.known_resource_types.instance_variable_get(:@sites).first)
+      if sites = scope.environment.known_resource_types.instance_variable_get(:@sites)
+        res.merge!(:sites => scope.environment.known_resource_types.instance_variable_get(:@sites).first)
       end
-      if scope.known_resource_types.respond_to?(:applications)
-        res.merge!(:applications => scope.known_resource_types.applications.keys)
+      if scope.environment.known_resource_types.respond_to?(:applications)
+        res.merge!(:applications => scope.environment.known_resource_types.applications.keys)
       end
       # some versions of puppet do not support capabilities
-      if scope.known_resource_types.respond_to?(:capability_mappings)
-        res.merge!(:capability_mappings => scope.known_resource_types.capability_mappings.keys)
+      if scope.environment.known_resource_types.respond_to?(:capability_mappings)
+        res.merge!(:capability_mappings => scope.environment.known_resource_types.capability_mappings.keys)
       end
       res
     end
@@ -141,7 +141,7 @@ module PuppetRepl
       ast = generate_ast(input)
       Puppet.override( {:global_scope => scope, :loaders => scope.compiler.loaders } , 'For puppet-repl') do
          # because the repl is not a module we leave the modname blank
-         scope.known_resource_types.import_ast(ast, '')
+         scope.environment.known_resource_types.import_ast(ast, '')
          parser.evaluate_string(scope, input)
       end
     end
