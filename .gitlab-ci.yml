@@ -112,3 +112,9 @@ puppet_45_ruby22:
     PUPPET_GEM_VERSION: "~> 4.5"
   <<: *puppet_job_def
   <<: *ruby22
+
+puppet_46_ruby22:
+  variables:
+    PUPPET_GEM_VERSION: "~> 4.6"
+  <<: *puppet_job_def
+  <<: *ruby22
