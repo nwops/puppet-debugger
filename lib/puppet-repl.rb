@@ -4,6 +4,8 @@ require 'awesome_print'
 require_relative 'awesome_print/ext/awesome_puppet'
 require_relative 'trollop'
 require 'puppet/util/log'
+require_relative 'puppet-repl/repl_code'
+
 require_relative 'puppet-repl/support/errors'
 # monkey patch in some color effects string methods
 class String
@@ -39,7 +41,6 @@ Puppet::Util::Log.newdesttype :buffer do
       :crit    => { :name => 'Critical',  :color => :hred,  :stream => err_buffer },
       :err     => { :name => 'Error',     :color => :hred,  :stream => err_buffer },
       :warning => { :name => 'Warning',   :color => :hred,  :stream => err_buffer },
-
       :notice  => { :name => 'Notice',    :color => :reset, :stream => out_buffer },
       :info    => { :name => 'Info',      :color => :green, :stream => out_buffer },
       :debug   => { :name => 'Debug',     :color => :cyan,  :stream => out_buffer },

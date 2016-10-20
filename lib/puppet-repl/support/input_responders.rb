@@ -4,8 +4,20 @@ module PuppetRepl
 
       def static_responder_list
         ["exit", "functions", "classification","vars", 'facterdb_filter', "krt", "facts",
-         "resources", "classes", "play","reset", "help"
+         "resources", "classes", "whereami", "play","reset", "help"
         ]
+      end
+
+      # @source_file and @source_line_num instance variables must be set for this
+      # method to show the surrounding code
+      # @return [String] - string output of the code surrounded by the breakpoint or nil if file or line_num do not exist
+      def whereami(command=nil, args=nil)
+        file=@source_file
+        line_num=@source_line_num
+        if file and line_num
+          code = ReplCode.from_file(file, :puppet)
+          return code.with_marker(line_num).around(line_num, 5).with_line_numbers.with_indentation(5).to_s
+        end
       end
 
       def facterdb_filter(args=[])

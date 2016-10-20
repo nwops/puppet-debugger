@@ -15,7 +15,11 @@ describe "PuppetRepl" do
   end
 
   let(:repl) do
-    PuppetRepl::Cli.new(:out_buffer => output)
+    PuppetRepl::Cli.new({:out_buffer => output}.merge(options))
+  end
+
+  let(:options) do
+    {}
   end
 
   let(:input) do
@@ -178,7 +182,7 @@ describe "PuppetRepl" do
       'help'
     end
     it 'can show the help screen' do
-      expected_repl_output = /Type \"exit\", \"functions\", \"vars\", \"krt\", \"facts\", \"resources\", \"classes\",\n     \"play\", \"classification\", \"reset\", or \"help\" for more information.\n\n/
+      expected_repl_output = /Type \"exit\", \"functions\", \"vars\", \"krt\", \"whereami\", \"facts\", \"resources\", \"classes\",\n     \"play\", \"classification\", \"reset\", or \"help\" for more information.\n\n/
       repl.handle_input(input)
       expect(output.string).to match(/Ruby Version: #{RUBY_VERSION}\n/)
       expect(output.string).to match(/Puppet Version: \d.\d.\d\n/)
@@ -445,12 +449,31 @@ describe "PuppetRepl" do
     end
   end
 
+  describe 'whereami' do
+    let(:input) do
+      File.expand_path File.join(fixtures_dir, 'sample_start_repl.pp')
+    end
+    let(:options) do
+      {
+          source_file: input,
+          source_line: 10,
+      }
+    end
+
+    it 'runs' do
+      expect(repl.whereami).to match(/\s+5/)
+    end
+    it 'contains marker' do
+      expect(repl.whereami).to match(/\s+=>\s10/)
+    end
+
+  end
+
   describe 'error message' do
     let(:input) do
       "file{'/tmp/test': ensure => present, contact => 'blah'}"
     end
-    p_version = ENV['PUPPET_GEM_VERSION'].split(' ').last
-    if Gem::Version.new(p_version) >= Gem::Version.new('4.0')
+    if Gem::Version.new(Puppet.version) >= Gem::Version.new('4.0')
       it 'show error message' do
         repl_output =  /no\ parameter\ named\ 'contact'/
         repl.handle_input(input)

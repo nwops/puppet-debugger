@@ -13,13 +13,14 @@ module PuppetRepl
       @log_level = 'notice'
       @out_buffer = options[:out_buffer] || $stdout
       @html_mode = options[:html_mode] || false
+      @source_file = options[:source_file] || nil
+      @source_line_num = options[:source_line] || nil
       @in_buffer = options[:in_buffer] || $stdin
       comp = Proc.new do |s|
         key_words.grep(/^#{Regexp.escape(s)}/)
       end
       Readline.completion_append_character = ""
       Readline.basic_word_break_characters = " "
-
       Readline.completion_proc = comp
       AwesomePrint.defaults = {
         :html => @html_mode,
@@ -91,11 +92,10 @@ module PuppetRepl
     #
     def handle_input(input)
         raise ArgumentError unless input.instance_of?(String)
-
         begin
           output = ''
           case input
-          when /^play|^classification|^facterdb_filter|^facts|^vars|^functions|^classes|^resources|^krt|^environment|^reset|^help/
+          when /^play|^classification|^whereami|^facterdb_filter|^facts|^vars|^functions|^classes|^resources|^krt|^environment|^reset|^help/
             args = input.split(' ')
             command = args.shift.to_sym
             if self.respond_to?(command)
@@ -149,7 +149,7 @@ Ruby Version: #{RUBY_VERSION}
 Puppet Version: #{Puppet.version}
 Puppet Repl Version: #{PuppetRepl::VERSION}
 Created by: NWOps <corey@nwops.io>
-Type "exit", "functions", "vars", "krt", "facts", "resources", "classes",
+Type "exit", "functions", "vars", "krt", "whereami", "facts", "resources", "classes",
      "play", "classification", "reset", or "help" for more information.
 
       EOT
@@ -194,10 +194,28 @@ Type "exit", "functions", "vars", "krt", "facts", "resources", "classes",
       end
     end
 
+    # used to start a repl without attempting to read from stdin
+    # or
+    # @param [Hash] must contain at least the puppet scope object
+    def self.start_without_stdin(options={:scope => nil})
+      puts print_repl_desc unless options[:quiet]
+      repl_obj = PuppetRepl::Cli.new(options)
+      repl_obj.remote_node_name = options[:node_name] if options[:node_name]
+      repl_obj.initialize_from_scope(options[:scope])
+      puts repl_obj.whereami if options[:source_file] and options[:source_line]
+      # helper code to make tests exit the loop
+      repl_obj.read_loop unless options[:run_once]
+      if options[:play]
+        repl_obj.play_back(options)
+      else
+        repl_obj.read_loop
+      end
+    end
+
     # start reads from stdin or from a file
     # if from stdin, the repl will process the input and exit
     # if from a file, the repl will process the file and continue to prompt
-    # @param [Scope] puppet scope object
+    # @param [Hash] puppet scope object
     def self.start(options={:scope => nil})
       opts = Trollop::options do
         opt :play, "Url or file to load from", :required => false, :type => String
@@ -207,7 +225,7 @@ Type "exit", "functions", "vars", "krt", "facts", "resources", "classes",
       end
       options = opts.merge(options)
       puts print_repl_desc unless options[:quiet]
-      repl_obj = PuppetRepl::Cli.new
+      repl_obj = PuppetRepl::Cli.new(options)
       repl_obj.remote_node_name = opts[:node_name] if opts[:node_name]
       repl_obj.initialize_from_scope(options[:scope])
       if options[:play]
