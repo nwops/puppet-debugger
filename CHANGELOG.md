@@ -1,3 +1,5 @@
+## 0.3.2
+  * Fixes #31 - adds ability to show surrounding code
 ## 0.3.1
   * Fixes #28 - puppet 4.6 support
   * Fixes #27 - repl should throw puppet error message instead of stacktrace
