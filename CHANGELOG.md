@@ -1,3 +1,6 @@
+## 0.3.3
+  * Adds ability to call breakpoints from within repl
+  * Adds newline for each multiline input
 ## 0.3.2
   * Fixes #31 - adds ability to show surrounding code
 ## 0.3.1

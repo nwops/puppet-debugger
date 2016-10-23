@@ -21,12 +21,18 @@ require_relative 'code/code_file'
       # @param [Symbol] code_type The type of code the file contains.
       # @return [Code]
       def from_file(filename, code_type = nil)
-        if filename == :code
-          new(Puppet[:code], 1, code_type)
-        else
-          code_file = CodeFile.new(filename, code_type)
-          new(code_file.code, 1, code_file.code_type)
-        end
+        code_file = CodeFile.new(filename, code_type)
+        new(code_file.code, 1, code_file.code_type)
+      end
+
+      # Instantiate a `Code` object containing code loaded from a file or
+      # Pry's line buffer.
+      #
+      # @param [String] source code".
+      # @param [Symbol] code_type The type of code the file contains.
+      # @return [Code]
+      def from_string(code, code_type = nil)
+        new(code, 1, code_type)
       end
     end
 

@@ -15,11 +15,18 @@ module PuppetRepl
         file=@source_file
         line_num=@source_line_num
         if file and line_num
-          code = ReplCode.from_file(file, :puppet)
+          if file == :code
+            source_code = Puppet[:code]
+            code = ReplCode.from_string(source_code, :puppet)
+          else
+            code = ReplCode.from_file(file, :puppet)
+          end
           return code.with_marker(line_num).around(line_num, 5).with_line_numbers.with_indentation(5).to_s
         end
       end
 
+      # displays the facterdb filter
+      # @param [Array] - args is not used
       def facterdb_filter(args=[])
         dynamic_facterdb_filter.ai
       end

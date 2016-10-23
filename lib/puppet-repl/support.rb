@@ -139,10 +139,14 @@ module PuppetRepl
       # in order to add functions to the scope the loaders must be created
       # in order to call native functions we need to set the global_scope
       ast = generate_ast(input)
-      Puppet.override( {:global_scope => scope, :loaders => scope.compiler.loaders } , 'For puppet-repl') do
+      # record the input for puppet to retrieve and reference later
+      File.open('.puppet_repl_input.pp', 'w') do |f|
+        f.write(input)
+      end
+      Puppet.override( {:code => input, :global_scope => scope, :loaders => scope.compiler.loaders } , 'For puppet-repl') do
          # because the repl is not a module we leave the modname blank
          scope.environment.known_resource_types.import_ast(ast, '')
-         parser.evaluate_string(scope, input)
+         parser.evaluate_string(scope, input, File.expand_path('.puppet_repl_input.pp'))
       end
     end
 
