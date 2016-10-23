@@ -186,6 +186,7 @@ Type "exit", "functions", "vars", "krt", "whereami", "facts", "resources", "clas
         rescue Puppet::ParseErrorWithIssue => e
           if multiline_input?(e)
             out_buffer.print '  '
+            full_buffer += "\n"
             next
           end
         end
