@@ -203,11 +203,9 @@ Type "exit", "functions", "vars", "krt", "whereami", "facts", "resources", "clas
       repl_obj.remote_node_name = options[:node_name] if options[:node_name]
       repl_obj.initialize_from_scope(options[:scope])
       puts repl_obj.whereami if options[:source_file] and options[:source_line]
-      # helper code to make tests exit the loop
-      repl_obj.read_loop unless options[:run_once]
       if options[:play]
         repl_obj.play_back(options)
-      else
+      elsif ! options[:run_once]
         repl_obj.read_loop
       end
     end
