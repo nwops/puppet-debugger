@@ -3,9 +3,9 @@ require 'readline'
 require 'json'
 require_relative 'support'
 
-module PuppetRepl
+module PuppetDebugger
   class Cli
-    include PuppetRepl::Support
+    include PuppetDebugger::Support
 
     attr_accessor :settings, :log_level, :in_buffer, :out_buffer, :html_mode
 
@@ -130,11 +130,11 @@ module PuppetRepl
           output = e.message.fatal
         rescue Puppet::ParseErrorWithIssue => e
           output = e.message.fatal
-        rescue PuppetRepl::Exception::FatalError => e
+        rescue PuppetDebugger::Exception::FatalError => e
           output = e.message.fatal
           out_buffer.puts output
           exit 1 # this can sometimes causes tests to fail
-        rescue PuppetRepl::Exception::Error => e
+        rescue PuppetDebugger::Exception::Error => e
           output = e.message.fatal
         end
         unless output.empty?
@@ -147,7 +147,7 @@ module PuppetRepl
       output = <<-EOT
 Ruby Version: #{RUBY_VERSION}
 Puppet Version: #{Puppet.version}
-Puppet Repl Version: #{PuppetRepl::VERSION}
+Puppet Debugger Version: #{PuppetDebugger::VERSION}
 Created by: NWOps <corey@nwops.io>
 Type "exit", "functions", "vars", "krt", "whereami", "facts", "resources", "classes",
      "play", "classification", "reset", or "help" for more information.
@@ -200,7 +200,7 @@ Type "exit", "functions", "vars", "krt", "whereami", "facts", "resources", "clas
     # @param [Hash] must contain at least the puppet scope object
     def self.start_without_stdin(options={:scope => nil})
       puts print_repl_desc unless options[:quiet]
-      repl_obj = PuppetRepl::Cli.new(options)
+      repl_obj = PuppetDebugger::Cli.new(options)
       repl_obj.remote_node_name = options[:node_name] if options[:node_name]
       repl_obj.initialize_from_scope(options[:scope])
       puts repl_obj.whereami if options[:source_file] and options[:source_line]
@@ -224,7 +224,7 @@ Type "exit", "functions", "vars", "krt", "whereami", "facts", "resources", "clas
       end
       options = opts.merge(options)
       puts print_repl_desc unless options[:quiet]
-      repl_obj = PuppetRepl::Cli.new(options)
+      repl_obj = PuppetDebugger::Cli.new(options)
       repl_obj.remote_node_name = opts[:node_name] if opts[:node_name]
       repl_obj.initialize_from_scope(options[:scope])
       if options[:play]

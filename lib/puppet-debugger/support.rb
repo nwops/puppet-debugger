@@ -7,33 +7,33 @@ Dir.glob(File.join(File.dirname(__FILE__),'support', '*.rb')).each do |file|
   require_relative File.join('support', File.basename(file, '.rb'))
 end
 
-module PuppetRepl
+module PuppetDebugger
   module Support
-    include PuppetRepl::Support::Compilier
-    include PuppetRepl::Support::Environment
-    include PuppetRepl::Support::Facts
-    include PuppetRepl::Support::Scope
-    include PuppetRepl::Support::Functions
-    include PuppetRepl::Support::Node
-    include PuppetRepl::Support::InputResponders
-    include PuppetRepl::Support::Play
+    include PuppetDebugger::Support::Compilier
+    include PuppetDebugger::Support::Environment
+    include PuppetDebugger::Support::Facts
+    include PuppetDebugger::Support::Scope
+    include PuppetDebugger::Support::Functions
+    include PuppetDebugger::Support::Node
+    include PuppetDebugger::Support::InputResponders
+    include PuppetDebugger::Support::Play
 
     # parses the error type into a more useful error message defined in errors.rb
     # returns new error object or the original if error cannot be parsed
     def parse_error(error)
       case error
       when SocketError
-        PuppetRepl::Exception::ConnectError.new(:message => "Unknown host: #{Puppet[:server]}")
+        PuppetDebugger::Exception::ConnectError.new(:message => "Unknown host: #{Puppet[:server]}")
       when Net::HTTPError
-        PuppetRepl::Exception::AuthError.new(:message => error.message)
+        PuppetDebugger::Exception::AuthError.new(:message => error.message)
       when Errno::ECONNREFUSED
-        PuppetRepl::Exception::ConnectError.new(:message => error.message)
+        PuppetDebugger::Exception::ConnectError.new(:message => error.message)
       when Puppet::Error
         if error.message =~ /could\ not\ find\ class/i
-          PuppetRepl::Exception::NoClassError.new(:default_modules_paths => default_modules_paths,
+          PuppetDebugger::Exception::NoClassError.new(:default_modules_paths => default_modules_paths,
            :message => error.message)
         elsif error.message =~ /default\ node/i
-          PuppetRepl::Exception::NodeDefinitionError.new(:default_site_manifest => default_site_manifest,
+          PuppetDebugger::Exception::NodeDefinitionError.new(:default_site_manifest => default_site_manifest,
            :message => error.message)
         else
           error
@@ -48,7 +48,7 @@ module PuppetRepl
     def default_modules_paths
       dirs = []
       do_initialize if Puppet[:codedir].nil?
-      # add the puppet-repl directory so we can load any defined functions
+      # add the puppet-debugger directory so we can load any defined functions
       dirs << File.join(Puppet[:environmentpath],default_puppet_env_name,'modules') unless Puppet[:environmentpath].empty?
       dirs << Puppet.settings[:basemodulepath].split(':')
       dirs.flatten
@@ -146,7 +146,7 @@ module PuppetRepl
       File.open(file, 'w') do |f|
         f.write(input)
       end
-      Puppet.override( {:code => input, :global_scope => scope, :loaders => scope.compiler.loaders } , 'For puppet-repl') do
+      Puppet.override( {:code => input, :global_scope => scope, :loaders => scope.compiler.loaders } , 'For puppet-debugger') do
          # because the repl is not a module we leave the modname blank
          scope.environment.known_resource_types.import_ast(ast, '')
          parser.evaluate_string(scope, input, File.expand_path(file))

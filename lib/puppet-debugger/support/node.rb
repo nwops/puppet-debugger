@@ -1,6 +1,6 @@
 require 'puppet/indirector/node/rest'
 
-module PuppetRepl
+module PuppetDebugger
   module Support
     module Node
       # creates a node object using defaults or gets the remote node
@@ -75,7 +75,7 @@ module PuppetRepl
         remote_node = get_remote_node(name)
         if remote_node and remote_node.parameters.empty?
           remote_node_name = nil  # clear out the remote name
-          raise PuppetRepl::Exception::UndefinedNode.new(:name => remote_node.name)
+          raise PuppetDebugger::Exception::UndefinedNode.new(:name => remote_node.name)
         end
         remote_node_name = remote_node.name
         node_object = convert_remote_node(remote_node)

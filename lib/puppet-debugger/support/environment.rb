@@ -1,4 +1,4 @@
-module PuppetRepl
+module PuppetDebugger
   module Support
     module Environment
       # creates a puppet environment given a module path and environment name

@@ -1,5 +1,5 @@
 require 'simplecov'
-require_relative '../lib/puppet-repl'
+require_relative '../lib/puppet-debugger'
 require 'yaml'
 ENV['COVERAGE'] = "true"
 
@@ -24,7 +24,7 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 
 require 'rspec'
-require 'puppet-repl'
+require 'puppet-debugger'
 ENV['REPL_FACTERDB_FILTER'] = "operatingsystem=Fedora and operatingsystemrelease=23 and architecture=x86_64 and facterversion=/^2\\.4/"
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.

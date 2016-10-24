@@ -1,3 +1,3 @@
-module PuppetRepl
-  VERSION = '0.3.4'
+module PuppetDebugger
+  VERSION = '0.4.0'
 end

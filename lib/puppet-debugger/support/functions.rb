@@ -1,4 +1,4 @@
-module PuppetRepl
+module PuppetDebugger
   module Support
     module Functions
       # returns a array of function files which is only required

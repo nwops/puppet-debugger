@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe 'prepl' do
+describe 'pdb' do
   let(:fixtures_file) do
     File.join(fixtures_dir, 'sample_manifest.pp')
   end
 
   before(:each) do
-    allow(PuppetRepl).to receive(:fetch_url_data).with(file_url).and_return(File.read(fixtures_file))
+    allow(PuppetDebugger).to receive(:fetch_url_data).with(file_url).and_return(File.read(fixtures_file))
   end
 
   let(:file_url) do
@@ -14,21 +14,21 @@ describe 'prepl' do
   end
 
   it do
-    expect(`echo 'file{"/tmp/test":}'| bundle exec bin/prepl`)
+    expect(`echo 'file{"/tmp/test":}'| bundle exec bin/pdb`)
       .to match(/Puppet::Type::File/)
   end
 
   it do
-    expect(`bundle exec bin/prepl #{fixtures_file} --run-once`)
+    expect(`bundle exec bin/pdb #{fixtures_file} --run-once`)
       .to match(/Puppet::Type::File/)
   end
   it do
-    expect(`bundle exec bin/prepl --play #{fixtures_file} --run-once`)
+    expect(`bundle exec bin/pdb --play #{fixtures_file} --run-once`)
       .to match(/Puppet::Type::File/)
   end
   # xit do
   #   # this test does not work without internet, and I am at 30K feet right now
-  #   expect(`bundle exec bin/prepl --play #{file_url} --run-once`)
+  #   expect(`bundle exec bin/pdb --play #{file_url} --run-once`)
   #     .to match(/Puppet::Type::File/)
   # end
 
@@ -40,10 +40,10 @@ describe 'prepl' do
       'puppetdev.localdomain'
     end
     before :each do
-      allow(PuppetRepl).to receive(:get_remote_node).with(node_name).and_return(node_obj)
+      allow(PuppetDebugger).to receive(:get_remote_node).with(node_name).and_return(node_obj)
     end
     # xit do
-    #   expect(`echo 'vars'| bundle exec bin/prepl -n #{node_name}`)
+    #   expect(`echo 'vars'| bundle exec bin/pdb -n #{node_name}`)
     #     .to match(/server_facts/)
     # end
   end

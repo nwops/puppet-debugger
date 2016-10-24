@@ -10,7 +10,7 @@ require_relative 'code/code_file'
   # which will format the text as specified when `#to_s` is called. This allows
   # arbitrary chaining of formatting methods without mutating the original
   # object.
-  class ReplCode
+  class DebuggerCode
     class << self
      # include MethodSource::CodeHelpers
 

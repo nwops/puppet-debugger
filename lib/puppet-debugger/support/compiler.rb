@@ -1,6 +1,6 @@
 require 'tempfile'
 
-module PuppetRepl
+module PuppetDebugger
   module Support
     module Compilier
       def create_compiler(node)

@@ -2,11 +2,11 @@
 require './lib/version'
 
 Gem::Specification.new do |s|
-  s.name = "puppet-repl"
-  s.version = PuppetRepl::VERSION
+  s.name = "puppet-debugger"
+  s.version = PuppetDebugger::VERSION
   s.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|resources|local_test_results|pec)/}) }
   s.bindir        = "bin"
-  s.executables = ["prepl"]
+  s.executables = ["pdb"]
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
   if s.respond_to?(:metadata)
@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
     "LICENSE.txt",
     "README.md"
   ]
-  s.homepage = "http://github.com/nwops/puppet-repl"
+  s.homepage = "http://github.com/nwops/puppet-debugger"
   s.licenses = ["MIT"]
   s.rubygems_version = "2.4.5.1"
   s.summary = "A repl for the puppet language"

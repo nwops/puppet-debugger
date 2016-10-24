@@ -1,4 +1,4 @@
-module PuppetRepl
+module PuppetDebugger
   module Support
     module Scope
       def set_scope(value)
@@ -35,7 +35,7 @@ module PuppetRepl
       # returns a hash of varaibles that are currently in scope
       def scope_vars
         vars = scope.to_hash.delete_if {| key, value | node.facts.values.key?(key.to_sym) }
-        vars['facts'] = 'removed by the puppet-repl'
+        vars['facts'] = 'removed by the puppet-debugger'
       end
     end
   end

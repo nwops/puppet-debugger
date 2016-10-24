@@ -1,4 +1,4 @@
-module PuppetRepl
+module PuppetDebugger
   module Support
     module InputResponders
 
@@ -17,9 +17,9 @@ module PuppetRepl
         if file and line_num
           if file == :code
             source_code = Puppet[:code]
-            code = ReplCode.from_string(source_code, :puppet)
+            code = DebuggerCode.from_string(source_code, :puppet)
           else
-            code = ReplCode.from_file(file, :puppet)
+            code = DebuggerCode.from_file(file, :puppet)
           end
           return code.with_marker(line_num).around(line_num, 5).with_line_numbers.with_indentation(5).to_s
         end
@@ -32,7 +32,7 @@ module PuppetRepl
       end
 
       def help(args=[])
-        PuppetRepl::Cli.print_repl_desc
+        PuppetDebugger::Cli.print_repl_desc
       end
 
       def handle_set(input)
@@ -71,7 +71,7 @@ module PuppetRepl
       def vars(args=[])
         # remove duplicate variables that are also in the facts hash
         variables = scope.to_hash.delete_if {| key, value | node.facts.values.key?(key) }
-        variables['facts'] = 'removed by the puppet-repl' if variables.key?('facts')
+        variables['facts'] = 'removed by the puppet-debugger' if variables.key?('facts')
         output = "Facts were removed for easier viewing".ai + "\n"
         output += variables.ai({:sort_keys => true, :indent => -1})
       end

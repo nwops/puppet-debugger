@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe 'facts' do
-  let(:repl) do
-    PuppetRepl::Cli.new(:out_buffer => output)
+  let(:debugger) do
+    PuppetDebugger::Cli.new(:out_buffer => output)
   end
 
   let(:puppet_version) do
@@ -10,7 +10,7 @@ describe 'facts' do
   end
 
   let(:facter_version) do
-    repl.default_facter_version
+    debugger.default_facter_version
   end
 
   before(:each) do
@@ -28,13 +28,13 @@ describe 'facts' do
       expect(facter_version).to eq('/^2\.4/')
     end
     it 'return default filter' do
-      expect(repl.dynamic_facterdb_filter).to eq("operatingsystem=Fedora and operatingsystemrelease=23 and architecture=x86_64 and facterversion=/^2\\.4/")
+      expect(debugger.dynamic_facterdb_filter).to eq("operatingsystem=Fedora and operatingsystemrelease=23 and architecture=x86_64 and facterversion=/^2\\.4/")
     end
     it 'get node_facts' do
-      expect(repl.node_facts).to be_instance_of(Hash)
+      expect(debugger.node_facts).to be_instance_of(Hash)
     end
     it 'has fqdn' do
-      expect(repl.node_facts[:fqdn]).to eq('foo.example.com')
+      expect(debugger.node_facts[:fqdn]).to eq('foo.example.com')
     end
   end
 
@@ -46,19 +46,19 @@ describe 'facts' do
       '4.5.3'
     end
     it 'get node_facts' do
-      expect(repl.node_facts).to be_instance_of(Hash)
+      expect(debugger.node_facts).to be_instance_of(Hash)
     end
     it 'has networking fqdn' do
-      expect(repl.node_facts[:networking]['fqdn']).to eq('foo.example.com')
+      expect(debugger.node_facts[:networking]['fqdn']).to eq('foo.example.com')
     end
     it 'has fqdn' do
-      expect(repl.node_facts[:fqdn]).to eq('foo.example.com')
+      expect(debugger.node_facts[:fqdn]).to eq('foo.example.com')
     end
     it 'returns 3.1' do
       expect(facter_version).to eq('/^3\.1/')
     end
     it 'return default filter' do
-      expect(repl.dynamic_facterdb_filter).to eq("operatingsystem=Fedora and operatingsystemrelease=23 and architecture=x86_64 and facterversion=/^3\\.1/")
+      expect(debugger.dynamic_facterdb_filter).to eq("operatingsystem=Fedora and operatingsystemrelease=23 and architecture=x86_64 and facterversion=/^3\\.1/")
     end
   end
 
@@ -68,10 +68,10 @@ describe 'facts' do
         ENV['REPL_FACTERDB_FILTER'] = 'facterversion=/^6\.5/'
       end
       it 'return filter' do
-        expect(repl.dynamic_facterdb_filter).to eq("facterversion=/^6\\.5/")
+        expect(debugger.dynamic_facterdb_filter).to eq("facterversion=/^6\\.5/")
       end
       it 'throws error' do
-        expect{repl.default_facts}.to raise_error(PuppetRepl::Exception::BadFilter)
+        expect{debugger.default_facts}.to raise_error(PuppetDebugger::Exception::BadFilter)
       end
     end
     describe 'good filter' do
@@ -79,7 +79,7 @@ describe 'facts' do
         ENV['REPL_FACTERDB_FILTER'] = 'facterversion=/^3\.1/'
       end
       it 'return filter' do
-        expect(repl.dynamic_facterdb_filter).to eq("facterversion=/^3\\.1/")
+        expect(debugger.dynamic_facterdb_filter).to eq("facterversion=/^3\\.1/")
       end
     end
   end

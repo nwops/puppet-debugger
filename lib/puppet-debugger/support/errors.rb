@@ -1,4 +1,4 @@
-module PuppetRepl
+module PuppetDebugger
   module Exception
     class Error < StandardError
       attr_accessor :data

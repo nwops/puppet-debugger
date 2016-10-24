@@ -7,17 +7,17 @@ describe 'support' do
     StringIO.new('', 'w')
   end
 
-  let(:repl) do
-    PuppetRepl::Cli.new(:out_buffer => output)
+  let(:debugger) do
+    PuppetDebugger::Cli.new(:out_buffer => output)
   end
 
   let(:scope) do
-    repl.scope
+    debugger.scope
   end
 
   describe 'play' do
     before(:each) do
-      allow(repl).to receive(:fetch_url_data).with(file_url + ".txt").and_return(File.read(fixtures_file))
+      allow(debugger).to receive(:fetch_url_data).with(file_url + ".txt").and_return(File.read(fixtures_file))
     end
 
     let(:fixtures_file) do
@@ -32,21 +32,21 @@ describe 'support' do
     end
 
     it do
-      repl.handle_input(input)
+      debugger.handle_input(input)
       expect(output.string).to match(/test/)
       expect(output.string).to match(/Puppet::Type::File/)
     end
   end
 
   let(:puppet_version) do
-    repl.mod_finder.match(repl.puppet_lib_dir)[1]
+    debugger.mod_finder.match(debugger.puppet_lib_dir)[1]
   end
 
   let(:manifest_file) do
-    file = File.open('/tmp/repl_puppet_manifest.pp', 'w') do |f|
+    file = File.open('/tmp/debugger_puppet_manifest.pp', 'w') do |f|
       f.write(manifest_code)
     end
-    '/tmp/repl_puppet_manifest.pp'
+    '/tmp/debugger_puppet_manifest.pp'
   end
 
   let(:manifest_code) do
@@ -65,8 +65,8 @@ describe 'support' do
   context '#function_map' do
 
     it 'should list functions' do
-      func = repl.function_map["#{puppet_version}::hiera"]
-      expect(repl.function_map).to be_instance_of(Hash)
+      func = debugger.function_map["#{puppet_version}::hiera"]
+      expect(debugger.function_map).to be_instance_of(Hash)
       expect(func).to eq({:name => 'hiera', :parent => puppet_version})
     end
 
@@ -77,21 +77,21 @@ describe 'support' do
   end
 
   it 'should return lib dirs' do
-    expect(repl.lib_dirs.count).to be >= 1
+    expect(debugger.lib_dirs.count).to be >= 1
   end
 
   it 'should return module dirs' do
-    expect(repl.modules_paths.count).to be >= 1
+    expect(debugger.modules_paths.count).to be >= 1
   end
 
   it 'should return a list of default facts' do
-    expect(repl.default_facts.values).to be_instance_of(Hash)
-    expect(repl.default_facts.values['fqdn']).to eq('foo.example.com')
+    expect(debugger.default_facts.values).to be_instance_of(Hash)
+    expect(debugger.default_facts.values['fqdn']).to eq('foo.example.com')
   end
 
   it 'should return a list of facts' do
-    expect(repl.node.facts.values).to be_instance_of(Hash)
-    expect(repl.node.facts.values['fqdn']).to eq('foo.example.com')
+    expect(debugger.node.facts.values).to be_instance_of(Hash)
+    expect(debugger.node.facts.values['fqdn']).to eq('foo.example.com')
   end
 
   describe 'convert  url' do
@@ -100,23 +100,23 @@ describe 'support' do
       let(:url) { 'https://bitbuck.com/master/lib/log_helper.rb'}
       let(:converted) { 'https://bitbuck.com/master/lib/log_helper.rb' }
       it do
-        expect(repl.convert_to_text(url)).to eq(converted)
+        expect(debugger.convert_to_text(url)).to eq(converted)
       end
     end
     describe 'gitlab' do
       describe 'blob' do
-        let(:url) { 'https://gitlab.com/nwops/prepl-web/blob/master/lib/log_helper.rb'}
-        let(:converted) { 'https://gitlab.com/nwops/prepl-web/raw/master/lib/log_helper.rb' }
+        let(:url) { 'https://gitlab.com/nwops/pdebugger-web/blob/master/lib/log_helper.rb'}
+        let(:converted) { 'https://gitlab.com/nwops/pdebugger-web/raw/master/lib/log_helper.rb' }
         it do
-          expect(repl.convert_to_text(url)).to eq(converted)
+          expect(debugger.convert_to_text(url)).to eq(converted)
         end
       end
 
       describe 'raw' do
-        let(:url) { 'https://gitlab.com/nwops/prepl-web/raw/master/lib/log_helper.rb'}
-        let(:converted) { 'https://gitlab.com/nwops/prepl-web/raw/master/lib/log_helper.rb' }
+        let(:url) { 'https://gitlab.com/nwops/pdebugger-web/raw/master/lib/log_helper.rb'}
+        let(:converted) { 'https://gitlab.com/nwops/pdebugger-web/raw/master/lib/log_helper.rb' }
         it do
-          expect(repl.convert_to_text(url)).to eq(converted)
+          expect(debugger.convert_to_text(url)).to eq(converted)
         end
       end
 
@@ -126,7 +126,7 @@ describe 'support' do
           let(:url) { 'https://gitlab.com/snippets/19471'}
           let(:converted) { 'https://gitlab.com/snippets/19471/raw'}
           it do
-            expect(repl.convert_to_text(url)).to eq(converted)
+            expect(debugger.convert_to_text(url)).to eq(converted)
           end
         end
 
@@ -134,7 +134,7 @@ describe 'support' do
           let(:url) { 'https://gitlab.com/snippets/19471/raw'}
           let(:converted) { 'https://gitlab.com/snippets/19471/raw'}
           it do
-            expect(repl.convert_to_text(url)).to eq(converted)
+            expect(debugger.convert_to_text(url)).to eq(converted)
           end
         end
       end
@@ -144,37 +144,37 @@ describe 'support' do
         let(:url) { 'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw'}
         let(:converted) { 'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw' }
         it do
-          expect(repl.convert_to_text(url)).to eq(converted)
+          expect(debugger.convert_to_text(url)).to eq(converted)
         end
       end
       describe 'raw' do
         let(:url) { 'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0'}
         let(:converted) { 'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0.txt' }
         it do
-          expect(repl.convert_to_text(url)).to eq(converted)
+          expect(debugger.convert_to_text(url)).to eq(converted)
         end
       end
       describe 'raw gist' do
         let(:url) {'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw/c8f6be52da5b2b0eeaabb9aa75832b75793d35d1/controls.pp'}
         let(:converted) {'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw/c8f6be52da5b2b0eeaabb9aa75832b75793d35d1/controls.pp'}
         it do
-          expect(repl.convert_to_text(url)).to eq(converted)
+          expect(debugger.convert_to_text(url)).to eq(converted)
         end
       end
       describe 'raw non gist' do
-        let(:url) { 'https://raw.githubusercontent.com/nwops/puppet-repl/master/lib/puppet-repl.rb'}
-        let(:converted) { 'https://raw.githubusercontent.com/nwops/puppet-repl/master/lib/puppet-repl.rb' }
+        let(:url) { 'https://raw.githubusercontent.com/nwops/puppet-debugger/master/lib/puppet-debugger.rb'}
+        let(:converted) { 'https://raw.githubusercontent.com/nwops/puppet-debugger/master/lib/puppet-debugger.rb' }
         it do
-          expect(repl.convert_to_text(url)).to eq(converted)
+          expect(debugger.convert_to_text(url)).to eq(converted)
         end
 
       end
 
       describe 'blob' do
-        let(:url) { 'https://github.com/nwops/puppet-repl/blob/master/lib/puppet-repl.rb'}
-        let(:converted) { 'https://github.com/nwops/puppet-repl/raw/master/lib/puppet-repl.rb' }
+        let(:url) { 'https://github.com/nwops/puppet-debugger/blob/master/lib/puppet-debugger.rb'}
+        let(:converted) { 'https://github.com/nwops/puppet-debugger/raw/master/lib/puppet-debugger.rb' }
         it do
-          expect(repl.convert_to_text(url)).to eq(converted)
+          expect(debugger.convert_to_text(url)).to eq(converted)
         end
       end
 
@@ -182,10 +182,9 @@ describe 'support' do
         let(:url) { 'https://gist.github.com/logicminds/f9b1ac65a3a440d562b0'}
         let(:converted) { 'https://gist.github.com/logicminds/f9b1ac65a3a440d562b0.txt' }
         it do
-          expect(repl.convert_to_text(url)).to eq(converted)
+          expect(debugger.convert_to_text(url)).to eq(converted)
         end
       end
     end
   end
-
 end

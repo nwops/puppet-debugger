@@ -1,4 +1,4 @@
-module PuppetRepl
+module PuppetDebugger
   module Support
     module Play
 
@@ -9,7 +9,7 @@ module PuppetRepl
           elsif File.exists? config[:play]
             play_back_string(File.read(config[:play]))
           else config[:play]
-            out_buffer.puts "puppet-repl can't play #{config[:play]}'"
+            out_buffer.puts "puppet-debugger can't play #{config[:play]}'"
           end
         end
       end
@@ -57,7 +57,7 @@ module PuppetRepl
           str = fetch_url_data(converted_url)
           play_back_string(str)
         rescue SocketError
-          abort "puppet-repl can't play `#{converted_url}'"
+          abort "puppet-debugger can't play `#{converted_url}'"
         end
       end
 

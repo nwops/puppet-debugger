@@ -1,4 +1,4 @@
-module PuppetRepl
+module PuppetDebugger
   module Support
     module Facts
       # in the future we will want to grab real facts from real systems via puppetdb
@@ -49,7 +49,7 @@ Using filter: #{facterdb_filter}
 Bad FacterDB filter, please change the filter so it returns a result set.
 See https://github.com/camptocamp/facterdb/#with-a-string-filter
           EOS
-          raise PuppetRepl::Exception::BadFilter.new(:message => message)
+          raise PuppetDebugger::Exception::BadFilter.new(:message => message)
         end
         # fix for when --show-legacy facts are not part of the facter 3 fact set
         node_facts[:fqdn] = node_facts[:networking].fetch('fqdn',nil) unless node_facts[:fqdn]

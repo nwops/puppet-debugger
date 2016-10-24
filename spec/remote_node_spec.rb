@@ -1,21 +1,21 @@
 require 'spec_helper'
 require 'stringio'
-describe "PuppetRepl" do
+describe "PuppetDebugger" do
 
   let(:resource) do
     "service{'httpd': ensure => running}"
   end
 
   before(:each) do
-    repl.handle_input('reset')
+    debugger.handle_input('reset')
   end
 
   let(:output) do
     StringIO.new('', 'w')
   end
 
-  let(:repl) do
-    PuppetRepl::Cli.new(:out_buffer => output)
+  let(:debugger) do
+    PuppetDebugger::Cli.new(:out_buffer => output)
   end
 
   let(:input) do
@@ -23,7 +23,7 @@ describe "PuppetRepl" do
   end
 
   let(:resource_types) do
-    repl.parser.evaluate_string(repl.scope, input)
+    debugger.parser.evaluate_string(debugger.scope, input)
   end
 
   describe 'remote node' do
@@ -34,8 +34,8 @@ describe "PuppetRepl" do
       'puppetdev.localdomain'
     end
     before :each do
-      allow(repl).to receive(:get_remote_node).with(node_name).and_return(node_obj)
-      repl.handle_input(":set node #{node_name}")
+      allow(debugger).to receive(:get_remote_node).with(node_name).and_return(node_obj)
+      debugger.handle_input(":set node #{node_name}")
     end
 
     describe 'set' do
@@ -45,13 +45,13 @@ describe "PuppetRepl" do
 
       it "return node name" do
         output.reopen # removes previous message
-        repl.handle_input('$::hostname')
+        debugger.handle_input('$::hostname')
         expect(output.string).to match(/puppetdev.localdomain/)
       end
 
       it "return classification" do
         output.reopen # removes previous message
-        repl.handle_input('classification')
+        debugger.handle_input('classification')
         expect(output.string).to match(/stdlib/)
       end
     end
@@ -61,9 +61,9 @@ describe "PuppetRepl" do
         "$::facts['os']['family'].downcase == 'debian'"
       end
       it 'fact evaulation should return false' do
-        repl_output = /false/
-        repl.handle_input(input)
-        expect(output.string).to match(repl_output)
+        debugger_output = /false/
+        debugger.handle_input(input)
+        expect(output.string).to match(debugger_output)
       end
 
     end
@@ -75,12 +75,12 @@ describe "PuppetRepl" do
         'invalid.localdomain'
       end
       it 'name' do
-        expect{repl.node.name}.to raise_error(PuppetRepl::Exception::UndefinedNode)
+        expect{debugger.node.name}.to raise_error(PuppetDebugger::Exception::UndefinedNode)
       end
     end
 
     it 'set node name' do
-      expect(repl.remote_node_name = 'puppetdev.localdomain').to eq("puppetdev.localdomain")
+      expect(debugger.remote_node_name = 'puppetdev.localdomain').to eq("puppetdev.localdomain")
     end
 
     describe 'print classes' do
@@ -88,9 +88,9 @@ describe "PuppetRepl" do
         'resources'
       end
       it 'should be able to print classes' do
-        repl_output = /Settings/
-        repl.handle_input(input)
-        expect(output.string).to match(repl_output)
+        debugger_output = /Settings/
+        debugger.handle_input(input)
+        expect(output.string).to match(debugger_output)
       end
     end
 
@@ -99,28 +99,28 @@ describe "PuppetRepl" do
         "vars"
       end
       it 'display facts variable' do
-        repl_output = /facts/
-        repl.handle_input(input)
-        expect(output.string).to match(repl_output)
+        debugger_output = /facts/
+        debugger.handle_input(input)
+        expect(output.string).to match(debugger_output)
       end
       it 'display server facts variable' do
-        repl_output = /server_facts/
-        repl.handle_input(input)
-        expect(output.string).to match(repl_output) if Puppet.version.to_f >= 4.1
+        debugger_output = /server_facts/
+        debugger.handle_input(input)
+        expect(output.string).to match(debugger_output) if Puppet.version.to_f >= 4.1
       end
       it 'display server facts variable' do
-        repl_output = /server_facts/
-        repl.handle_input(input)
-        expect(output.string).to match(repl_output) if Puppet.version.to_f >= 4.1
+        debugger_output = /server_facts/
+        debugger.handle_input(input)
+        expect(output.string).to match(debugger_output) if Puppet.version.to_f >= 4.1
       end
       it 'display local variable' do
-        repl.handle_input("$var1 = 'value1'")
+        debugger.handle_input("$var1 = 'value1'")
         expect(output.string).to match(/value1/)
-        repl.handle_input("$var1")
+        debugger.handle_input("$var1")
         expect(output.string).to match(/value1/)
       end
       it 'display productname variable' do
-        repl.handle_input("$productname")
+        debugger.handle_input("$productname")
         expect(output.string).to match(/VMware Virtual Platform/)
       end
     end
@@ -130,14 +130,14 @@ describe "PuppetRepl" do
         "md5('hello')"
       end
       it 'execute md5' do
-        repl_output =  /5d41402abc4b2a76b9719d911017c592/
-        repl.handle_input(input)
-        expect(output.string).to match(repl_output)
+        debugger_output =  /5d41402abc4b2a76b9719d911017c592/
+        debugger.handle_input(input)
+        expect(output.string).to match(debugger_output)
       end
       it 'execute swapcase' do
-        repl_output =  /HELLO/
-        repl.handle_input("swapcase('hello')")
-        expect(output.string).to match(repl_output)
+        debugger_output =  /HELLO/
+        debugger.handle_input("swapcase('hello')")
+        expect(output.string).to match(debugger_output)
       end
     end
 
@@ -147,12 +147,12 @@ describe "PuppetRepl" do
       end
 
       it 'can process a file' do
-        repl_output = /Puppet::Type::File/
-        repl.handle_input(input)
-        expect(output.string).to match(repl_output)
-        repl.handle_input('reset')
-        repl.handle_input(input)
-        expect(output.string).to match(repl_output)
+        debugger_output = /Puppet::Type::File/
+        debugger.handle_input(input)
+        expect(output.string).to match(debugger_output)
+        debugger.handle_input('reset')
+        debugger.handle_input(input)
+        expect(output.string).to match(debugger_output)
       end
     end
 
@@ -162,7 +162,7 @@ describe "PuppetRepl" do
       end
 
       it 'shows certificate_authority_host' do
-        repl.handle_input(input)
+        debugger.handle_input(input)
         expect(output.string).to match(/stdlib/)
       end
     end
