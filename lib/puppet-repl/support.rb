@@ -1,5 +1,7 @@
 require 'puppet/pops'
 require 'facterdb'
+require 'tempfile'
+
 # load all the generators found in the generators directory
 Dir.glob(File.join(File.dirname(__FILE__),'support', '*.rb')).each do |file|
   require_relative File.join('support', File.basename(file, '.rb'))
@@ -140,13 +142,14 @@ module PuppetRepl
       # in order to call native functions we need to set the global_scope
       ast = generate_ast(input)
       # record the input for puppet to retrieve and reference later
-      File.open('.puppet_repl_input.pp', 'w') do |f|
+      file = Tempfile.new(['puppet_repl_input', '.pp'])
+      File.open(file, 'w') do |f|
         f.write(input)
       end
       Puppet.override( {:code => input, :global_scope => scope, :loaders => scope.compiler.loaders } , 'For puppet-repl') do
          # because the repl is not a module we leave the modname blank
          scope.environment.known_resource_types.import_ast(ast, '')
-         parser.evaluate_string(scope, input, File.expand_path('.puppet_repl_input.pp'))
+         parser.evaluate_string(scope, input, File.expand_path(file))
       end
     end
 

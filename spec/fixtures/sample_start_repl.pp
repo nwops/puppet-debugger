@@ -10,3 +10,4 @@ class sample_test_breakpoint(
     start_repl()
   }
 }
+include sample_test_breakpoint
