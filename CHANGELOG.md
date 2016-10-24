@@ -1,3 +1,5 @@
+## 0.3.4
+  * Fixes issue with temporay file not being unique
 ## 0.3.3
   * Adds ability to call breakpoints from within repl
   * Adds newline for each multiline input
