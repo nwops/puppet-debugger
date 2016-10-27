@@ -6,7 +6,7 @@ module PuppetDebugger
 
       # allow the user to specify the facterdb filter
       def dynamic_facterdb_filter
-        ENV['REPL_FACTERDB_FILTER'] || default_facterdb_filter
+        ENV['DEBUGGER_FACTERDB_FILTER'] || default_facterdb_filter
       end
 
       def default_facterdb_filter
@@ -14,7 +14,7 @@ module PuppetDebugger
       end
 
       def facter_version
-        ENV['REPL_FACTER_VERSION'] || default_facter_version
+        ENV['DEBUGGER_FACTER_VERSION'] || default_facter_version
       end
 
       # return the correct supported version of facter facts
@@ -27,11 +27,11 @@ module PuppetDebugger
       end
 
       def facter_os_name
-        ENV['REPL_FACTER_OS_NAME'] || 'Fedora'
+        ENV['DEBUGGER_FACTER_OS_NAME'] || 'Fedora'
       end
 
       def facter_os_version
-        ENV['REPL_FACTER_OS_VERSION'] || '23'
+        ENV['DEBUGGER_FACTER_OS_VERSION'] || '23'
       end
 
       def set_facts(value)

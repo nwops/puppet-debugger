@@ -19,7 +19,7 @@ describe 'facts' do
 
   describe '2.4' do
     before(:each) do
-      ENV['REPL_FACTERDB_FILTER'] = nil
+      ENV['DEBUGGER_FACTERDB_FILTER'] = nil
     end
     let(:puppet_version) do
       '4.2.0'
@@ -40,7 +40,7 @@ describe 'facts' do
 
   describe '3.1' do
     before(:each) do
-      ENV['REPL_FACTERDB_FILTER'] = nil
+      ENV['DEBUGGER_FACTERDB_FILTER'] = nil
     end
     let(:puppet_version) do
       '4.5.3'
@@ -65,7 +65,7 @@ describe 'facts' do
   describe 'default facts' do
     describe 'bad filter' do
       before(:each) do
-        ENV['REPL_FACTERDB_FILTER'] = 'facterversion=/^6\.5/'
+        ENV['DEBUGGER_FACTERDB_FILTER'] = 'facterversion=/^6\.5/'
       end
       it 'return filter' do
         expect(debugger.dynamic_facterdb_filter).to eq("facterversion=/^6\\.5/")
@@ -76,7 +76,7 @@ describe 'facts' do
     end
     describe 'good filter' do
       before(:each) do
-        ENV['REPL_FACTERDB_FILTER'] = 'facterversion=/^3\.1/'
+        ENV['DEBUGGER_FACTERDB_FILTER'] = 'facterversion=/^3\.1/'
       end
       it 'return filter' do
         expect(debugger.dynamic_facterdb_filter).to eq("facterversion=/^3\\.1/")
