@@ -1,3 +1,5 @@
+## unreleased
+  * Fixes #41 - add file reference when showing code during code break
 ## 0.4.0
   * Rename to puppet-debugger
 ## 0.3.4

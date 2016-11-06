@@ -22,7 +22,7 @@ require_relative 'code/code_file'
       # @return [Code]
       def from_file(filename, code_type = nil)
         code_file = CodeFile.new(filename, code_type)
-        new(code_file.code, 1, code_file.code_type)
+        new(code_file.code, 1, code_file.code_type, filename)
       end
 
       # Instantiate a `Code` object containing code loaded from a file or
@@ -37,7 +37,7 @@ require_relative 'code/code_file'
     end
 
     # @return [Symbol] The type of code stored in this wrapper.
-    attr_accessor :code_type
+    attr_accessor :code_type, :filename
 
     # Instantiate a `Code` object containing code from the given `Array`,
     # `String`, or `IO`. The first line will be line 1 unless specified
@@ -47,14 +47,15 @@ require_relative 'code/code_file'
     # @param [Array<String>, String, IO] lines
     # @param [Integer?] start_line
     # @param [Symbol?] code_type
-    def initialize(lines = [], start_line = 1, code_type = :ruby)
+    def initialize(lines = [], start_line = 1, code_type = :ruby, filename=nil)
       if lines.is_a? String
         lines = lines.lines
       end
       @lines = lines.each_with_index.map { |line, lineno|
         LOC.new(line, lineno + start_line.to_i) }
       @code_type = code_type
-
+      @filename = filename
+      @with_file_reference = nil
       @with_marker = @with_indentation = nil
     end
 
@@ -181,6 +182,16 @@ require_relative 'code/code_file'
       end
     end
 
+    # Format output with line numbers next to it, unless `y_n` is falsy.
+    #
+    # @param [Boolean?] y_n
+    # @return [Code]
+    def with_file_reference(y_n = true)
+      alter do
+        @with_file_reference = y_n
+      end
+    end
+
     # Format output with a marker next to the given +lineno+, unless +lineno+ is
     # falsy.
     #
@@ -226,9 +237,14 @@ require_relative 'code/code_file'
       print_to_output("", true)
     end
 
+    def add_file_reference
+      "From file: #{File.basename(filename)}\n"
+    end
+
     # Writes a formatted representation (based on the configuration of the
     # object) to the given output, which must respond to `#<<`.
     def print_to_output(output, color=false)
+      output << add_file_reference if @with_file_reference
       @lines.each do |loc|
         loc = loc.dup
         loc.add_line_number(max_lineno_width) if @with_line_numbers

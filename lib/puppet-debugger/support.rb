@@ -142,7 +142,7 @@ module PuppetDebugger
       # in order to call native functions we need to set the global_scope
       ast = generate_ast(input)
       # record the input for puppet to retrieve and reference later
-      file = Tempfile.new(['puppet_repl_input', '.pp'])
+      file = Tempfile.new(['puppet_debugger_input', '.pp'])
       File.open(file, 'w') do |f|
         f.write(input)
       end

@@ -21,7 +21,7 @@ module PuppetDebugger
           else
             code = DebuggerCode.from_file(file, :puppet)
           end
-          return code.with_marker(line_num).around(line_num, 5).with_line_numbers.with_indentation(5).to_s
+          return code.with_marker(line_num).around(line_num, 5).with_line_numbers.with_indentation(5).with_file_reference.to_s
         end
       end
 
