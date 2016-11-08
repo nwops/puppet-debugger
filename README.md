@@ -61,7 +61,7 @@ There is a web version of the [puppet-debugger](https://www.puppet-debugger.com)
 limited at this time. In the future we will be adding lots of awesome features to the web repl.
 
 ## Usage
-puppet-debugger will only parse and evaulate your code.  It will not build a catalog
+puppet-debugger will only parse and evaluate your code.  It will not build a catalog
 and try to enforce the catalog. This has a few side affects.
 
 1. Type and provider code will not get run.
@@ -86,6 +86,8 @@ Type "exit", "functions", "vars", "krt", "facts", "reset", "help" for more infor
  >>
 
 ```
+
+You can also use the debugger from the puppet command via `puppet debugger`
 
 ## Using Variables
 

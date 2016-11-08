@@ -1,4 +1,5 @@
-## unreleased
+## 0.4.1
+  * Adds a puppet application face
   * Fixes #41 - add file reference when showing code during code break
 ## 0.4.0
   * Rename to puppet-debugger
