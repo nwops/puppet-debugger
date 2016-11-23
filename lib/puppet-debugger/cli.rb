@@ -63,7 +63,7 @@ module PuppetDebugger
       # don't return anything or returns nil if item is not in the catalog
     end
 
-    # ruturns a formatted array
+    # returns a formatted array
     def expand_resource_type(types)
       output = [types].flatten.map do |t|
         if t.class.to_s =~ /Puppet::Pops::Types/
@@ -195,14 +195,16 @@ Type "exit", "functions", "vars", "krt", "whereami", "facts", "resources", "clas
       end
     end
 
-    # used to start a repl without attempting to read from stdin
+    # used to start a debugger session without attempting to read from stdin
     # or
+    # this is primarily used by the debug::break() module function and the puppet debugger face
     # @param [Hash] must contain at least the puppet scope object
     def self.start_without_stdin(options={:scope => nil})
       puts print_repl_desc unless options[:quiet]
       repl_obj = PuppetDebugger::Cli.new(options)
       repl_obj.remote_node_name = options[:node_name] if options[:node_name]
       repl_obj.initialize_from_scope(options[:scope])
+      # TODO make the output optional so we can have different output destinations
       puts repl_obj.whereami if options[:source_file] and options[:source_line]
       repl_obj.play_back(options) if options[:play]
       repl_obj.read_loop unless options[:run_once]

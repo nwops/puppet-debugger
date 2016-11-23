@@ -238,6 +238,7 @@ require_relative 'code/code_file'
     end
 
     def add_file_reference
+      return "From inline code: \n" unless filename
       "From file: #{File.basename(filename)}\n"
     end
 
