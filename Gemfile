@@ -11,6 +11,11 @@ group :test do
   gem "bundler"
   gem "simplecov", ">= 0"
   gem 'rake'
+  gem 'release_me'
+end
+
+group :validate do
+  gem 'rubocop'
 end
 
 group :development do

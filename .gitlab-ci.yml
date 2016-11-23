@@ -1,5 +1,7 @@
 stages:
+  - validate
   - test
+  - release
   - deploy
   - web_deploy
 
@@ -8,7 +10,7 @@ stages:
   script:
     - gem update --system > /dev/null
     - gem install bundler > /dev/null
-    - bundle install --without development
+    - bundle install --without development validate
     - bundle exec puppet module install puppetlabs-stdlib
     - bundle exec rake spec
 
@@ -20,6 +22,28 @@ web_trigger_staging:
     - master
   script:
     - "curl -X POST -F token=$PREPL_BUILD_TRIGGER_TOKEN -F ref=$REF https://gitlab.com/api/v3/projects/1146764/trigger/builds"
+
+rubocop_ruby:
+  stage: validate
+  allow_failure: true
+  only:
+    - branches
+  tags:
+    - ruby2.2
+  script:
+    - bundle install
+    - bundle exec rubocop -D
+
+bump_and_tag:
+  type: release
+  when: manual
+  tags:
+    - ruby2.2
+  only:
+    - master@nwops/release_me
+  script:
+    - bundle install
+    - bundle exec bump_and_tag
 
 web_trigger_production:
   type: web_deploy
@@ -126,4 +150,3 @@ puppet_48_ruby22:
     PUPPET_GEM_VERSION: "~> 4.8"
   <<: *puppet_job_def
   <<: *ruby22
-
