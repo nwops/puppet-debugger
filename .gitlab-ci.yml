@@ -42,8 +42,8 @@ bump_and_tag:
   only:
     - master@puppet-debugger/puppet-debugger
   script:
-    - bundle install
-    - bundle exec bump_and_tag
+    - gem install release_me 
+    - bump_and_tag
 
 web_trigger_production:
   type: web_deploy
