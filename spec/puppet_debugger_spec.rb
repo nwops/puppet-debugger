@@ -1,7 +1,7 @@
+# frozen_string_literal: true
 require 'spec_helper'
 require 'stringio'
-describe "PuppetDebugger" do
-
+describe 'PuppetDebugger' do
   let(:resource) do
     "service{'httpd': ensure => running}"
   end
@@ -15,7 +15,7 @@ describe "PuppetDebugger" do
   end
 
   let(:debugger) do
-    PuppetDebugger::Cli.new({:out_buffer => output}.merge(options))
+    PuppetDebugger::Cli.new({ out_buffer: output }.merge(options))
   end
 
   let(:options) do
@@ -45,7 +45,7 @@ describe "PuppetDebugger" do
       end
       it do
         debugger.handle_input(input)
-        debugger.handle_input("include testfoo")
+        debugger.handle_input('include testfoo')
         expect(debugger.scope.compiler.catalog.classes).to include('testfoo')
       end
       it do
@@ -79,7 +79,7 @@ describe "PuppetDebugger" do
     end
   end
 
-  describe 'native functions', :native_functions => true do
+  describe 'native functions', native_functions: true do
     let(:func) do
       <<-EOF
       function debugger::bool2http($arg) {
@@ -113,10 +113,9 @@ describe "PuppetDebugger" do
   end
 
   describe 'types' do
-
     describe 'string' do
       let(:input) do
-        "String"
+        'String'
       end
       it 'shows type' do
         debugger.handle_input(input)
@@ -125,14 +124,13 @@ describe "PuppetDebugger" do
     end
     describe 'Array' do
       let(:input) do
-        "type_of([1,2,3,4])"
+        'type_of([1,2,3,4])'
       end
       it 'shows type' do
         debugger.handle_input(input)
         expect(output.string).to eq("\n => Tuple[Integer[1, 1], Integer[2, 2], Integer[3, 3], Integer[4, 4]]\n")
       end
     end
-
   end
 
   describe 'multiple lines of input' do
@@ -154,9 +152,9 @@ describe "PuppetDebugger" do
       it do
         debugger.play_back_string(input)
         expect(output.string).to include("$var1 = 'test'")
-        expect(output.string).to include("\"test\"")
+        expect(output.string).to include('"test"')
         expect(output.string).to include("$var2 = 'test2'")
-        expect(output.string).to include("\"test2\"")
+        expect(output.string).to include('"test2"')
       end
     end
     describe '1 lines' do
@@ -166,7 +164,7 @@ describe "PuppetDebugger" do
       it do
         debugger.play_back_string(input)
         expect(output.string).to include("$var1 = 'test'")
-        expect(output.string).to include("\"test\"")
+        expect(output.string).to include('"test"')
       end
     end
   end
@@ -194,7 +192,7 @@ describe "PuppetDebugger" do
 
   describe 'empty' do
     let(:input) do
-      ""
+      ''
     end
     it 'can run' do
       debugger_output = "\n"
@@ -203,7 +201,7 @@ describe "PuppetDebugger" do
     end
     describe 'space' do
       let(:input) do
-        " "
+        ' '
       end
       it 'can run' do
         debugger_output = "\n"
@@ -215,7 +213,7 @@ describe "PuppetDebugger" do
 
   describe 'krt' do
     let(:input) do
-      "krt"
+      'krt'
     end
     it 'can run' do
       debugger_output = /hostclasses/
@@ -269,7 +267,7 @@ describe "PuppetDebugger" do
 
   describe 'bad input' do
     let(:input) do
-      "Service{"
+      'Service{'
     end
     it 'can process' do
       debugger_output = "\n => \e[31mSyntax error at end of file\e[0m\n"
@@ -280,7 +278,7 @@ describe "PuppetDebugger" do
 
   describe 'classification' do
     let(:input) do
-      "classification"
+      'classification'
     end
 
     it 'can process a file' do
@@ -305,7 +303,7 @@ describe "PuppetDebugger" do
 
     describe 'loglevel' do
       it 'has not changed' do
-        debugger.handle_input(":set loglevel debug")
+        debugger.handle_input(':set loglevel debug')
         expect(Puppet::Util::Log.level).to eq(:debug)
         expect(Puppet::Util::Log.destinations[:buffer].name).to eq(:buffer)
         debugger.handle_input('reset')
@@ -339,7 +337,7 @@ describe "PuppetDebugger" do
 
   describe 'facts' do
     let(:input) do
-      "$::fqdn"
+      '$::fqdn'
     end
     it 'should be able to resolve fqdn' do
       debugger_output = /foo\.example\.com/
@@ -350,7 +348,7 @@ describe "PuppetDebugger" do
 
   describe 'print facts' do
     let(:input) do
-      "facts"
+      'facts'
     end
     it 'should be able to print facts' do
       debugger_output = /kernel/
@@ -394,7 +392,7 @@ describe "PuppetDebugger" do
 
   describe 'set' do
     let(:input) do
-      ":set loglevel debug"
+      ':set loglevel debug'
     end
     it 'should set the loglevel' do
       debugger_output = /loglevel debug is set/
@@ -407,7 +405,7 @@ describe "PuppetDebugger" do
 
   describe 'vars' do
     let(:input) do
-      "vars"
+      'vars'
     end
     it 'display facts variable' do
       debugger_output = /facts/
@@ -427,10 +425,9 @@ describe "PuppetDebugger" do
     it 'display local variable' do
       debugger.handle_input("$var1 = 'value1'")
       expect(output.string).to match(/value1/)
-      debugger.handle_input("$var1")
+      debugger.handle_input('$var1')
       expect(output.string).to match(/value1/)
     end
-
   end
 
   describe 'execute functions' do
@@ -438,12 +435,12 @@ describe "PuppetDebugger" do
       "md5('hello')"
     end
     it 'execute md5' do
-      debugger_output =  /5d41402abc4b2a76b9719d911017c592/
+      debugger_output = /5d41402abc4b2a76b9719d911017c592/
       debugger.handle_input(input)
       expect(output.string).to match(debugger_output)
     end
     it 'execute swapcase' do
-      debugger_output =  /HELLO/
+      debugger_output = /HELLO/
       debugger.handle_input("swapcase('hello')")
       expect(output.string).to match(debugger_output)
     end
@@ -455,8 +452,8 @@ describe "PuppetDebugger" do
     end
     let(:options) do
       {
-          source_file: input,
-          source_line: 10,
+        source_file: input,
+        source_line: 10
       }
     end
 
@@ -466,7 +463,6 @@ describe "PuppetDebugger" do
     it 'contains marker' do
       expect(debugger.whereami).to match(/\s+=>\s10/)
     end
-
   end
 
   describe 'error message' do
@@ -475,18 +471,16 @@ describe "PuppetDebugger" do
     end
     if Gem::Version.new(Puppet.version) >= Gem::Version.new('4.0')
       it 'show error message' do
-        debugger_output =  /no\ parameter\ named\ 'contact'/
+        debugger_output = /no\ parameter\ named\ 'contact'/
         debugger.handle_input(input)
         expect(output.string).to match(debugger_output)
       end
     else
       it 'show error message' do
-        debugger_output =  /Invalid\ parameter\ contact/
+        debugger_output = /Invalid\ parameter\ contact/
         debugger.handle_input(input)
         expect(output.string).to match(debugger_output)
       end
     end
-
   end
-
 end

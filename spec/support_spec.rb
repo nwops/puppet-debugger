@@ -1,14 +1,14 @@
+# frozen_string_literal: true
 require 'spec_helper'
 require 'tempfile'
 
 describe 'support' do
-
   let(:output) do
     StringIO.new('', 'w')
   end
 
   let(:debugger) do
-    PuppetDebugger::Cli.new(:out_buffer => output)
+    PuppetDebugger::Cli.new(out_buffer: output)
   end
 
   let(:scope) do
@@ -17,7 +17,7 @@ describe 'support' do
 
   describe 'play' do
     before(:each) do
-      allow(debugger).to receive(:fetch_url_data).with(file_url + ".txt").and_return(File.read(fixtures_file))
+      allow(debugger).to receive(:fetch_url_data).with(file_url + '.txt').and_return(File.read(fixtures_file))
     end
 
     let(:fixtures_file) do
@@ -59,17 +59,15 @@ describe 'support' do
   end
 
   after(:each) do
-    #manifest_file.close
+    # manifest_file.close
   end
 
   context '#function_map' do
-
     it 'should list functions' do
       func = debugger.function_map["#{puppet_version}::hiera"]
       expect(debugger.function_map).to be_instance_of(Hash)
-      expect(func).to eq({:name => 'hiera', :parent => puppet_version})
+      expect(func).to eq(name: 'hiera', parent: puppet_version)
     end
-
   end
 
   it 'should return a puppet version' do
@@ -95,9 +93,8 @@ describe 'support' do
   end
 
   describe 'convert  url' do
-
     describe 'unsupported' do
-      let(:url) { 'https://bitbuck.com/master/lib/log_helper.rb'}
+      let(:url) { 'https://bitbuck.com/master/lib/log_helper.rb' }
       let(:converted) { 'https://bitbuck.com/master/lib/log_helper.rb' }
       it do
         expect(debugger.convert_to_text(url)).to eq(converted)
@@ -105,7 +102,7 @@ describe 'support' do
     end
     describe 'gitlab' do
       describe 'blob' do
-        let(:url) { 'https://gitlab.com/nwops/pdebugger-web/blob/master/lib/log_helper.rb'}
+        let(:url) { 'https://gitlab.com/nwops/pdebugger-web/blob/master/lib/log_helper.rb' }
         let(:converted) { 'https://gitlab.com/nwops/pdebugger-web/raw/master/lib/log_helper.rb' }
         it do
           expect(debugger.convert_to_text(url)).to eq(converted)
@@ -113,7 +110,7 @@ describe 'support' do
       end
 
       describe 'raw' do
-        let(:url) { 'https://gitlab.com/nwops/pdebugger-web/raw/master/lib/log_helper.rb'}
+        let(:url) { 'https://gitlab.com/nwops/pdebugger-web/raw/master/lib/log_helper.rb' }
         let(:converted) { 'https://gitlab.com/nwops/pdebugger-web/raw/master/lib/log_helper.rb' }
         it do
           expect(debugger.convert_to_text(url)).to eq(converted)
@@ -121,18 +118,17 @@ describe 'support' do
       end
 
       describe 'snippet' do
-
         describe 'not raw' do
-          let(:url) { 'https://gitlab.com/snippets/19471'}
-          let(:converted) { 'https://gitlab.com/snippets/19471/raw'}
+          let(:url) { 'https://gitlab.com/snippets/19471' }
+          let(:converted) { 'https://gitlab.com/snippets/19471/raw' }
           it do
             expect(debugger.convert_to_text(url)).to eq(converted)
           end
         end
 
         describe 'raw' do
-          let(:url) { 'https://gitlab.com/snippets/19471/raw'}
-          let(:converted) { 'https://gitlab.com/snippets/19471/raw'}
+          let(:url) { 'https://gitlab.com/snippets/19471/raw' }
+          let(:converted) { 'https://gitlab.com/snippets/19471/raw' }
           it do
             expect(debugger.convert_to_text(url)).to eq(converted)
           end
@@ -141,37 +137,36 @@ describe 'support' do
     end
     describe 'github' do
       describe 'raw' do
-        let(:url) { 'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw'}
+        let(:url) { 'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw' }
         let(:converted) { 'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw' }
         it do
           expect(debugger.convert_to_text(url)).to eq(converted)
         end
       end
       describe 'raw' do
-        let(:url) { 'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0'}
+        let(:url) { 'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0' }
         let(:converted) { 'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0.txt' }
         it do
           expect(debugger.convert_to_text(url)).to eq(converted)
         end
       end
       describe 'raw gist' do
-        let(:url) {'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw/c8f6be52da5b2b0eeaabb9aa75832b75793d35d1/controls.pp'}
-        let(:converted) {'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw/c8f6be52da5b2b0eeaabb9aa75832b75793d35d1/controls.pp'}
+        let(:url) { 'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw/c8f6be52da5b2b0eeaabb9aa75832b75793d35d1/controls.pp' }
+        let(:converted) { 'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw/c8f6be52da5b2b0eeaabb9aa75832b75793d35d1/controls.pp' }
         it do
           expect(debugger.convert_to_text(url)).to eq(converted)
         end
       end
       describe 'raw non gist' do
-        let(:url) { 'https://raw.githubusercontent.com/nwops/puppet-debugger/master/lib/puppet-debugger.rb'}
+        let(:url) { 'https://raw.githubusercontent.com/nwops/puppet-debugger/master/lib/puppet-debugger.rb' }
         let(:converted) { 'https://raw.githubusercontent.com/nwops/puppet-debugger/master/lib/puppet-debugger.rb' }
         it do
           expect(debugger.convert_to_text(url)).to eq(converted)
         end
-
       end
 
       describe 'blob' do
-        let(:url) { 'https://github.com/nwops/puppet-debugger/blob/master/lib/puppet-debugger.rb'}
+        let(:url) { 'https://github.com/nwops/puppet-debugger/blob/master/lib/puppet-debugger.rb' }
         let(:converted) { 'https://github.com/nwops/puppet-debugger/raw/master/lib/puppet-debugger.rb' }
         it do
           expect(debugger.convert_to_text(url)).to eq(converted)
@@ -179,7 +174,7 @@ describe 'support' do
       end
 
       describe 'gist' do
-        let(:url) { 'https://gist.github.com/logicminds/f9b1ac65a3a440d562b0'}
+        let(:url) { 'https://gist.github.com/logicminds/f9b1ac65a3a440d562b0' }
         let(:converted) { 'https://gist.github.com/logicminds/f9b1ac65a3a440d562b0.txt' }
         it do
           expect(debugger.convert_to_text(url)).to eq(converted)

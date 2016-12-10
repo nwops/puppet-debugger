@@ -1,8 +1,9 @@
+# frozen_string_literal: true
 require 'spec_helper'
 
 describe 'facts' do
   let(:debugger) do
-    PuppetDebugger::Cli.new(:out_buffer => output)
+    PuppetDebugger::Cli.new(out_buffer: output)
   end
 
   let(:puppet_version) do
@@ -28,7 +29,7 @@ describe 'facts' do
       expect(facter_version).to eq('/^2\.4/')
     end
     it 'return default filter' do
-      expect(debugger.dynamic_facterdb_filter).to eq("operatingsystem=Fedora and operatingsystemrelease=23 and architecture=x86_64 and facterversion=/^2\\.4/")
+      expect(debugger.dynamic_facterdb_filter).to eq('operatingsystem=Fedora and operatingsystemrelease=23 and architecture=x86_64 and facterversion=/^2\\.4/')
     end
     it 'get node_facts' do
       expect(debugger.node_facts).to be_instance_of(Hash)
@@ -58,7 +59,7 @@ describe 'facts' do
       expect(facter_version).to eq('/^3\.1/')
     end
     it 'return default filter' do
-      expect(debugger.dynamic_facterdb_filter).to eq("operatingsystem=Fedora and operatingsystemrelease=23 and architecture=x86_64 and facterversion=/^3\\.1/")
+      expect(debugger.dynamic_facterdb_filter).to eq('operatingsystem=Fedora and operatingsystemrelease=23 and architecture=x86_64 and facterversion=/^3\\.1/')
     end
   end
 
@@ -68,10 +69,10 @@ describe 'facts' do
         ENV['DEBUGGER_FACTERDB_FILTER'] = 'facterversion=/^6\.5/'
       end
       it 'return filter' do
-        expect(debugger.dynamic_facterdb_filter).to eq("facterversion=/^6\\.5/")
+        expect(debugger.dynamic_facterdb_filter).to eq('facterversion=/^6\\.5/')
       end
       it 'throws error' do
-        expect{debugger.default_facts}.to raise_error(PuppetDebugger::Exception::BadFilter)
+        expect { debugger.default_facts }.to raise_error(PuppetDebugger::Exception::BadFilter)
       end
     end
     describe 'good filter' do
@@ -79,7 +80,7 @@ describe 'facts' do
         ENV['DEBUGGER_FACTERDB_FILTER'] = 'facterversion=/^3\.1/'
       end
       it 'return filter' do
-        expect(debugger.dynamic_facterdb_filter).to eq("facterversion=/^3\\.1/")
+        expect(debugger.dynamic_facterdb_filter).to eq('facterversion=/^3\\.1/')
       end
     end
   end

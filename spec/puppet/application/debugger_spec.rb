@@ -1,4 +1,5 @@
 #! /usr/bin/env ruby
+# frozen_string_literal: true
 require 'spec_helper'
 
 require 'puppet/application/debugger'
@@ -24,7 +25,7 @@ describe Puppet::Application::Debugger do
     debugger.initialize_app_defaults
   end
 
-  it "declare a main command" do
+  it 'declare a main command' do
     expect(debugger).to respond_to(:main)
   end
 
@@ -54,7 +55,6 @@ describe Puppet::Application::Debugger do
   # runonce
   # test
 
-
   # it 'create a node' do
   #   require 'pry'; binding.pry
   #   expect(node).to be_a(Puppet::Node::Environment)
@@ -63,5 +63,4 @@ describe Puppet::Application::Debugger do
   # it 'create a scope' do
   #   expect(scope).to be_a(Puppet::Node::Environment)
   # end
-
 end

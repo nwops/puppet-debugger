@@ -1,7 +1,7 @@
+# frozen_string_literal: true
 require 'spec_helper'
 require 'stringio'
-describe "PuppetDebugger" do
-
+describe 'PuppetDebugger' do
   let(:resource) do
     "service{'httpd': ensure => running}"
   end
@@ -15,7 +15,7 @@ describe "PuppetDebugger" do
   end
 
   let(:debugger) do
-    PuppetDebugger::Cli.new(:out_buffer => output)
+    PuppetDebugger::Cli.new(out_buffer: output)
   end
 
   let(:input) do
@@ -43,13 +43,13 @@ describe "PuppetDebugger" do
         expect(output.string).to eq("\n => Resetting to use node puppetdev.localdomain\n")
       end
 
-      it "return node name" do
+      it 'return node name' do
         output.reopen # removes previous message
         debugger.handle_input('$::hostname')
         expect(output.string).to match(/puppetdev.localdomain/)
       end
 
-      it "return classification" do
+      it 'return classification' do
         output.reopen # removes previous message
         debugger.handle_input('classification')
         expect(output.string).to match(/stdlib/)
@@ -65,7 +65,6 @@ describe "PuppetDebugger" do
         debugger.handle_input(input)
         expect(output.string).to match(debugger_output)
       end
-
     end
     describe 'use defaults when invalid' do
       let(:node_obj) do
@@ -75,12 +74,12 @@ describe "PuppetDebugger" do
         'invalid.localdomain'
       end
       it 'name' do
-        expect{debugger.node.name}.to raise_error(PuppetDebugger::Exception::UndefinedNode)
+        expect { debugger.node.name }.to raise_error(PuppetDebugger::Exception::UndefinedNode)
       end
     end
 
     it 'set node name' do
-      expect(debugger.remote_node_name = 'puppetdev.localdomain').to eq("puppetdev.localdomain")
+      expect(debugger.remote_node_name = 'puppetdev.localdomain').to eq('puppetdev.localdomain')
     end
 
     describe 'print classes' do
@@ -96,7 +95,7 @@ describe "PuppetDebugger" do
 
     describe 'vars' do
       let(:input) do
-        "vars"
+        'vars'
       end
       it 'display facts variable' do
         debugger_output = /facts/
@@ -116,11 +115,11 @@ describe "PuppetDebugger" do
       it 'display local variable' do
         debugger.handle_input("$var1 = 'value1'")
         expect(output.string).to match(/value1/)
-        debugger.handle_input("$var1")
+        debugger.handle_input('$var1')
         expect(output.string).to match(/value1/)
       end
       it 'display productname variable' do
-        debugger.handle_input("$productname")
+        debugger.handle_input('$productname')
         expect(output.string).to match(/VMware Virtual Platform/)
       end
     end
@@ -130,12 +129,12 @@ describe "PuppetDebugger" do
         "md5('hello')"
       end
       it 'execute md5' do
-        debugger_output =  /5d41402abc4b2a76b9719d911017c592/
+        debugger_output = /5d41402abc4b2a76b9719d911017c592/
         debugger.handle_input(input)
         expect(output.string).to match(debugger_output)
       end
       it 'execute swapcase' do
-        debugger_output =  /HELLO/
+        debugger_output = /HELLO/
         debugger.handle_input("swapcase('hello')")
         expect(output.string).to match(debugger_output)
       end
@@ -158,7 +157,7 @@ describe "PuppetDebugger" do
 
     describe 'classification' do
       let(:input) do
-        "classification"
+        'classification'
       end
 
       it 'shows certificate_authority_host' do
