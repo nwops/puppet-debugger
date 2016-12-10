@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'puppet'
 require 'readline'
 require 'json'
@@ -9,23 +10,23 @@ module PuppetDebugger
 
     attr_accessor :settings, :log_level, :in_buffer, :out_buffer, :html_mode
 
-    def initialize(options={})
+    def initialize(options = {})
       @log_level = 'notice'
       @out_buffer = options[:out_buffer] || $stdout
       @html_mode = options[:html_mode] || false
       @source_file = options[:source_file] || nil
       @source_line_num = options[:source_line] || nil
       @in_buffer = options[:in_buffer] || $stdin
-      comp = Proc.new do |s|
+      comp = proc do |s|
         key_words.grep(/^#{Regexp.escape(s)}/)
       end
-      Readline.completion_append_character = ""
-      Readline.basic_word_break_characters = " "
+      Readline.completion_append_character = ''
+      Readline.basic_word_break_characters = ' '
       Readline.completion_proc = comp
       AwesomePrint.defaults = {
-        :html => @html_mode,
-        :sort_keys => true,
-        :indent => 2
+        html: @html_mode,
+        sort_keys: true,
+        indent: 2
       }
       do_initialize
     end
@@ -36,16 +37,16 @@ module PuppetDebugger
       # list so its not explicitly clear what the keyword
       variables = scope.to_hash.keys
       # prepend a :: to topscope variables
-      scoped_vars = variables.map { |k,v| scope.compiler.topscope.exist?(k) ? "$::#{k}" : "$#{k}" }
+      scoped_vars = variables.map { |k, _v| scope.compiler.topscope.exist?(k) ? "$::#{k}" : "$#{k}" }
       # append a () to functions so we know they are functions
-      funcs = function_map.keys.map { |k| "#{k.split('::').last}()"}
+      funcs = function_map.keys.map { |k| "#{k.split('::').last}()" }
       (scoped_vars + funcs + static_responder_list).uniq.sort
     end
 
     # looks up the type in the catalog by using the type and title
     # and returns the resource in ral format
     def to_resource_declaration(type)
-      if type.respond_to?(:type_name) and type.respond_to?(:title)
+      if type.respond_to?(:type_name) && type.respond_to?(:title)
         title = type.title
         type_name = type.type_name
       elsif type_result = /(\w+)\['?(\w+)'?\]/.match(type.to_s)
@@ -57,9 +58,7 @@ module PuppetDebugger
         return type
       end
       res = scope.catalog.resource(type_name, title)
-      if res
-        return res.to_ral
-      end
+      return res.to_ral if res
       # don't return anything or returns nil if item is not in the catalog
     end
 
@@ -78,9 +77,7 @@ module PuppetDebugger
     def normalize_output(result)
       if result.instance_of?(Array)
         output = expand_resource_type(result)
-        if output.count == 1
-          return output.first
-        end
+        return output.first if output.count == 1
         return output
       elsif result.class.to_s =~ /Puppet::Pops::Types/
         return to_resource_declaration(result)
@@ -91,56 +88,54 @@ module PuppetDebugger
     # this method handles all input and expects a string of text.
     #
     def handle_input(input)
-        raise ArgumentError unless input.instance_of?(String)
-        begin
-          output = ''
-          case input
-          when /^play|^classification|^whereami|^facterdb_filter|^facts|^vars|^functions|^classes|^resources|^krt|^environment|^reset|^help/
-            args = input.split(' ')
-            command = args.shift.to_sym
-            if self.respond_to?(command)
-              output = self.send(command, args)
-            end
-            return out_buffer.puts output
-          when /exit/
-            exit 0
-          when /^:set/
-            output = handle_set(input)
-          when '_'
-            output = " => #{@last_item}"
-          else
-            result = puppet_eval(input)
-            @last_item = result
-            output = normalize_output(result)
-            if output.nil?
-              output = ""
-            else
-              output = output.ai
-            end
-          end
-        rescue LoadError => e
-          output = e.message.fatal
-        rescue Errno::ETIMEDOUT => e
-          output = e.message.fatal
-        rescue ArgumentError => e
-          output = e.message.fatal
-        rescue Puppet::ResourceError => e
-          output = e.message.fatal
-        rescue Puppet::Error => e
-          output = e.message.fatal
-        rescue Puppet::ParseErrorWithIssue => e
-          output = e.message.fatal
-        rescue PuppetDebugger::Exception::FatalError => e
-          output = e.message.fatal
-          out_buffer.puts output
-          exit 1 # this can sometimes causes tests to fail
-        rescue PuppetDebugger::Exception::Error => e
-          output = e.message.fatal
+      raise ArgumentError unless input.instance_of?(String)
+      begin
+        output = ''
+        case input
+        when /^play|^classification|^whereami|^facterdb_filter|^facts|^vars|^functions|^classes|^resources|^krt|^environment|^reset|^help/
+          args = input.split(' ')
+          command = args.shift.to_sym
+          output = send(command, args) if respond_to?(command)
+          return out_buffer.puts output
+        when /exit/
+          exit 0
+        when /^:set/
+          output = handle_set(input)
+        when '_'
+          output = " => #{@last_item}"
+        else
+          result = puppet_eval(input)
+          @last_item = result
+          output = normalize_output(result)
+          output = if output.nil?
+                     ''
+                   else
+                     output.ai
+                   end
         end
-        unless output.empty?
-          out_buffer.print " => "
-          out_buffer.puts output unless output.empty?
-        end
+      rescue LoadError => e
+        output = e.message.fatal
+      rescue Errno::ETIMEDOUT => e
+        output = e.message.fatal
+      rescue ArgumentError => e
+        output = e.message.fatal
+      rescue Puppet::ResourceError => e
+        output = e.message.fatal
+      rescue Puppet::Error => e
+        output = e.message.fatal
+      rescue Puppet::ParseErrorWithIssue => e
+        output = e.message.fatal
+      rescue PuppetDebugger::Exception::FatalError => e
+        output = e.message.fatal
+        out_buffer.puts output
+        exit 1 # this can sometimes causes tests to fail
+      rescue PuppetDebugger::Exception::Error => e
+        output = e.message.fatal
+      end
+      unless output.empty?
+        out_buffer.print ' => '
+        out_buffer.puts output unless output.empty?
+      end
     end
 
     def self.print_repl_desc
@@ -199,13 +194,13 @@ Type "exit", "functions", "vars", "krt", "whereami", "facts", "resources", "clas
     # or
     # this is primarily used by the debug::break() module function and the puppet debugger face
     # @param [Hash] must contain at least the puppet scope object
-    def self.start_without_stdin(options={:scope => nil})
+    def self.start_without_stdin(options = { scope: nil })
       puts print_repl_desc unless options[:quiet]
       repl_obj = PuppetDebugger::Cli.new(options)
       repl_obj.remote_node_name = options[:node_name] if options[:node_name]
       repl_obj.initialize_from_scope(options[:scope])
-      # TODO make the output optional so we can have different output destinations
-      puts repl_obj.whereami if options[:source_file] and options[:source_line]
+      # TODO: make the output optional so we can have different output destinations
+      puts repl_obj.whereami if options[:source_file] && options[:source_line]
       repl_obj.play_back(options) if options[:play]
       repl_obj.read_loop unless options[:run_once]
     end
@@ -214,12 +209,12 @@ Type "exit", "functions", "vars", "krt", "whereami", "facts", "resources", "clas
     # if from stdin, the repl will process the input and exit
     # if from a file, the repl will process the file and continue to prompt
     # @param [Hash] puppet scope object
-    def self.start(options={:scope => nil})
-      opts = Trollop::options do
-        opt :play, "Url or file to load from", :required => false, :type => String
-        opt :run_once, "Evaluate and quit", :required => false, :default => false
-        opt :node_name, "Remote Node to grab facts from", :required => false, :type => String
-        opt :quiet, "Do not display banner", :required => false, :default => false
+    def self.start(options = { scope: nil })
+      opts = Trollop.options do
+        opt :play, 'Url or file to load from', required: false, type: String
+        opt :run_once, 'Evaluate and quit', required: false, default: false
+        opt :node_name, 'Remote Node to grab facts from', required: false, type: String
+        opt :quiet, 'Do not display banner', required: false, default: false
       end
       options = opts.merge(options)
       puts print_repl_desc unless options[:quiet]
@@ -229,18 +224,16 @@ Type "exit", "functions", "vars", "krt", "whereami", "facts", "resources", "clas
       if options[:play]
         repl_obj.play_back(opts)
       # when the user supplied a file name without using the args (stdin)
-      elsif ARGF.filename != "-"
+      elsif ARGF.filename != '-'
         path = File.expand_path(ARGF.filename)
-        repl_obj.play_back(:play => path)
+        repl_obj.play_back(play: path)
       # when the user supplied a file content using stdin, aka. cat,pipe,echo or redirection
-      elsif ARGF.filename == "-" and (not STDIN.tty? and not STDIN.closed?)
+      elsif (ARGF.filename == '-') && (!STDIN.tty? && !STDIN.closed?)
         input = ARGF.read
         repl_obj.handle_input(input)
       end
       # helper code to make tests exit the loop
-      unless options[:run_once]
-        repl_obj.read_loop
-      end
+      repl_obj.read_loop unless options[:run_once]
     end
   end
 end

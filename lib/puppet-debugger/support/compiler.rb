@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'tempfile'
 
 module PuppetDebugger
@@ -14,7 +15,6 @@ module PuppetDebugger
       def set_compiler(value)
         @compiler = value
       end
-
     end
   end
 end

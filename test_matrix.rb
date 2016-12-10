@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'yaml'
 require 'fileutils'
 @threads = {}
@@ -5,14 +6,14 @@ require 'fileutils'
 def run_container(image, puppet_version)
   pversion = puppet_version.match(/([\d\.]+)/)[0]
   ruby_version = image.split(':').last
-  dir = File.join('.','local_test_results', pversion, ruby_version)
+  dir = File.join('.', 'local_test_results', pversion, ruby_version)
   real_dir = File.expand_path(dir)
   FileUtils.rm_rf(real_dir)
   FileUtils.mkdir_p(real_dir)
   cmd = "docker run -e OUT_DIR='#{dir}' -e RUBY_VERSION='#{ruby_version}' -e PUPPET_GEM_VERSION='#{puppet_version}' --rm -ti -v ${PWD}:/module --workdir /module #{image} /bin/bash run_container_test.sh"
   File.write(File.join(real_dir, 'command.txt'), cmd)
   output = `#{cmd}`
-  if $?.success?
+  if $CHILD_STATUS.success?
     File.write(File.join(dir, 'success.txt'), output)
   else
     File.write(File.join(dir, 'error.txt'), output)
@@ -39,4 +40,4 @@ matrix.each do |id, item|
   end
 end
 
-@threads.each {|id, thr| thr.join } # wait on thread to finish
+@threads.each { |_id, thr| thr.join } # wait on thread to finish

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'puppet/application'
 require 'optparse'
 require 'puppet/util/command_line'
@@ -5,38 +6,38 @@ require 'puppet/util/command_line'
 class Puppet::Application::Debugger < Puppet::Application
   attr_reader :use_facterdb, :use_stdin
 
-  option("--execute EXECUTE","-e") do |arg|
+  option('--execute EXECUTE', '-e') do |arg|
     options[:code] = arg
   end
 
-  option("--facterdb-filter FILTER") do |arg|
+  option('--facterdb-filter FILTER') do |arg|
     @use_facterdb = true unless options[:node_name]
     ENV['DEBUGGER_FACTERDB_FILTER'] = arg if arg
   end
 
-  option("--test") do |_arg|
+  option('--test') do |_arg|
     options[:quiet] = true
     options[:run_once] = true
     @use_stdin = true
   end
 
-  option("--no-facterdb") { |_arg| @use_facterdb = false }
+  option('--no-facterdb') { |_arg| @use_facterdb = false }
 
-  option("--log-level LEVEL","-l") do |arg|
+  option('--log-level LEVEL', '-l') do |arg|
     Puppet::Util::Log.level = arg.to_sym
   end
 
-  option("--quiet", "-q") { |_arg| options[:quiet] = true }
+  option('--quiet', '-q') { |_arg| options[:quiet] = true }
 
-  option("--play URL", "-p") do |arg|
+  option('--play URL', '-p') do |arg|
     options[:play] = arg
   end
 
-  option("--stdin", "-s") { |_arg| @use_stdin = true }
+  option('--stdin', '-s') { |_arg| @use_stdin = true }
 
-  option("--run-once", '-r') { |_arg| options[:run_once] = true }
+  option('--run-once', '-r') { |_arg| options[:run_once] = true }
 
-  option("--node-name CERTNAME", '-n') do |arg|
+  option('--node-name CERTNAME', '-n') do |arg|
     @use_facterdb = false
     options[:node_name] = arg
   end
@@ -173,7 +174,7 @@ Copyright (c) 2016 NWOps
 
   def app_defaults
     Puppet::Settings.app_defaults_for_run_mode(self.class.run_mode).merge(
-        :name => name
+      name: name
     )
   end
 
@@ -208,26 +209,26 @@ Copyright (c) 2016 NWOps
         f.write(code_input)
       end
       options[:play] = file
-    elsif command_line.args.length == 0 and use_stdin
+    elsif command_line.args.empty? && use_stdin
       code_input = STDIN.read
       file = Tempfile.new(['puppet_repl_input', '.pp'])
       File.open(file, 'w') do |f|
         f.write(code_input)
       end
       options[:play] = file
-    elsif command_line.args.length > 0
+    elsif !command_line.args.empty?
       manifest = command_line.args.shift
       raise "Could not find file #{manifest}" unless Puppet::FileSystem.exist?(manifest)
-      Puppet.warning("Only one file can be used per run.  Skipping #{command_line.args.join(', ')}") if command_line.args.size > 0
+      Puppet.warning("Only one file can be used per run.  Skipping #{command_line.args.join(', ')}") unless command_line.args.empty?
       options[:play] = file
     end
-    if ! use_facterdb and options[:node_name].nil?
+    if !use_facterdb && options[:node_name].nil?
       debug_environment = create_environment(nil)
       Puppet.notice('Gathering node facts...')
       node = create_node(debug_environment)
       scope = create_scope(node)
       # start_debugger(scope)
-      options.merge!({:scope => scope})
+      options[:scope] = scope
     end
     ::PuppetDebugger::Cli.start_without_stdin(options)
   end
@@ -235,7 +236,7 @@ Copyright (c) 2016 NWOps
   def create_environment(manifest)
     configured_environment = Puppet.lookup(:current_environment)
     manifest ?
-        configured_environment.override_with(:manifest => manifest) :
+        configured_environment.override_with(manifest: manifest) :
         configured_environment
   end
 
@@ -250,7 +251,7 @@ Copyright (c) 2016 NWOps
       facts.name = Puppet[:node_name_value]
     end
 
-    Puppet.override({:current_environment => environment}, "For puppet debugger") do
+    Puppet.override({ current_environment: environment }, 'For puppet debugger') do
       # Find our Node
       unless node = Puppet::Node.indirection.find(Puppet[:node_name_value])
         raise "Could not find node #{Puppet[:node_name_value]}"
@@ -275,10 +276,10 @@ Copyright (c) 2016 NWOps
 
   def start_debugger(scope, options = {})
     if $stdout.isatty
-      options = options.merge({:scope => scope})
+      options = options.merge(scope: scope)
       # required in order to use convert puppet hash into ruby hash with symbols
-      options = options.inject({}){|data,(k,v)| data[k.to_sym] = v; data}
-      #options[:source_file], options[:source_line] = stacktrace.last
+      options = options.each_with_object({}) { |(k, v), data| data[k.to_sym] = v; data }
+      # options[:source_file], options[:source_line] = stacktrace.last
       ::PuppetRepl::Cli.start(options)
     else
       Puppet.info 'puppet debug: refusing to start the debugger without a tty'
@@ -292,15 +293,14 @@ Copyright (c) 2016 NWOps
   # for compatibility with older puppet versions
   # The basics behind this are to find the `.pp` file in the list of loaded code
   def stacktrace
-    result = caller().reduce([]) do |memo, loc|
+    result = caller.each_with_object([]) do |loc, memo|
       if loc =~ /\A(.*\.pp)?:([0-9]+):in\s(.*)/
         # if the file is not found we set to code
         # and read from Puppet[:code]
         # $3 is reserved for the stacktrace type
-        memo << [$1.nil? ? :code : $1, $2.to_i]
+        memo << [Regexp.last_match(1).nil? ? :code : Regexp.last_match(1), Regexp.last_match(2).to_i]
       end
       memo
     end.reverse
   end
-
 end

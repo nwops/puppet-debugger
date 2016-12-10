@@ -1,20 +1,19 @@
+# frozen_string_literal: true
 module PuppetDebugger
   module Support
     module InputResponders
-
       def static_responder_list
-        ["exit", "functions", "classification","vars", 'facterdb_filter', "krt", "facts",
-         "resources", "classes", "whereami", "play","reset", "help"
-        ]
+        %w(exit functions classification vars facterdb_filter krt facts
+           resources classes whereami play reset help)
       end
 
       # @source_file and @source_line_num instance variables must be set for this
       # method to show the surrounding code
       # @return [String] - string output of the code surrounded by the breakpoint or nil if file or line_num do not exist
-      def whereami(command=nil, args=nil)
-        file=@source_file
-        line_num=@source_line_num
-        if file and line_num
+      def whereami(_command = nil, _args = nil)
+        file = @source_file
+        line_num = @source_line_num
+        if file && line_num
           if file == :code
             source_code = Puppet[:code]
             code = DebuggerCode.from_string(source_code, :puppet)
@@ -27,11 +26,11 @@ module PuppetDebugger
 
       # displays the facterdb filter
       # @param [Array] - args is not used
-      def facterdb_filter(args=[])
+      def facterdb_filter(_args = [])
         dynamic_facterdb_filter.ai
       end
 
-      def help(args=[])
+      def help(_args = [])
         PuppetDebugger::Cli.print_repl_desc
       end
 
@@ -46,7 +45,7 @@ module PuppetDebugger
             reset
             set_remote_node_name(name)
           else
-            out_buffer.puts "Must supply a valid node name"
+            out_buffer.puts 'Must supply a valid node name'
           end
         when /loglevel/
           if level = args.shift
@@ -58,29 +57,29 @@ module PuppetDebugger
         output
       end
 
-      def facts(args=[])
+      def facts(_args = [])
         variables = node.facts.values
-        variables.ai({:sort_keys => true, :indent => -1})
+        variables.ai(sort_keys: true, indent: -1)
       end
 
-      def functions(args=[])
+      def functions(args = [])
         filter = args.first || ''
         function_map.keys.sort.grep(/^#{Regexp.escape(filter)}/)
       end
 
-      def vars(args=[])
+      def vars(_args = [])
         # remove duplicate variables that are also in the facts hash
-        variables = scope.to_hash.delete_if {| key, value | node.facts.values.key?(key) }
+        variables = scope.to_hash.delete_if { |key, _value| node.facts.values.key?(key) }
         variables['facts'] = 'removed by the puppet-debugger' if variables.key?('facts')
-        output = "Facts were removed for easier viewing".ai + "\n"
-        output += variables.ai({:sort_keys => true, :indent => -1})
+        output = 'Facts were removed for easier viewing'.ai + "\n"
+        output += variables.ai(sort_keys: true, indent: -1)
       end
 
-      def environment(args=[])
+      def environment(_args = [])
         "Puppet Environment: #{puppet_env_name}"
       end
 
-      def reset(args=[])
+      def reset(_args = [])
         set_scope(nil)
         set_remote_node_name(nil)
         set_node(nil)
@@ -100,22 +99,22 @@ module PuppetDebugger
         nil
       end
 
-      def krt(args=[])
-        known_resource_types.ai({:sort_keys => true, :indent => -1})
+      def krt(_args = [])
+        known_resource_types.ai(sort_keys: true, indent: -1)
       end
 
-      def play(args=[])
+      def play(args = [])
         config = {}
         config[:play] = args.first
         play_back(config)
-        return nil  # we don't want to return anything
+        nil # we don't want to return anything
       end
 
-      def classification(args=[])
+      def classification(_args = [])
         node.classes.ai
       end
 
-      def resources(args=[])
+      def resources(args = [])
         res = scope.compiler.catalog.resources.map do |res|
           res.to_s.gsub(/\[/, "['").gsub(/\]/, "']") # ensure the title has quotes
         end
@@ -127,10 +126,9 @@ module PuppetDebugger
         end
       end
 
-      def classes(args=[])
+      def classes(_args = [])
         scope.compiler.catalog.classes.ai
       end
-
     end
   end
 end

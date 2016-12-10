@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module PuppetDebugger
   module Support
     module Environment
@@ -25,14 +26,13 @@ module PuppetDebugger
 
       # the cached name of the environment
       def default_puppet_env_name
-         ENV['PUPPET_ENV'] || Puppet[:environment]
+        ENV['PUPPET_ENV'] || Puppet[:environment]
       end
 
       # currently this is not being used
       def environment_loaders
         name = compiler.loaders.public_environment_loader.loader_name
       end
-
     end
   end
 end

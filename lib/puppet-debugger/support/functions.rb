@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module PuppetDebugger
   module Support
     module Functions
@@ -7,14 +8,12 @@ module PuppetDebugger
       def function_files
         search_dirs = lib_dirs.map do |lib_dir|
           [File.join(lib_dir, 'puppet', 'functions', '**', '*.rb'),
-            File.join(lib_dir, 'functions', '**', '*.rb'),
-           File.join(lib_dir, 'puppet', 'parser', 'functions', '*.rb')
-           ]
+           File.join(lib_dir, 'functions', '**', '*.rb'),
+           File.join(lib_dir, 'puppet', 'parser', 'functions', '*.rb')]
         end
         # add puppet lib directories
         search_dirs << [File.join(puppet_lib_dir, 'puppet', 'functions', '**', '*.rb'),
-          File.join(puppet_lib_dir, 'puppet', 'parser', 'functions', '*.rb')
-         ]
+                        File.join(puppet_lib_dir, 'puppet', 'parser', 'functions', '*.rb')]
         Dir.glob(search_dirs.flatten)
       end
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'puppet/indirector/node/rest'
 
 module PuppetDebugger
@@ -46,7 +47,7 @@ module PuppetDebugger
       def get_remote_node(name)
         indirection = Puppet::Indirector::Indirection.instance(:node)
         indirection.terminus_class = 'rest'
-        remote_node = indirection.find(name, :environment => puppet_environment)
+        remote_node = indirection.find(name, environment: puppet_environment)
         remote_node
       end
 
@@ -59,7 +60,7 @@ module PuppetDebugger
         parameters = remote_node.parameters.dup
         trusted_data = parameters.delete('trusted')
         options[:parameters] = parameters || {}
-        options[:facts] = Puppet::Node::Facts.new(remote_node.name,remote_node.parameters)
+        options[:facts] = Puppet::Node::Facts.new(remote_node.name, remote_node.parameters)
         options[:classes] = remote_node.classes
         options[:environment] = puppet_environment
         node_object = Puppet::Node.new(remote_node.name, options)
@@ -71,11 +72,11 @@ module PuppetDebugger
       # query the remote puppet server and retrieve the node object
       #
       def set_node_from_name(name)
-        out_buffer.puts ("Fetching node #{name}")
+        out_buffer.puts "Fetching node #{name}"
         remote_node = get_remote_node(name)
-        if remote_node and remote_node.parameters.empty?
-          remote_node_name = nil  # clear out the remote name
-          raise PuppetDebugger::Exception::UndefinedNode.new(:name => remote_node.name)
+        if remote_node && remote_node.parameters.empty?
+          remote_node_name = nil # clear out the remote name
+          raise PuppetDebugger::Exception::UndefinedNode, name: remote_node.name
         end
         remote_node_name = remote_node.name
         node_object = convert_remote_node(remote_node)

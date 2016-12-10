@@ -1,11 +1,11 @@
+# frozen_string_literal: true
 module PuppetDebugger
   module Exception
     class Error < StandardError
       attr_accessor :data
-      def initialize(data={})
+      def initialize(data = {})
         @data = data
       end
-
     end
 
     class FatalError < Error
@@ -34,7 +34,7 @@ Cannot find node with name: #{data[:name]} on remote server
     end
 
     class TimeOutError < Error
-      #Errno::ETIMEDOUT
+      # Errno::ETIMEDOUT
     end
 
     class NoClassError < FatalError
@@ -70,6 +70,5 @@ You will need to edit your auth.conf or conf.d/auth.conf (puppetserver) to allow
 EOF
     end
     end
-
   end
 end

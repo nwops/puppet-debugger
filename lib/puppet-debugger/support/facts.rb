@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module PuppetDebugger
   module Support
     module Facts
@@ -49,16 +50,16 @@ Using filter: #{facterdb_filter}
 Bad FacterDB filter, please change the filter so it returns a result set.
 See https://github.com/camptocamp/facterdb/#with-a-string-filter
           EOS
-          raise PuppetDebugger::Exception::BadFilter.new(:message => message)
+          raise PuppetDebugger::Exception::BadFilter, message: message
         end
         # fix for when --show-legacy facts are not part of the facter 3 fact set
-        node_facts[:fqdn] = node_facts[:networking].fetch('fqdn',nil) unless node_facts[:fqdn]
+        node_facts[:fqdn] = node_facts[:networking].fetch('fqdn', nil) unless node_facts[:fqdn]
         node_facts
       end
 
       def default_facts
         unless @facts
-          values = Hash[ node_facts.map { |k, v| [k.to_s, v] } ]
+          values = Hash[node_facts.map { |k, v| [k.to_s, v] }]
           name = values['fqdn']
           @facts ||= Puppet::Node::Facts.new(name, values)
         end
@@ -67,12 +68,11 @@ See https://github.com/camptocamp/facterdb/#with-a-string-filter
 
       def server_facts
         data = {}
-        data["servername"] = Facter.value("fqdn") || Facter.value('networking')['fqdn']
-        data['serverip'] = Facter.value("ipaddress")
-        data["serverversion"] = Puppet.version.to_s
+        data['servername'] = Facter.value('fqdn') || Facter.value('networking')['fqdn']
+        data['serverip'] = Facter.value('ipaddress')
+        data['serverversion'] = Puppet.version.to_s
         data
       end
-
     end
   end
 end

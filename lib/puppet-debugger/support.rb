@@ -1,9 +1,10 @@
+# frozen_string_literal: true
 require 'puppet/pops'
 require 'facterdb'
 require 'tempfile'
 
 # load all the generators found in the generators directory
-Dir.glob(File.join(File.dirname(__FILE__),'support', '*.rb')).each do |file|
+Dir.glob(File.join(File.dirname(__FILE__), 'support', '*.rb')).each do |file|
   require_relative File.join('support', File.basename(file, '.rb'))
 end
 
@@ -23,18 +24,18 @@ module PuppetDebugger
     def parse_error(error)
       case error
       when SocketError
-        PuppetDebugger::Exception::ConnectError.new(:message => "Unknown host: #{Puppet[:server]}")
+        PuppetDebugger::Exception::ConnectError.new(message: "Unknown host: #{Puppet[:server]}")
       when Net::HTTPError
-        PuppetDebugger::Exception::AuthError.new(:message => error.message)
+        PuppetDebugger::Exception::AuthError.new(message: error.message)
       when Errno::ECONNREFUSED
-        PuppetDebugger::Exception::ConnectError.new(:message => error.message)
+        PuppetDebugger::Exception::ConnectError.new(message: error.message)
       when Puppet::Error
         if error.message =~ /could\ not\ find\ class/i
-          PuppetDebugger::Exception::NoClassError.new(:default_modules_paths => default_modules_paths,
-           :message => error.message)
+          PuppetDebugger::Exception::NoClassError.new(default_modules_paths: default_modules_paths,
+                                                      message: error.message)
         elsif error.message =~ /default\ node/i
-          PuppetDebugger::Exception::NodeDefinitionError.new(:default_site_manifest => default_site_manifest,
-           :message => error.message)
+          PuppetDebugger::Exception::NodeDefinitionError.new(default_site_manifest: default_site_manifest,
+                                                             message: error.message)
         else
           error
         end
@@ -49,7 +50,7 @@ module PuppetDebugger
       dirs = []
       do_initialize if Puppet[:codedir].nil?
       # add the puppet-debugger directory so we can load any defined functions
-      dirs << File.join(Puppet[:environmentpath],default_puppet_env_name,'modules') unless Puppet[:environmentpath].empty?
+      dirs << File.join(Puppet[:environmentpath], default_puppet_env_name, 'modules') unless Puppet[:environmentpath].empty?
       dirs << Puppet.settings[:basemodulepath].split(':')
       dirs.flatten
     end
@@ -75,40 +76,38 @@ module PuppetDebugger
       end
     end
 
-     def keyword_expression
-       @keyword_expression ||= Regexp.new(/^exit|^:set|^play|^classification|^facts|^vars|^functions|^whereami|^classes|^resources|^krt|^environment|^reset|^help/)
-     end
+    def keyword_expression
+      @keyword_expression ||= Regexp.new(/^exit|^:set|^play|^classification|^facts|^vars|^functions|^whereami|^classes|^resources|^krt|^environment|^reset|^help/)
+    end
 
     def known_resource_types
       res = {
-        :hostclasses => scope.environment.known_resource_types.hostclasses.keys,
-        :definitions => scope.environment.known_resource_types.definitions.keys,
-        :nodes => scope.environment.known_resource_types.nodes.keys,
+        hostclasses: scope.environment.known_resource_types.hostclasses.keys,
+        definitions: scope.environment.known_resource_types.definitions.keys,
+        nodes: scope.environment.known_resource_types.nodes.keys
       }
       if sites = scope.environment.known_resource_types.instance_variable_get(:@sites)
-        res.merge!(:sites => scope.environment.known_resource_types.instance_variable_get(:@sites).first)
+        res[:sites] = scope.environment.known_resource_types.instance_variable_get(:@sites).first
       end
       if scope.environment.known_resource_types.respond_to?(:applications)
-        res.merge!(:applications => scope.environment.known_resource_types.applications.keys)
+        res[:applications] = scope.environment.known_resource_types.applications.keys
       end
       # some versions of puppet do not support capabilities
       if scope.environment.known_resource_types.respond_to?(:capability_mappings)
-        res.merge!(:capability_mappings => scope.environment.known_resource_types.capability_mappings.keys)
+        res[:capability_mappings] = scope.environment.known_resource_types.capability_mappings.keys
       end
       res
     end
 
     # this is required in order to load things only when we need them
     def do_initialize
-      begin
-        Puppet.initialize_settings
-        Puppet[:parser] = 'future'  # this is required in order to work with puppet 3.8
-        Puppet[:trusted_node_data] = true
-      rescue ArgumentError => e
+      Puppet.initialize_settings
+      Puppet[:parser] = 'future' # this is required in order to work with puppet 3.8
+      Puppet[:trusted_node_data] = true
+    rescue ArgumentError => e
 
-      rescue Puppet::DevError => e
-        # do nothing otherwise calling init twice raises an error
-      end
+    rescue Puppet::DevError => e
+      # do nothing otherwise calling init twice raises an error
     end
 
     # @param String - any valid puppet language code
@@ -125,14 +124,14 @@ module PuppetDebugger
       ::Puppet::Pops::Model::AstTransformer.new('').merge_location(args, model)
 
       ast_code =
-      if model.is_a? ::Puppet::Pops::Model::Program
-        ::Puppet::Parser::AST::PopsBridge::Program.new(model, args)
-      else
-        args[:value] = model
-        ::Puppet::Parser::AST::PopsBridge::Expression.new(args)
-      end
+        if model.is_a? ::Puppet::Pops::Model::Program
+          ::Puppet::Parser::AST::PopsBridge::Program.new(model, args)
+        else
+          args[:value] = model
+          ::Puppet::Parser::AST::PopsBridge::Expression.new(args)
+        end
       # Create the "main" class for the content - this content will get merged with all other "main" content
-      ::Puppet::Parser::AST::Hostclass.new('', :code => ast_code)
+      ::Puppet::Parser::AST::Hostclass.new('', code: ast_code)
     end
 
     # @param String - any valid puppet language code
@@ -146,10 +145,10 @@ module PuppetDebugger
       File.open(file, 'w') do |f|
         f.write(input)
       end
-      Puppet.override( {:code => input, :global_scope => scope, :loaders => scope.compiler.loaders } , 'For puppet-debugger') do
-         # because the repl is not a module we leave the modname blank
-         scope.environment.known_resource_types.import_ast(ast, '')
-         parser.evaluate_string(scope, input, File.expand_path(file))
+      Puppet.override({ code: input, global_scope: scope, loaders: scope.compiler.loaders }, 'For puppet-debugger') do
+        # because the repl is not a module we leave the modname blank
+        scope.environment.known_resource_types.import_ast(ast, '')
+        parser.evaluate_string(scope, input, File.expand_path(file))
       end
     end
 
@@ -165,12 +164,11 @@ module PuppetDebugger
     end
 
     def default_manifests_dir
-      File.join(Puppet[:environmentpath],default_puppet_env_name,'manifests')
+      File.join(Puppet[:environmentpath], default_puppet_env_name, 'manifests')
     end
 
     def default_site_manifest
       File.join(default_manifests_dir, 'site.pp')
     end
-
   end
 end

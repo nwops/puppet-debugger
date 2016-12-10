@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module PuppetDebugger
   module Support
     module Scope
@@ -7,9 +8,7 @@ module PuppetDebugger
 
       # @return [Scope] puppet scope object
       def scope
-        unless @scope
-          @scope ||= create_scope
-        end
+        @scope ||= create_scope unless @scope
         @scope
       end
 
@@ -34,7 +33,7 @@ module PuppetDebugger
 
       # returns a hash of varaibles that are currently in scope
       def scope_vars
-        vars = scope.to_hash.delete_if {| key, value | node.facts.values.key?(key.to_sym) }
+        vars = scope.to_hash.delete_if { |key, _value| node.facts.values.key?(key.to_sym) }
         vars['facts'] = 'removed by the puppet-debugger'
       end
     end
