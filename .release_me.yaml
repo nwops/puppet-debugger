@@ -1,3 +1,9 @@
 vcs:
   author_email: autobot@nwops.io
   author_name: Autobot
+
+adapter:
+  version_file_relative_path: 'lib/puppet-debugger/version.rb'
+  version_field: 'VERSION'
+  version_type: 'semver'
+  adapter_name: 'custom'
