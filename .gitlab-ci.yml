@@ -40,7 +40,7 @@ bump_and_tag:
   tags:
     - ruby2.2
   only:
-    - master@puppet-debugger/release_me
+    - master@puppet-debugger/puppet-debugger
   script:
     - bundle install
     - bundle exec bump_and_tag
