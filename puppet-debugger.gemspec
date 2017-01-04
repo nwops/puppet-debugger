@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
   s.rubygems_version = "2.4.5.1"
   s.summary = "A repl for the puppet language"
   s.add_runtime_dependency(%q<puppet>, [">= 3.8"])
-  s.add_runtime_dependency(%q<facterdb>, ["~> 0.3"])
+  s.add_runtime_dependency(%q<facterdb>, [">= 0.3.8"])
   s.add_runtime_dependency(%q<awesome_print>, ["~> 1.6"])
   s.add_development_dependency(%q<rdoc>, ["~> 3.12"])
 end

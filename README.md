@@ -228,10 +228,10 @@ Currently native functions are not available in auto complete. See #24
 The puppet-debugger internally leverages the [facterdb](https://github.com/camptocamp/facterdb/) gem to load pre-cached facts into the debugger session.  At some point you
 may need to override the debugger's default fact set with something of your own choosing.  You can do this by setting one of the environment variables below.
 
-* `REPL_FACTERDB_FILTER`  Sets the entire filter
-* `REPL_FACTER_OS_VERSION` Sets the OS version (only works with RHEL clones and Fedora)
-* `REPL_FACTER_OS_NAME` Sets the OS name (only works with RHEL clones and Fedora)
-* `REPL_FACTER_VERSION` Sets the facter version to use in the debugger session (uses facter 3.1 for puppet 4.4+ and facter 2.4 for 3.8-4.4)
+* `DEBUGGER_FACTERDB_FILTER`  Sets the entire filter
+* `DEBUGGER_FACTER_OS_VERSION` Sets the OS version (only works with RHEL clones and Fedora)
+* `DEBUGGER_FACTER_OS_NAME` Sets the OS name (only works with RHEL clones and Fedora)
+* `DEBUGGER_FACTER_VERSION` Sets the facter version to use in the debugger session (uses facter 3.1 for puppet 4.4+ and facter 2.4 for 3.8-4.4)
 
 By default it looks something like `operatingsystem=Fedora and operatingsystemrelease=23 and architecture=x86_64 and facterversion=/^3\\.1/`
 depending on the puppet version currently running.
