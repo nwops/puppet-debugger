@@ -243,16 +243,17 @@ class DebuggerCode
   # Writes a formatted representation (based on the configuration of the
   # object) to the given output, which must respond to `#<<`.
   def print_to_output(output, _color = false)
-    output << add_file_reference if @with_file_reference
+    print_output = output.dup
+    print_output << add_file_reference if @with_file_reference
     @lines.each do |loc|
       loc = loc.dup
       loc.add_line_number(max_lineno_width) if @with_line_numbers
       loc.add_marker(@marker_lineno)        if @with_marker
       loc.indent(@indentation_num)          if @with_indentation
-      output << loc.line
-      output << "\n"
+      print_output << loc.line
+      print_output << "\n"
     end
-    output
+    print_output
   end
 
   # Get the comment that describes the expression on the given line number.
