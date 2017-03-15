@@ -1,4 +1,7 @@
 # rcov generated
+.bash_history
+.gems
+.gem
 .puppet_repl_input*
 local_test_results
 bundle

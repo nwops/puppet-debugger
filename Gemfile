@@ -1,5 +1,5 @@
 source "http://rubygems.org"
-gem 'puppet', ENV['PUPPET_GEM_VERSION'] || ">= 3.8"
+gem 'puppet', ENV['PUPPET_GEM_VERSION'] || "~> 4.9"
 gem 'facterdb', ">= 0.3.8"
 gem 'awesome_print', "~> 1.6"
 

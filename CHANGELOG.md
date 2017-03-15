@@ -1,3 +1,5 @@
+## Unreleased
+  
 ## 0.4.4
   * Refactor to upcoming puppet 5.0  (minor fix, requires a few more changes)
   * Fixes issue with frozen string literal under ruby 2.3.x

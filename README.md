@@ -27,7 +27,7 @@
   - [Copyright](#copyright)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-![Build Status](https://gitlab.com/nwops/puppet-debugger/badges/master/build.svg)
+[![build status](https://gitlab.com/puppet-debugger/puppet-debugger/badges/master/build.svg)
 [![Gem Version](https://badge.fury.io/rb/puppet-debugger.svg)](https://badge.fury.io/rb/puppet-debugger)
 # puppet-debugger
 
@@ -37,7 +37,7 @@ A interactive command line tool for evaluating and debugging the puppet language
 Requires Puppet 3.8+ and only uses the future parser.
 
 ## Production usage
-The puppet repl is a developer tool that should only be used when writing puppet code.  Although it might seem useful
+The puppet debugger is a developer tool that should only be used when writing puppet code.  Although it might seem useful
 to install on your production puppet master. Please do not install because of the puppet-debugger gem dependencies that might conflict with your existing environment.
 
 ## Installation
@@ -47,7 +47,7 @@ to install on your production puppet master. Please do not install because of th
 puppet-debugger will load all functions from your basemodulepath and environmentpath.
 
 This means if you run `puppet module install puppetlabs-stdlib` and they will be available
-in the repl.
+in the debugger.
 
 ## Interactive demo
 I have put together a repo with a few setup instructions that will assist you in setting up a "mock" environment
@@ -58,41 +58,44 @@ https://github.com/nwops/puppet-debugger-demo
 
 ## Web demo
 There is a web version of the [puppet-debugger](https://www.puppet-debugger.com) online but is somewhat
-limited at this time. In the future we will be adding lots of awesome features to the web repl.
+limited at this time. In the future we will be adding lots of awesome features to the web debugger.
 
 ## Usage
-puppet-debugger will only parse and evaluate your code.  It will not build a catalog
-and try to enforce the catalog. This has a few side affects.
+The puppet debugger is a puppet application so once you install the gem, just fire it up using `puppet debugger`.  
+If you have used `puppet apply` to evaulate puppet code, this replaces all of that with a simple debugger REPL console.
+The debugger will only parse and evaluate your code.  It will not build a catalog
+and try to enforce the catalog. This has a few side affects.  This means you can type any puppet code in the debugger
+and see what it would actual do when compiling a resource.
 
 1. Type and provider code will not get run.
 2. Nothing is created or destroyed on your system.
 
-`pdb`
+`puppet debugger`
 
 Example Usage
 ```
-MacBook-Pro-2/tmp % pdb
+MacBook-Pro-2/tmp % puppet debugger
 Ruby Version: 2.0.0
-Puppet Version: 3.8.5
-Puppet Debugger Version: 0.0.7
+Puppet Version: 4.8.1
+Puppet Debugger Version: 0.4.3
 Created by: NWOps <corey@nwops.io>
-Type "exit", "functions", "vars", "krt", "facts", "reset", "help" for more information.
+Type "exit", "functions", "vars", "krt", "whereami", "facts", "resources", "classes",
+     "play", "classification", "reset", or "help" for more information.
 
->> ['/tmp/test3', '/tmp/test4'].each |String $path| { file{$path: ensure => present} }
-  => [
-     [0] "/tmp/test3",
-     [1] "/tmp/test4"
- ]
- >>
+1:>> ['/tmp/test3', '/tmp/test4'].each |String $path| { file{$path: ensure => present} }
+ => [
+  [0] "/tmp/test3",
+  [1] "/tmp/test4"
+]
+2:>> 
+
 
 ```
-
-You can also use the debugger from the puppet command via `puppet debugger`
 
 ## Using Variables
 
 ```
-MacBook-Pro-2/tmp % pdb
+MacBook-Pro-2/tmp % puppet debugger
 Ruby Version: 2.0.0
 Puppet Version: 3.8.5
 Puppet Debugger Version: 0.0.7
@@ -206,7 +209,7 @@ There are two ways of using the remote node feature.  You can either
 pass in the node name from the command line or set the node name from the debugger session.
 
 #### Command line:
-`pdb -n node_name`
+`puppet debugger -n node_name`
 
 ![command line](resources/command_line_node.png)
 
@@ -248,9 +251,9 @@ You can also playback a file that contains puppet code and debugger commands.
 
 or
 
-`pdb -p https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw`
+`puppet debugger -p https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0/raw`
 
-or just use STDIN  `pdb <some_file>` or `echo "abs(-3)" | pdb`
+or just use STDIN  `puppet debugger <some_file>` or `echo "abs(-3)" | puppet debugger`
 
 ### Web based playback support
 If using the [web based debugger](https://www.puppet-debugger.com) you can playback a shared url
@@ -274,5 +277,5 @@ Pull requests welcomed.
 
 ## Copyright
 
-Copyright (c) 2016 Corey Osman. See LICENSE.txt for
+Copyright (c) 2017 Corey Osman. See LICENSE.txt for
 further details.
