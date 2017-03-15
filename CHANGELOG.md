@@ -1,3 +1,10 @@
+## 0.4.4
+  * Refactor to upcoming puppet 5.0  (minor fix, requires a few more changes)
+  * Fixes issue with frozen string literal under ruby 2.3.x
+## 0.4.3
+  * Fixes issue with older facterdb filter not working
+## 0.4.2
+  * Fixes #44 - error when running under puppet apply
 ## 0.4.1
   * Adds a puppet application face
   * Fixes #41 - add file reference when showing code during code break
