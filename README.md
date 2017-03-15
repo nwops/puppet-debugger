@@ -1,3 +1,8 @@
+![demo](resources/puppet_debugger_long_white.png)
+
+![demo](resources/animated-debugger-demo.gif)
+
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
@@ -27,7 +32,6 @@
   - [Copyright](#copyright)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-[![build status](https://gitlab.com/puppet-debugger/puppet-debugger/badges/master/build.svg)
 [![Gem Version](https://badge.fury.io/rb/puppet-debugger.svg)](https://badge.fury.io/rb/puppet-debugger)
 # puppet-debugger
 
