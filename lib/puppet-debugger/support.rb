@@ -119,7 +119,9 @@ module PuppetDebugger
       # * a Model::Program
       # * a Model::Expression
       #
-      model = parse_result.nil? ? nil : parse_result.current
+      # should return nil or Puppet::Pops::Model::Program
+      # puppet 5 does not have the method current
+      model = parse_result.respond_to?(:current) ? parse_result.current : parse_result
       args = {}
       ::Puppet::Pops::Model::AstTransformer.new('').merge_location(args, model)
 
