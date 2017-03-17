@@ -47,8 +47,8 @@ module PuppetDebugger
       end
 
       # gather all the lib dirs
-      def lib_dirs
-        dirs = modules_paths.map do |mod_dir|
+      def lib_dirs(module_dirs = modules_paths)
+        dirs = module_dirs.map do |mod_dir|
           Dir["#{mod_dir}/*/lib"].entries
         end.flatten
         dirs + [puppet_repl_lib_dir]
@@ -56,8 +56,8 @@ module PuppetDebugger
 
       # load all the lib dirs so puppet can find the functions
       # at this time, this function is not being used
-      def load_lib_dirs
-        lib_dirs.each do |lib|
+      def load_lib_dirs(module_dirs = modules_paths)
+        lib_dirs(module_dirs).each do |lib|
           $LOAD_PATH << lib
         end
       end

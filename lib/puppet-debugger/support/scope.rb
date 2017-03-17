@@ -8,8 +8,7 @@ module PuppetDebugger
 
       # @return [Scope] puppet scope object
       def scope
-        @scope ||= create_scope unless @scope
-        @scope
+        @scope ||= create_scope
       end
 
       def create_scope
