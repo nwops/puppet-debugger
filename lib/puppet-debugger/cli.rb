@@ -11,6 +11,8 @@ module PuppetDebugger
     attr_accessor :settings, :log_level, :in_buffer, :out_buffer, :html_mode
 
     def initialize(options = {})
+      set_remote_node_name(options[:node_name])
+      initialize_from_scope(options[:scope])
       @log_level = 'notice'
       @out_buffer = options[:out_buffer] || $stdout
       @html_mode = options[:html_mode] || false
@@ -197,8 +199,6 @@ Type "exit", "functions", "vars", "krt", "whereami", "facts", "resources", "clas
     def self.start_without_stdin(options = { scope: nil })
       puts print_repl_desc unless options[:quiet]
       repl_obj = PuppetDebugger::Cli.new(options)
-      repl_obj.remote_node_name = options[:node_name] if options[:node_name]
-      repl_obj.initialize_from_scope(options[:scope])
       # TODO: make the output optional so we can have different output destinations
       puts repl_obj.whereami if options[:source_file] && options[:source_line]
       repl_obj.play_back(options) if options[:play]
@@ -219,8 +219,6 @@ Type "exit", "functions", "vars", "krt", "whereami", "facts", "resources", "clas
       options = opts.merge(options)
       puts print_repl_desc unless options[:quiet]
       repl_obj = PuppetDebugger::Cli.new(options)
-      repl_obj.remote_node_name = opts[:node_name] if opts[:node_name]
-      repl_obj.initialize_from_scope(options[:scope])
       if options[:play]
         repl_obj.play_back(opts)
       # when the user supplied a file name without using the args (stdin)
