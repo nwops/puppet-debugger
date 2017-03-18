@@ -11,6 +11,9 @@ module PuppetDebugger
     attr_accessor :settings, :log_level, :in_buffer, :out_buffer, :html_mode
 
     def initialize(options = {})
+      do_initialize
+      Puppet.settings[:name] = :debugger
+      Puppet.settings[:trusted_server_facts] = true
       set_remote_node_name(options[:node_name])
       initialize_from_scope(options[:scope])
       @log_level = 'notice'
