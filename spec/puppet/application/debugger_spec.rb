@@ -6,7 +6,15 @@ require 'puppet/application/debugger'
 
 describe Puppet::Application::Debugger do
   let(:debugger) do
-    Puppet::Application[:debugger]
+    Puppet::Application::Debugger.new(command_line)
+  end
+
+  let(:args) do
+    []
+  end
+
+  let(:command_line) do
+    Puppet::Util::CommandLine.new('debugger', args)
   end
 
   let(:environment) do
@@ -46,21 +54,30 @@ describe Puppet::Application::Debugger do
   it 'shows describtion' do
     expect(debugger.help).to match(/^puppet-debugger\([^\)]+\) -- (.*)$/)
   end
+  describe 'with facterdb' do
+    before(:each) do
+    end
+    it 'run md5 function' do
+      allow(debugger).to receive(:options).and_return(code: "md5('sdafsd')", quiet: true, run_once: true, use_facterdb: true)
+      expect { debugger.run_command }.to output(/569ebc3d91672e7d3dce25de1684d0c9/).to_stdout
+    end
 
-  # use --stdin
-  #  use facterdb
-  # not use facterdb
-  # use execute
-  # play
-  # runonce
-  # test
+    it 'assign variable' do
+      allow(debugger).to receive(:options).and_return(code: "$var1 = 'blah'", quiet: true, run_once: true, use_facterdb: true)
+      expect { debugger.run_command }.to output(/"blah"/).to_stdout
+    end
+  end
 
-  # it 'create a node' do
-  #   require 'pry'; binding.pry
-  #   expect(node).to be_a(Puppet::Node::Environment)
-  # end
-  #
-  # it 'create a scope' do
-  #   expect(scope).to be_a(Puppet::Node::Environment)
-  # end
+  describe 'without facterdb' do
+    before(:each) do
+    end
+    it 'run md5 function' do
+      allow(debugger).to receive(:options).and_return(code: "md5('sdafsd')", quiet: true, run_once: true, use_facterdb: false)
+      expect { debugger.run_command }.to output(/569ebc3d91672e7d3dce25de1684d0c9/).to_stdout
+    end
+    it 'assign variable' do
+      allow(debugger).to receive(:options).and_return(code: "$var1 = 'blah'", quiet: true, run_once: true, use_facterdb: false)
+      expect { debugger.run_command }.to output(/"blah"/).to_stdout
+    end
+  end
 end

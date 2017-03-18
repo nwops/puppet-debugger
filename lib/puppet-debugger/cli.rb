@@ -11,7 +11,7 @@ module PuppetDebugger
     attr_accessor :settings, :log_level, :in_buffer, :out_buffer, :html_mode
 
     def initialize(options = {})
-      do_initialize
+      do_initialize if Puppet[:codedir].nil?
       Puppet.settings[:name] = :debugger
       Puppet.settings[:trusted_server_facts] = true
       set_remote_node_name(options[:node_name])
@@ -33,7 +33,6 @@ module PuppetDebugger
         sort_keys: true,
         indent: 2
       }
-      do_initialize
     end
 
     # returns a cached list of key words

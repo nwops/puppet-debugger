@@ -1,5 +1,5 @@
 source "http://rubygems.org"
-gem 'puppet', ENV['PUPPET_GEM_VERSION'] || "~> 4.9"
+gem 'puppet', ENV['PUPPET_GEM_VERSION'] || "~> 4.9.0"
 gem 'facterdb', ">= 0.3.8"
 gem 'awesome_print', "~> 1.6"
 
@@ -12,12 +12,10 @@ group :test do
   gem "simplecov", ">= 0"
   gem 'rake'
   gem 'release_me'
+  gem 'pry'
 end
 
 group :validate do
   gem 'rubocop'
 end
 
-group :development do
-  gem 'pry'
-end

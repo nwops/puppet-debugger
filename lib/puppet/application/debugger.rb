@@ -4,14 +4,14 @@ require 'optparse'
 require 'puppet/util/command_line'
 
 class Puppet::Application::Debugger < Puppet::Application
-  attr_reader :use_facterdb, :use_stdin
+  attr_reader :use_stdin
 
   option('--execute EXECUTE', '-e') do |arg|
     options[:code] = arg
   end
 
   option('--facterdb-filter FILTER') do |arg|
-    @use_facterdb = true unless options[:node_name]
+    options[:use_facterdb] = true unless options[:node_name]
     ENV['DEBUGGER_FACTERDB_FILTER'] = arg if arg
   end
 
@@ -21,7 +21,7 @@ class Puppet::Application::Debugger < Puppet::Application
     @use_stdin = true
   end
 
-  option('--no-facterdb') { |_arg| @use_facterdb = false }
+  option('--no-facterdb') { |_arg| options[:use_facterdb] = false }
 
   option('--log-level LEVEL', '-l') do |arg|
     Puppet::Util::Log.level = arg.to_sym
@@ -38,7 +38,7 @@ class Puppet::Application::Debugger < Puppet::Application
   option('--run-once', '-r') { |_arg| options[:run_once] = true }
 
   option('--node-name CERTNAME', '-n') do |arg|
-    @use_facterdb = false
+    options[:use_facterdb] = false
     options[:node_name] = arg
   end
 
@@ -172,20 +172,9 @@ Copyright (c) 2016 NWOps
     HELP
   end
 
-  def app_defaults
-    Puppet::Settings.app_defaults_for_run_mode(self.class.run_mode).merge(
-      name: name
-    )
-  end
-
-  def initialize_app_defaults
-    Puppet.settings.initialize_app_defaults(app_defaults)
-  end
-
   def initialize(command_line = Puppet::Util::CommandLine.new)
     @command_line = CommandLineArgs.new(command_line.subcommand_name, command_line.args.dup)
-    @options = {}
-    @use_facterdb = true
+    @options = { use_facterdb: true, play: nil, run_once: false, node_name: nil, quiet: false, help: false, scope: nil }
     @use_stdin = false
     begin
       require 'puppet-debugger'
@@ -201,7 +190,7 @@ Copyright (c) 2016 NWOps
     # if this is a file we don't play back since its part of the environment
     # if just the code we put in a file and use the play feature of the debugger
     # we could do the same thing with the passed in manifest file but that might be too much code to show
-    manifest = nil
+
     if options[:code]
       code_input = options.delete(:code)
       file = Tempfile.new(['puppet_repl_input', '.pp'])
@@ -222,7 +211,7 @@ Copyright (c) 2016 NWOps
       Puppet.warning("Only one file can be used per run.  Skipping #{command_line.args.join(', ')}") unless command_line.args.empty?
       options[:play] = file
     end
-    if !use_facterdb && options[:node_name].nil?
+    if !options[:use_facterdb] && options[:node_name].nil?
       debug_environment = create_environment(nil)
       Puppet.notice('Gathering node facts...')
       node = create_node(debug_environment)
@@ -250,7 +239,6 @@ Copyright (c) 2016 NWOps
       Puppet[:node_name_value] = facts.values[Puppet[:node_name_fact]]
       facts.name = Puppet[:node_name_value]
     end
-
     Puppet.override({ current_environment: environment }, 'For puppet debugger') do
       # Find our Node
       unless node = Puppet::Node.indirection.find(Puppet[:node_name_value])

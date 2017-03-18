@@ -59,21 +59,21 @@ describe 'PuppetDebugger' do
   describe 'native definitions' do
     describe 'create' do
       let(:input) do
-        'define testfoo {}'
+        'define testfoodefine {}'
       end
       let(:debugger_output) do
         "\n => Puppet::Type::Component {\n  loglevel\e[0;37m => \e[0m\e[0;36mnotice\e[0m,\n      name\e[0;37m => \e[0m\e[0;33m\"some_name\"\e[0m,\n     title\e[0;37m => \e[0m\e[0;33m\"Testfoo[some_name]\"\e[0m\n}\n"
       end
       it do
         debugger.handle_input(input)
-        expect(debugger.scope.environment.known_resource_types.definitions.keys).to include('testfoo')
+        expect(debugger.scope.environment.known_resource_types.definitions.keys).to include('testfoodefine')
         expect(output.string).to eq("\n")
       end
       it do
         debugger.handle_input(input)
-        debugger.handle_input("testfoo{'some_name':}")
+        debugger.handle_input("testfoodefine{'some_name':}")
         expect(debugger.scope.compiler.resources.collect(&:name)).to include('some_name')
-        expect(debugger.scope.compiler.resources.collect(&:type)).to include('Testfoo')
+        expect(debugger.scope.compiler.resources.collect(&:type)).to include('Testfoodefine')
         expect(output.string).to include("\n => Puppet::Type::Component")
       end
     end
@@ -124,7 +124,7 @@ describe 'PuppetDebugger' do
     end
     describe 'Array' do
       let(:input) do
-        'type_of([1,2,3,4])'
+        'type([1,2,3,4])'
       end
       it 'shows type' do
         debugger.handle_input(input)

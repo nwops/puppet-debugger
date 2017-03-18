@@ -44,17 +44,6 @@ module PuppetDebugger
       end
     end
 
-    # returns an array of module directories, generally this is the only place
-    # to look for puppet code by default.  This is read from the puppet configuration
-    def default_modules_paths
-      dirs = []
-      do_initialize if Puppet[:codedir].nil?
-      # add the puppet-debugger directory so we can load any defined functions
-      dirs << File.join(Puppet[:environmentpath], default_puppet_env_name, 'modules') unless Puppet[:environmentpath].empty?
-      dirs << Puppet.settings[:basemodulepath].split(':')
-      dirs.flatten
-    end
-
     # this is the lib directory of this gem
     # in order to load any puppet functions from this gem we need to add the lib path
     # of this gem
@@ -62,14 +51,9 @@ module PuppetDebugger
       File.expand_path(File.join(File.dirname(File.dirname(File.dirname(__FILE__))), 'lib'))
     end
 
-    # returns all the modules paths defined in the environment
-    def modules_paths
-      puppet_environment.full_modulepath
-    end
-
     def initialize_from_scope(value)
       set_scope(value)
-      unless value.nil?
+      if value
         set_environment(value.environment)
         set_node(value.compiler.node)
         set_compiler(value.compiler)
@@ -105,7 +89,6 @@ module PuppetDebugger
       Puppet[:parser] = 'future' # this is required in order to work with puppet 3.8
       Puppet[:trusted_node_data] = true
     rescue ArgumentError => e
-
     rescue Puppet::DevError => e
       # do nothing otherwise calling init twice raises an error
     end
@@ -163,14 +146,6 @@ module PuppetDebugger
     # returns a future parser for evaluating code
     def parser
       @parser ||= ::Puppet::Pops::Parser::EvaluatingParser.new
-    end
-
-    def default_manifests_dir
-      File.join(Puppet[:environmentpath], default_puppet_env_name, 'manifests')
-    end
-
-    def default_site_manifest
-      File.join(default_manifests_dir, 'site.pp')
     end
   end
 end
