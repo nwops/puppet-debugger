@@ -17,6 +17,6 @@ describe 'environment' do
   end
 
   it 'full module path' do
-    expect(debugger.modules_paths.count).to be > 2
+    expect(debugger.modules_paths.count).to be >= 2
   end
 end

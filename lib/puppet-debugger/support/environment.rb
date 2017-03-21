@@ -32,7 +32,6 @@ module PuppetDebugger
       end
 
       def create_environment
-        do_initialize
         env = Puppet.lookup(:environments).get!(Puppet[:environment])
         manifests_dir = env.manifest == :no_manifest ? default_manifests_dir : env.manifest
         env = env.override_with(modulepath: default_modules_paths,

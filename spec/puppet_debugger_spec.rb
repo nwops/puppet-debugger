@@ -122,13 +122,13 @@ describe 'PuppetDebugger' do
         expect(output.string).to eq("\n => String\n")
       end
     end
-    describe 'Array' do
+    describe 'Array', type_function: true do
       let(:input) do
         'type([1,2,3,4])'
       end
       it 'shows type' do
         debugger.handle_input(input)
-        expect(output.string).to eq("\n => Tuple[Integer[1, 1], Integer[2, 2], Integer[3, 3], Integer[4, 4]]\n")
+        expect(output.string).to eq("\n => Tuple[Integer[1, 1], Integer[2, 2], Integer[3, 3], Integer[4, 4]]\n") if supports_type_function?
       end
     end
   end
