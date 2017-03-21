@@ -1,5 +1,8 @@
 ## Unreleased
-  
+
+## 0.5.0
+  * Fixes #gh-49 - puppet 4 functions don't seem to work
+  * Disables trying to set trusted_node_data for puppet versions that do not support it
 ## 0.4.4
   * Refactor to upcoming puppet 5.0  (minor fix, requires a few more changes)
   * Fixes issue with frozen string literal under ruby 2.3.x
