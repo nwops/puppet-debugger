@@ -130,7 +130,8 @@ module PuppetDebugger
       File.open(file, 'w') do |f|
         f.write(input)
       end
-      Puppet.override({ code: input, global_scope: scope, loaders: scope.compiler.loaders }, 'For puppet-debugger') do
+      Puppet.override({ current_environment: puppet_environment, code: input,
+                        global_scope: scope, loaders: scope.compiler.loaders }, 'For puppet-debugger') do
         # because the repl is not a module we leave the modname blank
         scope.environment.known_resource_types.import_ast(ast, '')
         parser.evaluate_string(scope, input, File.expand_path(file))

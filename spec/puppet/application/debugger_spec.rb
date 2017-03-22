@@ -66,6 +66,24 @@ describe Puppet::Application::Debugger do
       allow(debugger).to receive(:options).and_return(code: "$var1 = 'blah'", quiet: true, run_once: true, use_facterdb: true)
       expect { debugger.run_command }.to output(/"blah"/).to_stdout
     end
+
+    describe 'can reset correctly' do
+      let(:input) do
+        <<-EOF
+$var1 = 'dsfasd'
+$var1
+reset
+$var1 = '111111'
+$var1
+        EOF
+      end
+
+
+      it 'assign variable' do
+        allow(debugger).to receive(:options).and_return(code: input, quiet: true, run_once: true, use_facterdb: true)
+        expect { debugger.run_command }.to output(/\"111111\"/).to_stdout
+      end
+    end
   end
 
   describe 'without facterdb' do
@@ -79,5 +97,25 @@ describe Puppet::Application::Debugger do
       allow(debugger).to receive(:options).and_return(code: "$var1 = 'blah'", quiet: true, run_once: true, use_facterdb: false)
       expect { debugger.run_command }.to output(/"blah"/).to_stdout
     end
+
+    describe 'can reset correctly' do
+      let(:input) do
+        <<-EOF
+$var1 = 'dsfasd'
+$var1
+reset
+$var1 = '111111'
+$var1
+        EOF
+      end
+
+
+      it 'assign variable' do
+        allow(debugger).to receive(:options).and_return(code: input, quiet: true, run_once: true, use_facterdb: false)
+        expect { debugger.run_command }.to output(/\"111111\"/).to_stdout
+      end
+    end
   end
+
+
 end

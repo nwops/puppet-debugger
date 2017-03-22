@@ -9,7 +9,7 @@ module PuppetDebugger
       end
 
       def compiler
-        @compiler
+        @compiler ||= create_compiler(node)
       end
 
       def set_compiler(value)

@@ -31,11 +31,16 @@ module PuppetDebugger
         File.join(default_manifests_dir, 'site.pp')
       end
 
+      # returns the environment
       def create_environment
-        env = Puppet.lookup(:environments).get!(Puppet[:environment])
-        manifests_dir = env.manifest == :no_manifest ? default_manifests_dir : env.manifest
-        env = env.override_with(modulepath: default_modules_paths,
-                                manifest: manifests_dir)
+        Puppet::Node::Environment.create(Puppet[:environment],
+                                                   default_modules_paths,
+                                                   default_manifests_dir)
+      end
+
+      def create_node_environment(manifest = nil)
+        env = Puppet.lookup(:current_environment)
+        manifest ? env.override_with(manifest: manifest) : env
       end
 
       def set_environment(value)

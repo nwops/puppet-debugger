@@ -27,6 +27,27 @@ module PuppetDebugger
         node_obj
       end
 
+      def create_real_node(environment)
+        node = nil
+        unless Puppet[:node_name_fact].empty?
+          # Collect our facts.
+          unless facts = Puppet::Node::Facts.indirection.find(Puppet[:node_name_value])
+            raise "Could not find facts for #{Puppet[:node_name_value]}"
+          end
+          Puppet[:node_name_value] = facts.values[Puppet[:node_name_fact]]
+          facts.name = Puppet[:node_name_value]
+        end
+        Puppet.override({ current_environment: environment }, 'For puppet debugger') do
+          # Find our Node
+          unless node = Puppet::Node.indirection.find(Puppet[:node_name_value])
+            raise "Could not find node #{Puppet[:node_name_value]}"
+          end
+          # Merge in the facts.
+          node.merge(facts.values) if facts
+        end
+        node
+      end
+
       def set_remote_node_name(name)
         @remote_node_name = name
       end

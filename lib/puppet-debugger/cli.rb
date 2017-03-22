@@ -14,6 +14,7 @@ module PuppetDebugger
       do_initialize if Puppet[:codedir].nil?
       Puppet.settings[:name] = :debugger
       Puppet.settings[:trusted_server_facts] = true unless Puppet.settings[:trusted_server_facts].nil?
+      Puppet[:static_catalogs] = false unless Puppet.settings[:static_catalogs].nil?
       set_remote_node_name(options[:node_name])
       initialize_from_scope(options[:scope])
       @log_level = 'notice'
