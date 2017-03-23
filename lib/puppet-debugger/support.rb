@@ -16,6 +16,7 @@ module PuppetDebugger
     include PuppetDebugger::Support::Scope
     include PuppetDebugger::Support::Functions
     include PuppetDebugger::Support::Node
+    include PuppetDebugger::Support::Loader
     include PuppetDebugger::Support::InputResponders
     include PuppetDebugger::Support::Play
 

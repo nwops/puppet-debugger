@@ -38,14 +38,6 @@ module PuppetDebugger
         @functions
       end
 
-      # returns an array of module loaders that we may need to use in the future
-      # in order to parse all types of code (ie. functions)  For now this is not
-      # being used.
-      def resolve_paths(loaders)
-        mod_resolver = loaders.instance_variable_get(:@module_resolver)
-        all_mods = mod_resolver.instance_variable_get(:@all_module_loaders)
-      end
-
       # gather all the lib dirs
       def lib_dirs(module_dirs = modules_paths)
         dirs = module_dirs.map do |mod_dir|
@@ -61,11 +53,6 @@ module PuppetDebugger
           $LOAD_PATH << lib
         end
       end
-
-      # def functions
-      #   @functions = []
-      #   @functions << compiler.loaders.static_loader.loaded.keys.find_all {|l| l.type == :function}
-      # end
     end
   end
 end
