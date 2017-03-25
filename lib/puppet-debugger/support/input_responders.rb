@@ -4,7 +4,13 @@ module PuppetDebugger
     module InputResponders
       def static_responder_list
         %w(exit functions classification vars facterdb_filter krt facts
-           resources classes whereami play reset help)
+           resources classes whereami datatypes play reset help)
+      end
+
+      def datatypes(_args = [])
+        types = data_types
+        return types.sort.ai if types.instance_of?(Array)
+        types
       end
 
       # @source_file and @source_line_num instance variables must be set for this

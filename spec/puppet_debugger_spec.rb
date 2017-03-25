@@ -180,7 +180,7 @@ describe 'PuppetDebugger' do
       'help'
     end
     it 'can show the help screen' do
-      expected_debugger_output = /Type \"exit\", \"functions\", \"vars\", \"krt\", \"whereami\", \"facts\", \"resources\", \"classes\",\n     \"play\", \"classification\", \"reset\", or \"help\" for more information.\n\n/
+      expected_debugger_output = /Type \"exit\", \"functions\", \"vars\", \"krt\", \"whereami\", \"facts\", \"resources\", \"classes\",\n     \"play\", \"classification\", \"datatypes\", \"reset\", or \"help\" for more information.\n\n/
       debugger.handle_input(input)
       expect(output.string).to match(/Ruby Version: #{RUBY_VERSION}\n/)
       expect(output.string).to match(/Puppet Version: \d.\d.\d\n/)
@@ -443,6 +443,20 @@ describe 'PuppetDebugger' do
       debugger_output = /HELLO/
       debugger.handle_input("swapcase('hello')")
       expect(output.string).to match(debugger_output)
+    end
+  end
+
+  describe 'datatypes' do
+    let(:input) do
+      'datatypes'
+    end
+    it 'handle datatypes' do
+      debugger.handle_input(input)
+      if Puppet.version < '4.3.0'
+        expect(output.string).to match(/.*Not.*/)
+      else
+        expect(output.string).to match(/.*Array.*/)
+      end
     end
   end
 

@@ -7,7 +7,8 @@ module PuppetDebugger
       end
 
       def data_types
-        loader.implementation_registry.
+        return "Data Types Not Available in Puppet: #{Puppet.version}" unless loaders.respond_to?(:implementation_registry)
+        loaders.implementation_registry.
             instance_variable_get(:'@implementations_per_type_name').
             keys.find_all { |t| t !~ /::/ }
       end
@@ -27,6 +28,9 @@ module PuppetDebugger
       # def functions
       #   @functions = []
       #   @functions << compiler.loaders.static_loader.loaded.keys.find_all {|l| l.type == :function}
+      # returns all the type names, athough we cannot determine the difference between datatype and resource type
+      # loaders.static_loader.loaded.map { |item| item.first.name}
+
       # end
 
     end

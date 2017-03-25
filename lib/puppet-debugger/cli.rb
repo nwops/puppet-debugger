@@ -97,7 +97,7 @@ module PuppetDebugger
       begin
         output = ''
         case input
-        when /^play|^classification|^whereami|^facterdb_filter|^facts|^vars|^functions|^classes|^resources|^krt|^environment|^reset|^help/
+        when /^play|^classification|^whereami|^facterdb_filter|^facts|^vars|^functions|^classes|^resources|^krt|^environment|^datatypes|^reset|^help/
           args = input.split(' ')
           command = args.shift.to_sym
           output = send(command, args) if respond_to?(command)
@@ -150,7 +150,7 @@ Puppet Version: #{Puppet.version}
 Puppet Debugger Version: #{PuppetDebugger::VERSION}
 Created by: NWOps <corey@nwops.io>
 Type "exit", "functions", "vars", "krt", "whereami", "facts", "resources", "classes",
-     "play", "classification", "reset", or "help" for more information.
+     "play", "classification", "datatypes", "reset", or "help" for more information.
 
       EOT
       output
