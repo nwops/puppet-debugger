@@ -180,7 +180,7 @@ describe 'PuppetDebugger' do
       'help'
     end
     it 'can show the help screen' do
-      expected_debugger_output = /Type \"exit\", \"functions\", \"vars\", \"krt\", \"whereami\", \"facts\", \"resources\", \"classes\",\n     \"play\", \"classification\", \"datatypes\", \"reset\", or \"help\" for more information.\n\n/
+      expected_debugger_output = /Type \"exit\", \"functions\", \"vars\", \"krt\", \"whereami\", \"facts\", \"resources\", \"classes\",\n     \"play\", \"classification\", \"types\", \"datatypes\", \"reset\", or \"help\" for more information.\n\n/
       debugger.handle_input(input)
       expect(output.string).to match(/Ruby Version: #{RUBY_VERSION}\n/)
       expect(output.string).to match(/Puppet Version: \d.\d.\d\n/)
@@ -476,6 +476,16 @@ describe 'PuppetDebugger' do
     end
     it 'contains marker' do
       expect(debugger.whereami).to match(/\s+=>\s10/)
+    end
+  end
+
+  describe 'types' do
+    let(:input) do
+      'types'
+    end
+    it 'runs' do
+      debugger.handle_input(input)
+      expect(output.string).to match(/service/)
     end
   end
 

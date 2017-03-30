@@ -1,5 +1,8 @@
 ## Unreleased
-
+  * Adds ability to list puppet types
+  * Adds ability to list puppet datatypes
+## 0.5.1
+  * accidently bump 
 ## 0.5.0
   * Fixes #gh-49 - puppet 4 functions don't seem to work
   * Disables trying to set trusted_node_data for puppet versions that do not support it
