@@ -8,7 +8,7 @@ module PuppetDebugger
       end
 
       def datatypes(_args = [])
-        types = data_types
+        types = all_data_types
         return types.sort.ai if types.instance_of?(Array)
         types
       end

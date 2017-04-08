@@ -453,7 +453,7 @@ describe 'PuppetDebugger' do
     it 'handle datatypes' do
       debugger.handle_input(input)
       if Puppet.version < '4.3.0'
-        expect(output.string).to match(/.*Not.*/)
+        expect(output.string).to eq("\n[]\n")
       else
         expect(output.string).to match(/.*Array.*/)
       end

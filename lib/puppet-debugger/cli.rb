@@ -45,7 +45,7 @@ module PuppetDebugger
       scoped_vars = variables.map { |k, _v| scope.compiler.topscope.exist?(k) ? "$::#{k}" : "$#{k}" }
       # append a () to functions so we know they are functions
       funcs = function_map.keys.map { |k| "#{k.split('::').last}()" }
-      (scoped_vars + funcs + static_responder_list).uniq.sort
+      (scoped_vars + funcs + static_responder_list + all_data_types).uniq.sort
     end
 
     # looks up the type in the catalog by using the type and title

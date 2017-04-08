@@ -17,6 +17,18 @@ module PuppetDebugger
         Dir.glob(search_dirs.flatten)
       end
 
+      def data_type_files
+        search_dirs = lib_dirs.map do |lib_dir|
+          [File.join(lib_dir, 'puppet', 'functions', '**', '*.rb'),
+           File.join(lib_dir, 'functions', '**', '*.rb'),
+           File.join(lib_dir, 'puppet', 'parser', 'functions', '*.rb')]
+        end
+        # add puppet lib directories
+        search_dirs << [File.join(puppet_lib_dir, 'puppet', 'functions', '**', '*.rb'),
+                        File.join(puppet_lib_dir, 'puppet', 'parser', 'functions', '*.rb')]
+        Dir.glob(search_dirs.flatten)
+      end
+
       # returns either the module name or puppet version
       def mod_finder
         @mod_finder ||= Regexp.new('\/([\w\-\.]+)\/lib')
