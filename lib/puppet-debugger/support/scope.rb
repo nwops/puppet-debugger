@@ -2,7 +2,6 @@
 module PuppetDebugger
   module Support
     module Scope
-
       # @param [Puppet::Pops::Scope] - Scope object or nil
       def set_scope(value)
         @scope = value

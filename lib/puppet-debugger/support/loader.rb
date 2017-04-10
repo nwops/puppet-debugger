@@ -1,26 +1,26 @@
+# frozen_string_literal: true
 module PuppetDebugger
   module Support
     module Loader
-
       def create_loader(environment)
         Puppet::Pops::Loaders.new(environment)
       end
 
       # @return [Array[String]] - returns a list of all the custom data types found in all the modules in the environment
       def environment_data_types
-        files = Dir.glob(puppet_environment.modulepath.map {|m| File.join(m, '**', 'types', '**', '*.pp')})
-        t = files.map do |f|
+        files = Dir.glob(puppet_environment.modulepath.map { |m| File.join(m, '**', 'types', '**', '*.pp') })
+        files.map do |f|
           m = File.read(f).match(/type\s([a-z\d\:_]+)/i)
-          next if m =~ /type|alias/  # can't figure out the best way to filter type and alias out
-          m[1] if m and m[1] =~ /::/
+          next if m =~ /type|alias/ # can't figure out the best way to filter type and alias out
+          m[1] if m && m[1] =~ /::/
         end.uniq.compact
       end
 
       # @return [Array[String]] - a list of core data types
       def core_datatypes
-        loaders.implementation_registry.
-            instance_variable_get(:'@implementations_per_type_name').
-            keys.find_all { |t| t !~ /::/ }
+        loaders.implementation_registry
+               .instance_variable_get(:'@implementations_per_type_name')
+               .keys.find_all { |t| t !~ /::/ }
       end
 
       # @return [Array[String]] - combined list of core data types and environment data types
@@ -53,10 +53,9 @@ module PuppetDebugger
       # loaders.implementation_registry.
       #     instance_variable_get(:'@implementations_per_type_name').
       #     keys.find_all { |t| t !~ /::/ }
-      #Puppet::Pops::Types::TypeFactory.type_map.keys.map(&:capatilize)
+      # Puppet::Pops::Types::TypeFactory.type_map.keys.map(&:capatilize)
       # end
-      #Puppet::Pops::Adapters::LoaderAdapter.loader_for_model_object(generate_ast(''))
-
+      # Puppet::Pops::Adapters::LoaderAdapter.loader_for_model_object(generate_ast(''))
     end
   end
 end

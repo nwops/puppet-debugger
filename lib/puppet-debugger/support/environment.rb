@@ -34,8 +34,8 @@ module PuppetDebugger
       # returns the environment
       def create_environment
         Puppet::Node::Environment.create(Puppet[:environment],
-                                                   default_modules_paths,
-                                                   default_manifests_dir)
+                                         default_modules_paths,
+                                         default_manifests_dir)
       end
 
       def create_node_environment(manifest = nil)
