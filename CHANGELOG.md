@@ -1,4 +1,4 @@
-## Unreleased
+## 0.6.0
   * Adds ability to list puppet types
   * Adds ability to list puppet datatypes
 ## 0.5.1
