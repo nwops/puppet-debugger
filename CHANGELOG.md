@@ -1,3 +1,5 @@
+## 0.6.1
+  * Adds benchmark feature
 ## 0.6.0
   * Adds ability to list puppet types
   * Adds ability to list puppet datatypes

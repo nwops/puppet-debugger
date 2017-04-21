@@ -135,7 +135,16 @@ module PuppetDebugger
                         global_scope: scope, loaders: scope.compiler.loaders }, 'For puppet-debugger') do
         # because the repl is not a module we leave the modname blank
         scope.environment.known_resource_types.import_ast(ast, '')
-        parser.evaluate_string(scope, input, File.expand_path(file))
+
+        if $benchmark
+          result = nil
+          time = Benchmark.realtime do
+            result = parser.evaluate_string(scope, input, File.expand_path(file))
+          end
+          [result, "Time elapsed #{(time*1000).round(2)} ms"]
+        else
+          parser.evaluate_string(scope, input, File.expand_path(file))
+        end
       end
     end
 

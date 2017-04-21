@@ -180,7 +180,7 @@ describe 'PuppetDebugger' do
       'help'
     end
     it 'can show the help screen' do
-      expected_debugger_output = /Type \"exit\", \"functions\", \"vars\", \"krt\", \"whereami\", \"facts\", \"resources\", \"classes\",\n     \"play\", \"classification\", \"types\", \"datatypes\", \"reset\", or \"help\" for more information.\n\n/
+      expected_debugger_output = /Type \"exit\", \"functions\", \"vars\", \"krt\", \"whereami\", \"facts\", \"resources\", \"classes\",\n     \"play\", \"classification\", \"types\", \"datatypes\", \"benchmark\",\n     \"reset\", or \"help\" for more information.\n\n/
       debugger.handle_input(input)
       expect(output.string).to match(/Ruby Version: #{RUBY_VERSION}\n/)
       expect(output.string).to match(/Puppet Version: \d.\d.\d\n/)
@@ -504,6 +504,35 @@ describe 'PuppetDebugger' do
         debugger_output = /Invalid\ parameter\ contact/
         debugger.handle_input(input)
         expect(output.string).to match(debugger_output)
+      end
+    end
+  end
+
+  describe 'benchmark' do
+    let(:input) do
+      "benchmark md5('12345')"
+    end
+    describe 'mode' do
+      before(:each) do
+        debugger.handle_input('benchmark') # enable
+      end
+      it 'enable' do
+        debugger.handle_input("md5('12345')")
+        expect(output.string).to match(/Benchmark\ Mode\ On/)
+        expect(output.string).to match(/Time\ elapsed/)
+      end
+      it 'disable' do
+        debugger.handle_input('benchmark') # disable
+        expect(output.string).to match(/Benchmark\ Mode\ Off/)
+      end
+    end
+
+    describe 'onetime' do
+      it 'run' do
+        debugger.handle_input("benchmark md5('12345')")
+        expect(output.string).to_not match(/Benchmark\ Mode\ On/)
+        expect(output.string).to_not match(/Benchmark\ Mode\ Off/)
+        expect(output.string).to match(/Time\ elapsed/)
       end
     end
   end

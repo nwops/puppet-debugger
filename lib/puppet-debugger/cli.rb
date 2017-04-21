@@ -97,10 +97,11 @@ module PuppetDebugger
       begin
         output = ''
         case input
-        when /^play|^classification|^whereami|^facterdb_filter|^facts|^datatypes|^types|^vars|^functions|^classes|^resources|^krt|^environment|^reset|^help/
+        when /^play|^classification|^whereami|^facterdb_filter|^facts|^datatypes|^types|^vars|^functions|^classes|^resources|^krt|^environment|^benchmark|^reset|^help/
           args = input.split(' ')
           command = args.shift.to_sym
           output = send(command, args) if respond_to?(command)
+          @bencmark = false
           return out_buffer.puts output
         when /exit/
           exit 0
@@ -112,11 +113,7 @@ module PuppetDebugger
           result = puppet_eval(input)
           @last_item = result
           output = normalize_output(result)
-          output = if output.nil?
-                     ''
-                   else
-                     output.ai
-                   end
+          output = output.nil? ? '' : output.ai
         end
       rescue LoadError => e
         output = e.message.fatal
@@ -150,7 +147,8 @@ Puppet Version: #{Puppet.version}
 Puppet Debugger Version: #{PuppetDebugger::VERSION}
 Created by: NWOps <corey@nwops.io>
 Type "exit", "functions", "vars", "krt", "whereami", "facts", "resources", "classes",
-     "play", "classification", "types", "datatypes", "reset", or "help" for more information.
+     "play", "classification", "types", "datatypes", "benchmark",
+     "reset", or "help" for more information.
 
       EOT
       output
@@ -175,7 +173,7 @@ Type "exit", "functions", "vars", "krt", "whereami", "facts", "resources", "clas
     def read_loop
       line_number = 1
       full_buffer = ''
-      while buf = Readline.readline("#{line_number}:>> ", true)
+      while buf = Readline.readline("#{line_number}:#{$extra_prompt}>> ", true)
         begin
           full_buffer += buf
           # unless this is puppet code, otherwise skip repl keywords
