@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'yaml'
 require 'fileutils'
+require 'English'
 @threads = {}
 
 def run_container(image, puppet_version)

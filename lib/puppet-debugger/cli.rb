@@ -146,9 +146,9 @@ Ruby Version: #{RUBY_VERSION}
 Puppet Version: #{Puppet.version}
 Puppet Debugger Version: #{PuppetDebugger::VERSION}
 Created by: NWOps <corey@nwops.io>
-Type "exit", "functions", "vars", "krt", "whereami", "facts", "resources", "classes",
-     "play", "classification", "types", "datatypes", "benchmark",
-     "reset", or "help" for more information.
+Type "commands" for a list of debugger commands
+or "help" to show the help screen.
+
 
       EOT
       output

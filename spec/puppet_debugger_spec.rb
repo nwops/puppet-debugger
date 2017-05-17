@@ -180,7 +180,7 @@ describe 'PuppetDebugger' do
       'help'
     end
     it 'can show the help screen' do
-      expected_debugger_output = /Type \"exit\", \"functions\", \"vars\", \"krt\", \"whereami\", \"facts\", \"resources\", \"classes\",\n     \"play\", \"classification\", \"types\", \"datatypes\", \"benchmark\",\n     \"reset\", or \"help\" for more information.\n\n/
+      expected_debugger_output = /Type \"commands\" for a list of debugger commands\nor \"help\" to show the help screen.\n\n/
       debugger.handle_input(input)
       expect(output.string).to match(/Ruby Version: #{RUBY_VERSION}\n/)
       expect(output.string).to match(/Puppet Version: \d.\d.\d\n/)
