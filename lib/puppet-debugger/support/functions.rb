@@ -43,7 +43,8 @@ module PuppetDebugger
             obj = {}
             name = File.basename(file, '.rb')
             obj[:name] = name
-            obj[:parent] = mod_finder.match(file)[1]
+            # return the last matched in cases where rbenv might be involved
+            obj[:parent] = file.scan(mod_finder).flatten.last
             @functions["#{obj[:parent]}::#{name}"] = obj
           end
         end

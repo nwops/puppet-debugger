@@ -39,7 +39,7 @@ describe 'support' do
   end
 
   let(:puppet_version) do
-    debugger.mod_finder.match(debugger.puppet_lib_dir)[1]
+    debugger.puppet_lib_dir.scan(debugger.mod_finder).flatten.last
   end
 
   let(:manifest_file) do
