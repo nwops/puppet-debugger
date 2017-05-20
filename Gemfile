@@ -2,7 +2,6 @@ source "http://rubygems.org"
 gem 'puppet', ENV['PUPPET_GEM_VERSION'] || "~> 4.9.0"
 gem 'facterdb', ">= 0.3.8"
 gem 'awesome_print', "~> 1.6"
-
 group :test do
   # ruby versions prior to 2.0 cannot install json_pure 2.0.2+
   gem 'json_pure', '<= 2.0.1'
@@ -13,6 +12,7 @@ group :test do
   gem 'rake'
   gem 'release_me'
   gem 'pry'
+  gem 'CFPropertyList'
 end
 
 group :validate do
