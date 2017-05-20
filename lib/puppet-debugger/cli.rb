@@ -97,7 +97,7 @@ module PuppetDebugger
       begin
         output = ''
         case input
-        when /^play|^classification|^whereami|^facterdb_filter|^facts|^datatypes|^types|^vars|^functions|^classes|^resources|^krt|^environment|^benchmark|^reset|^help/
+        when /^play|^classification|^whereami|^facterdb_filter|^facts|^datatypes|^types|^vars|^functions|^classes|^resources|^krt|^environment|^benchmark|^reset|^help|^commands/
           args = input.split(' ')
           command = args.shift.to_sym
           output = send(command, args) if respond_to?(command)

@@ -175,6 +175,41 @@ describe 'PuppetDebugger' do
     end
   end
 
+  describe 'commands' do
+    let(:input) do
+      'commands'
+    end
+
+    it 'shows a list of groups of available commands' do
+      command_groups = {
+        'Important' => { 'help' => 'Get help.' },
+
+        'Misc' => {
+          'do_something' => 'Do something good.',
+          'do_something_else' => 'Do something really good.'
+        }
+      }
+
+      stub_const('PuppetDebugger::Support::InputResponders::COMMAND_GROUPS', command_groups)
+
+      debugger.handle_input(input)
+
+      command_groups.each do |command_group|
+        group_name = command_group[0]
+        group_commands = command_group[1]
+
+        expect(output.string).to match(group_name)
+
+        group_commands.each do |command|
+          command_name = command[0]
+          command_description = command[1]
+          expect(output.string).to match(command_name)
+          expect(output.string).to match(command_description)
+        end
+      end
+    end
+  end
+
   describe 'help' do
     let(:input) do
       'help'

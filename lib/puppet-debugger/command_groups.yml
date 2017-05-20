@@ -1,0 +1,29 @@
+Help:
+  help: Show the help screen with version information.
+  commands: Show this screen.
+  exit: Quit Puppet Debugger.
+
+Tools:
+  benchmark: Benchmark your Puppet code.
+
+Scope:
+  classes: List all the classes current in the catalog.
+  resources: List all the resources current in the catalog.
+  vars: List all the variables in the current scopes.
+  krt: List all the known resource types.
+
+Environment:
+  functions: List all the functions available in the environment.
+  types: List all the types available in the environment.
+  datatypes: List all the datatypes available in the environment.
+
+Node:
+  facts: List all the facts associated with the node.
+  classification: Show the classification details of the node.
+
+Context:
+  reset: Reset the debugger to a clean state.
+  whereami: Show code surrounding the current context.
+
+Editing:
+  play: Playback a file or URL as input.

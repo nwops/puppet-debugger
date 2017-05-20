@@ -141,7 +141,7 @@ module PuppetDebugger
           time = Benchmark.realtime do
             result = parser.evaluate_string(scope, input, File.expand_path(file))
           end
-          [result, "Time elapsed #{(time*1000).round(2)} ms"]
+          [result, "Time elapsed #{(time * 1000).round(2)} ms"]
         else
           parser.evaluate_string(scope, input, File.expand_path(file))
         end
@@ -150,7 +150,7 @@ module PuppetDebugger
 
     def puppet_lib_dir
       # returns something like "/Library/Ruby/Gems/2.0.0/gems/puppet-4.2.2/lib/puppet.rb"
-      #"/Users/adam/.rbenv/versions/2.2.6/lib/ruby/gems/2.2.0/gems/puppet-4.9.4/lib"
+      # "/Users/adam/.rbenv/versions/2.2.6/lib/ruby/gems/2.2.0/gems/puppet-4.9.4/lib"
 
       # this is only useful when returning a namespace with the functions
       @puppet_lib_dir ||= File.dirname(Puppet.method(:[]).source_location.first)
