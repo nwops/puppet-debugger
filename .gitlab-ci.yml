@@ -73,6 +73,9 @@ bump_and_tag:
 .ruby_23: &ruby23
   image: ruby:2.3
 
+.ruby_24: &ruby24
+  image: ruby:2.4
+
 gem_production:
   image: ruby:2.1
   tags:
@@ -87,72 +90,84 @@ gem_production:
 
 puppet_38_ruby193:
   variables:
-    PUPPET_GEM_VERSION: "~> 3.8"
+    PUPPET_GEM_VERSION: "~> 3.8.0"
   <<: *puppet_job_def
   <<: *ruby193
 
 puppet_38_ruby20:
   variables:
-    PUPPET_GEM_VERSION: "~> 3.8"
+    PUPPET_GEM_VERSION: "~> 3.8.0"
   <<: *puppet_job_def
   <<: *ruby20
 
 puppet_38_ruby21:
   variables:
-    PUPPET_GEM_VERSION: "~> 3.8"
+    PUPPET_GEM_VERSION: "~> 3.8.0"
   <<: *puppet_job_def
   <<: *ruby21
 
 puppet_43_ruby20:
   variables:
-    PUPPET_GEM_VERSION: "~> 4.3"
+    PUPPET_GEM_VERSION: "~> 4.3.0"
   <<: *puppet_job_def
   <<: *ruby20
 
 puppet_43_ruby21:
   variables:
-    PUPPET_GEM_VERSION: "~> 4.3"
+    PUPPET_GEM_VERSION: "~> 4.3.0"
   <<: *puppet_job_def
   <<: *ruby21
 
 puppet_43_ruby22:
   variables:
-    PUPPET_GEM_VERSION: "~> 4.3"
+    PUPPET_GEM_VERSION: "~> 4.3.0"
   <<: *puppet_job_def
   <<: *ruby22
 
 puppet_44_ruby21:
   variables:
-    PUPPET_GEM_VERSION: "~> 4.4"
+    PUPPET_GEM_VERSION: "~> 4.4.0"
   <<: *puppet_job_def
   <<: *ruby21
 
 puppet_44_ruby22:
   variables:
-    PUPPET_GEM_VERSION: "~> 4.4"
+    PUPPET_GEM_VERSION: "~> 4.4.0"
   <<: *puppet_job_def
   <<: *ruby22
 
 puppet_45_ruby21:
   variables:
-    PUPPET_GEM_VERSION: "~> 4.5"
+    PUPPET_GEM_VERSION: "~> 4.5.0"
   <<: *puppet_job_def
   <<: *ruby21
 
 puppet_46_ruby22:
   variables:
-    PUPPET_GEM_VERSION: "~> 4.6"
+    PUPPET_GEM_VERSION: "~> 4.6.0"
   <<: *puppet_job_def
   <<: *ruby22
 
 puppet_47_ruby22:
   variables:
-    PUPPET_GEM_VERSION: "~> 4.7"
+    PUPPET_GEM_VERSION: "~> 4.7.0"
   <<: *puppet_job_def
   <<: *ruby22
 
 puppet_48_ruby22:
   variables:
-    PUPPET_GEM_VERSION: "~> 4.8"
+    PUPPET_GEM_VERSION: "~> 4.8.0"
   <<: *puppet_job_def
   <<: *ruby22
+
+puppet_49_ruby23:
+  variables:
+    PUPPET_GEM_VERSION: "~> 4.9.0"
+  <<: *puppet_job_def
+  <<: *ruby23
+
+puppet_410_ruby24:
+  variables:
+    PUPPET_GEM_VERSION: "~> 4.10.0"
+  <<: *puppet_job_def
+  <<: *ruby24
