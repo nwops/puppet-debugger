@@ -1,3 +1,5 @@
+## Unreleased
+  * Adds new commands and help command 
 ## 0.6.1
   * Adds benchmark feature
 ## 0.6.0
