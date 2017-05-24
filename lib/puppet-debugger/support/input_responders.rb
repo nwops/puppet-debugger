@@ -95,7 +95,7 @@ module PuppetDebugger
       def commands(_args = [])
         commands_list = ''
         COMMAND_GROUPS.each do |command_group|
-          group_name = command_group[0]
+          group_name = command_group[0].bold
           commands = command_group[1]
           commands_list += ' ' + group_name + "\n"
           commands.each do |command|
