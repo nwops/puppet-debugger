@@ -136,7 +136,7 @@ module PuppetDebugger
         # because the repl is not a module we leave the modname blank
         scope.environment.known_resource_types.import_ast(ast, '')
 
-        if $benchmark
+        if @benchmark
           result = nil
           time = Benchmark.realtime do
             result = parser.evaluate_string(scope, input, File.expand_path(file))

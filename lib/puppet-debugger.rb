@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative 'puppet-debugger/cli'
 require_relative 'version'
 require 'awesome_print'
@@ -6,18 +7,17 @@ require_relative 'awesome_print/ext/awesome_puppet'
 require_relative 'trollop'
 require 'puppet/util/log'
 require_relative 'puppet-debugger/debugger_code'
-
 require_relative 'puppet-debugger/support/errors'
+
 # monkey patch in some color effects string methods
 class String
   def red
     "\033[31m#{self}\033[0m"
   end
 
-  def bold;
+  def bold
     "\033[1m#{self}\033[22m"
   end
-
 
   def black
     "\033[30m#{self}\033[0m"

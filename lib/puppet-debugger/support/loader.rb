@@ -1,6 +1,8 @@
 # frozen_string_literal: true
+
 module PuppetDebugger
   module Support
+    # the Loader module wraps a few puppet loader functions
     module Loader
       def create_loader(environment)
         Puppet::Pops::Loaders.new(environment)

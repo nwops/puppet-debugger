@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class DebuggerCode
   # Represents a range of lines in a code listing.
   #

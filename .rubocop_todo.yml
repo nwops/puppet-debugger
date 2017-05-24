@@ -63,10 +63,18 @@ Lint/UselessAssignment:
 Metrics/AbcSize:
   Max: 150
 
+Style/IndentHeredoc:
+  Enabled: false
+
+Style/FileName:
+  Exclude:
+    - Rakefile
+    - Gemfile
+    - puppet-debugger.gemspec
 # Offense count: 3
 # Configuration parameters: CountComments.
 Metrics/BlockLength:
-  Max: 442
+  Max: 518
 
 # Offense count: 3
 Metrics/BlockNesting:
@@ -89,7 +97,7 @@ Metrics/MethodLength:
 # Offense count: 2
 # Configuration parameters: CountComments.
 Metrics/ModuleLength:
-  Max: 115
+  Max: 168
 
 # Offense count: 10
 Metrics/PerceivedComplexity:
@@ -154,6 +162,7 @@ Style/GuardClause:
     - 'lib/puppet-debugger/support/input_responders.rb'
     - 'lib/puppet-debugger/support/play.rb'
     - 'lib/trollop.rb'
+    - puppet-debugger.gemspec
 
 # Offense count: 2
 Style/IdenticalConditionalBranches:

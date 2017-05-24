@@ -173,7 +173,7 @@ or "help" to show the help screen.
     def read_loop
       line_number = 1
       full_buffer = ''
-      while buf = Readline.readline("#{line_number}:#{$extra_prompt}>> ", true)
+      while buf = Readline.readline("#{line_number}:#{@extra_prompt}>> ", true)
         begin
           full_buffer += buf
           # unless this is puppet code, otherwise skip repl keywords

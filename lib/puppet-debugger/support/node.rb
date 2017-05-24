@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'puppet/indirector/node/rest'
 
 module PuppetDebugger

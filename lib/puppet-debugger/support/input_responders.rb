@@ -1,25 +1,26 @@
 # frozen_string_literal: true
+
 module PuppetDebugger
   module Support
     module InputResponders
       COMMAND_GROUPS = Psych.load_file('./lib/puppet-debugger/command_groups.yml')
 
       def static_responder_list
-        %w(exit functions classification vars facterdb_filter krt facts types
-           resources classes whereami datatypes play reset help commands)
+        %w[exit functions classification vars facterdb_filter krt facts types
+           resources classes whereami datatypes benchmark play reset help commands]
       end
 
       def disable_benchmark
-        $benchmark = false
-        $extra_prompt = ''
+        @benchmark = false
+        @extra_prompt = ''
         'Off'
       end
 
       def enable_benchmark(show_status = false)
         require 'benchmark'
-        $benchmark = true
+        @benchmark = true
         if show_status
-          $extra_prompt = 'BM'
+          @extra_prompt = 'BM'
           'On'
         end
       end
@@ -31,7 +32,7 @@ module PuppetDebugger
           disable_benchmark
           out
         else
-          status = $benchmark ? disable_benchmark : enable_benchmark(true)
+          status = @benchmark ? disable_benchmark : enable_benchmark(true)
           "Benchmark Mode #{status}"
         end
       end
