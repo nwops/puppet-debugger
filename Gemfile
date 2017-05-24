@@ -13,6 +13,7 @@ group :test do
   gem 'release_me'
   gem 'pry'
   gem 'CFPropertyList'
+  gem 'puppet-debugger', path: './'
 end
 
 group :validate do
