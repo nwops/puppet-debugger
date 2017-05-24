@@ -15,6 +15,7 @@ AllCops:
     - lib/version.rb
     - lib/puppet-debugger.rb
     - bin
+
 # Offense count: 7
 # Configuration parameters: AllowSafeAssignment.
 Lint/AssignmentInCondition:
@@ -30,7 +31,8 @@ Lint/Debugger:
   Exclude:
     - spec/**/*.rb
 
-
+Style/NumericPredicate:
+  Enabled: false
 # Offense count: 1
 # Cop supports --auto-correct.
 # Configuration parameters: AlignWith, SupportedStyles, AutoCorrect.

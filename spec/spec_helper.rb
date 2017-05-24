@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'simplecov'
 require_relative '../lib/puppet-debugger'
 require 'yaml'

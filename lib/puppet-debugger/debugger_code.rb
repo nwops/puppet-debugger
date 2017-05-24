@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative 'code/loc'
 require_relative 'code/code_range'
 require_relative 'code/code_file'

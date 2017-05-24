@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class DebuggerCode
   # Represents a line of code. A line of code is a tuple, which consists of a
   # line and a line number. A `LOC` object's state (namely, the line
