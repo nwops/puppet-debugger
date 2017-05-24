@@ -1,3 +1,11 @@
+PATH
+  remote: .
+  specs:
+    puppet-debugger (0.6.1)
+      awesome_print (~> 1.6)
+      facterdb (>= 0.3.8)
+      puppet (>= 3.8)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -84,6 +92,7 @@ DEPENDENCIES
   json_pure (<= 2.0.1)
   pry
   puppet (~> 4.9.0)
+  puppet-debugger!
   rake
   rdoc (~> 3.12)
   release_me
