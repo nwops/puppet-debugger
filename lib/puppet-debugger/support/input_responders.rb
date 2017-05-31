@@ -2,8 +2,9 @@
 
 module PuppetDebugger
   module Support
+    BASE_DIR = File.dirname(File.dirname(__FILE__))
     module InputResponders
-      COMMAND_GROUPS = Psych.load_file('./lib/puppet-debugger/command_groups.yml')
+      COMMAND_GROUPS = Psych.load_file(File.join(PuppetDebugger::Support::BASE_DIR, 'command_groups.yml'))
 
       def static_responder_list
         %w[exit functions classification vars facterdb_filter krt facts types

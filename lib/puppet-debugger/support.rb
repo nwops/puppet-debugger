@@ -20,6 +20,8 @@ module PuppetDebugger
     include PuppetDebugger::Support::InputResponders
     include PuppetDebugger::Support::Play
 
+
+
     # parses the error type into a more useful error message defined in errors.rb
     # returns new error object or the original if error cannot be parsed
     def parse_error(error)
