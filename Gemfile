@@ -1,10 +1,10 @@
 # frozen_string_literal: true
-
 source 'http://rubygems.org'
 gem 'awesome_print', '~> 1.6'
 gem 'facterdb', '>= 0.3.8'
 gem 'puppet', ENV['PUPPET_GEM_VERSION'] || '~> 4.9.0'
-group :test do
+gem 'pluginator', '~> 1.4.1'
+group :test, :development do
   # ruby versions prior to 2.0 cannot install json_pure 2.0.2+
   gem 'bundler'
   gem 'CFPropertyList'

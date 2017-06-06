@@ -4,12 +4,13 @@ require 'puppet'
 require 'readline'
 require 'json'
 require_relative 'support'
+require 'pluginator'
 
 module PuppetDebugger
   class Cli
     include PuppetDebugger::Support
 
-    attr_accessor :settings, :log_level, :in_buffer, :out_buffer, :html_mode
+    attr_accessor :settings, :log_level, :in_buffer, :out_buffer, :html_mode, :extra_prompt, :bench
 
     def initialize(options = {})
       do_initialize if Puppet[:codedir].nil?
@@ -91,10 +92,15 @@ module PuppetDebugger
       result
     end
 
+    def responder_list
+      plugins = Pluginator.find(PuppetDebugger)
+    end
+
     # this method handles all input and expects a string of text.
     #
     def handle_input(input)
       raise ArgumentError unless input.instance_of?(String)
+      #responder_list
       begin
         output = ''
         case input
@@ -102,7 +108,7 @@ module PuppetDebugger
           args = input.split(' ')
           command = args.shift.to_sym
           output = send(command, args) if respond_to?(command)
-          @bencmark = false
+          bench = false
           return out_buffer.puts output
         when /exit/
           exit 0
@@ -174,7 +180,7 @@ or "help" to show the help screen.
     def read_loop
       line_number = 1
       full_buffer = ''
-      while buf = Readline.readline("#{line_number}:#{@extra_prompt}>> ", true)
+      while buf = Readline.readline("#{line_number}:#{extra_prompt}>> ", true)
         begin
           full_buffer += buf
           # unless this is puppet code, otherwise skip repl keywords

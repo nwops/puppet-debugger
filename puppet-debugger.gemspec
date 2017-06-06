@@ -28,12 +28,13 @@ Gem::Specification.new do |s|
     'LICENSE.txt',
     'README.md'
   ]
-  s.homepage = 'http://github.com/nwops/puppet-debugger'
-  s.licenses = ['MIT']
-  s.rubygems_version = '2.4.5.1'
-  s.summary = 'A repl based debugger for the puppet language'
-  s.add_runtime_dependency('puppet', ['>= 3.8'])
-  s.add_runtime_dependency('facterdb', ['>= 0.3.8'])
-  s.add_runtime_dependency('awesome_print', ['~> 1.6'])
-  s.add_development_dependency('rdoc', ['~> 3.12'])
+  s.homepage = "http://github.com/nwops/puppet-debugger"
+  s.licenses = ["MIT"]
+  s.rubygems_version = "2.4.5.1"
+  s.summary = "A repl based debugger for the puppet language"
+  s.add_runtime_dependency(%q<pluginator>, ["~> 1.4.1"])
+  s.add_runtime_dependency(%q<puppet>, [">= 3.8"])
+  s.add_runtime_dependency(%q<facterdb>, [">= 0.3.8"])
+  s.add_runtime_dependency(%q<awesome_print>, ["~> 1.6"])
+  s.add_development_dependency(%q<rdoc>, ["~> 3.12"])
 end

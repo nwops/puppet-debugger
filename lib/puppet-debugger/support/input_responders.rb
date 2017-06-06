@@ -11,31 +11,8 @@ module PuppetDebugger
            resources classes whereami datatypes benchmark play reset help commands]
       end
 
-      def disable_benchmark
-        @benchmark = false
-        @extra_prompt = ''
-        'Off'
-      end
-
-      def enable_benchmark(show_status = false)
-        require 'benchmark'
-        @benchmark = true
-        if show_status
-          @extra_prompt = 'BM'
-          'On'
-        end
-      end
-
       def benchmark(args = [])
-        if args.count > 0
-          enable_benchmark(false)
-          out = handle_input(args.first)
-          disable_benchmark
-          out
-        else
-          status = @benchmark ? disable_benchmark : enable_benchmark(true)
-          "Benchmark Mode #{status}"
-        end
+        PuppetDebugger::InputResponders::Benchmark.execute(args, self)
       end
 
       def datatypes(_args = [])
