@@ -2,7 +2,7 @@
 export PATH=$PATH:/usr/local/bundle
 gem install bundler > /dev/null
 gem update --system > /dev/null
-bundle install --no-color --without development
+bundle update
 bundle exec puppet module install puppetlabs-stdlib
 echo "Running tests, output to ${OUT_DIR}/results.txt"
 bundle exec rspec --out "${OUT_DIR}/results.txt" --format documentation

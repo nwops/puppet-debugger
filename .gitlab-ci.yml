@@ -31,7 +31,7 @@ rubocop_ruby:
   only:
     - branches
   tags:
-    - ruby2.2
+    - ruby
   script:
     - bundle install
     - bundle exec rubocop -D
@@ -79,7 +79,7 @@ bump_and_tag:
 gem_production:
   image: ruby:2.1
   tags:
-    - ruby2.2
+    - ruby
   before_script:
     - gem install dpl
   stage: deploy

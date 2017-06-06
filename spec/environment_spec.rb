@@ -4,7 +4,7 @@ require 'spec_helper'
 require 'stringio'
 describe 'environment' do
   let(:output) do
-    StringIO.new('', 'w')
+    StringIO.new
   end
 
   let(:debugger) do

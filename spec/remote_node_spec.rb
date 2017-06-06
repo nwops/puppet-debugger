@@ -12,7 +12,7 @@ describe 'PuppetDebugger' do
   end
 
   let(:output) do
-    StringIO.new('', 'w')
+    StringIO.new
   end
 
   let(:debugger) do

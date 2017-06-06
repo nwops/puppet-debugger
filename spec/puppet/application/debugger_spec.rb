@@ -1,7 +1,6 @@
-#! /usr/bin/env ruby
 # frozen_string_literal: true
-require 'spec_helper'
 
+require 'spec_helper'
 require 'puppet/application/debugger'
 
 describe Puppet::Application::Debugger do

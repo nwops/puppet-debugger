@@ -12,7 +12,7 @@ describe 'PuppetDebugger' do
   end
 
   let(:output) do
-    StringIO.new('', 'w')
+    StringIO.new
   end
 
   let(:debugger) do
@@ -128,8 +128,10 @@ describe 'PuppetDebugger' do
         'type([1,2,3,4])'
       end
       it 'shows type' do
-        debugger.handle_input(input)
-        expect(output.string).to eq("\n => Tuple[Integer[1, 1], Integer[2, 2], Integer[3, 3], Integer[4, 4]]\n") if supports_type_function?
+        if Gem::Version.new(Puppet.version) > Gem::Version.new('4.4')
+          debugger.handle_input(input)
+          expect(output.string).to eq("\n => Tuple[Integer[1, 1], Integer[2, 2], Integer[3, 3], Integer[4, 4]]\n") if supports_type_function?
+        end
       end
     end
   end
@@ -219,7 +221,7 @@ describe 'PuppetDebugger' do
       expected_debugger_output = /Type \"commands\" for a list of debugger commands\nor \"help\" to show the help screen.\n\n/
       debugger.handle_input(input)
       expect(output.string).to match(/Ruby Version: #{RUBY_VERSION}\n/)
-      expect(output.string).to match(/Puppet Version: \d.\d.\d\n/)
+      expect(output.string).to match(/Puppet Version: \d.\d\d?.\d\n/)
       expect(output.string).to match(/Puppet Debugger Version: \d.\d.\d\n/)
       expect(output.string).to match(/Created by: NWOps <corey@nwops.io>\n/)
       expect(output.string).to match(expected_debugger_output)
@@ -488,7 +490,7 @@ describe 'PuppetDebugger' do
     end
     it 'handle datatypes' do
       debugger.handle_input(input)
-      if Puppet.version < '4.3.0'
+      if Gem::Version.new(Puppet.version) < Gem::Version.new('4.5.0')
         expect(output.string).to eq("\n[]\n")
       else
         expect(output.string).to match(/.*Array.*/)

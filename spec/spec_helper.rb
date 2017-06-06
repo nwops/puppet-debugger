@@ -58,6 +58,11 @@ def supports_type_function?
   Gem::Version.new(Puppet.version) >= Gem::Version.new('4.0')
 end
 
+def supports_datatypes?
+  Gem::Version.new(Puppet.version) >= Gem::Version.new('4.5')
+end
+
+
 RSpec.configure do |config|
   config.filter_run_excluding native_functions: !supports_native_functions?
 end

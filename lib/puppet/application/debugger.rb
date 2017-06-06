@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'puppet/application'
 require 'optparse'
 require 'puppet/util/command_line'

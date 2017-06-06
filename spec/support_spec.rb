@@ -5,7 +5,7 @@ require 'tempfile'
 
 describe 'support' do
   let(:output) do
-    StringIO.new('', 'w')
+    StringIO.new
   end
 
   let(:debugger) do
@@ -72,7 +72,7 @@ describe 'support' do
   end
 
   it 'should return a puppet version' do
-    expect(puppet_version).to match(/puppet-\d\.\d.\d/)
+    expect(puppet_version).to match(/puppet-\d\.\d+.\d/)
   end
 
   it 'should return lib dirs' do
