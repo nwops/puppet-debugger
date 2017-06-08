@@ -7,7 +7,7 @@ module PuppetDebugger
 
       def static_responder_list
         %w[exit functions classification vars facterdb_filter krt facts types
-           resources classes whereami datatypes play reset help ] + PuppetDebugger::InputResponders::Commands.command_list
+           resources whereami datatypes play reset help ] + PuppetDebugger::InputResponders::Commands.command_list
       end
 
       def datatypes(_args = [])
@@ -159,9 +159,6 @@ module PuppetDebugger
         end
       end
 
-      def classes(_args = [])
-        scope.compiler.catalog.classes.ai
-      end
     end
   end
 end
