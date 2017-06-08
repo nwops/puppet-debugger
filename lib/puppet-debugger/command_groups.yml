@@ -3,7 +3,6 @@
   exit: Quit Puppet Debugger.
 
 :scope:
-  classes: List all the classes current in the catalog.
   resources: List all the resources current in the catalog.
   vars: List all the variables in the current scopes.
   krt: List all the known resource types.
@@ -11,7 +10,6 @@
 :environment:
   functions: List all the functions available in the environment.
   types: List all the types available in the environment.
-  datatypes: List all the datatypes available in the environment.
 
 :node:
   facts: List all the facts associated with the node.

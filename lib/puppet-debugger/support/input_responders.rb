@@ -7,13 +7,7 @@ module PuppetDebugger
 
       def static_responder_list
         %w[exit functions classification vars facterdb_filter krt facts types
-           resources whereami datatypes play reset help ] + PuppetDebugger::InputResponders::Commands.command_list
-      end
-
-      def datatypes(_args = [])
-        types = all_data_types
-        return types.sort.ai if types.instance_of?(Array)
-        types
+           resources whereami play reset help ] + PuppetDebugger::InputResponders::Commands.command_list
       end
 
       # @source_file and @source_line_num instance variables must be set for this
