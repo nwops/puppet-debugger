@@ -6,13 +6,7 @@ module PuppetDebugger
     module InputResponders
 
       def static_responder_list
-        %w[exit facterdb_filter] +  PuppetDebugger::InputResponders::Commands.command_list
-      end
-
-      # displays the facterdb filter
-      # @param [Array] - args is not used
-      def facterdb_filter(_args = [])
-        dynamic_facterdb_filter.ai
+        %w[exit] +  PuppetDebugger::InputResponders::Commands.command_list
       end
 
       def handle_set(input)

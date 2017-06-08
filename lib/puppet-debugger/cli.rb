@@ -113,11 +113,6 @@ module PuppetDebugger
           return out_buffer.puts output
         when /^exit/
           exit 0
-        when /^facterdb_filter|/
-          args = input.split(' ')
-          command = args.shift.to_sym
-          output = send(command, args) if respond_to?(command)
-          return out_buffer.puts output
         when /^:set/
           output = handle_set(input)
         when '_'
