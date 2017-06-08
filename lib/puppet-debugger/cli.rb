@@ -111,8 +111,6 @@ module PuppetDebugger
           return out_buffer.puts "invalid command #{command}".red unless plugin
           output = plugin.execute(args, self)
           return out_buffer.puts output
-        when /^:set/
-          output = handle_set(input)
         when '_'
           output = " => #{@last_item}"
         else

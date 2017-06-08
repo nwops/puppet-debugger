@@ -18,7 +18,6 @@ module PuppetDebugger
     include PuppetDebugger::Support::Functions
     include PuppetDebugger::Support::Node
     include PuppetDebugger::Support::Loader
-    include PuppetDebugger::Support::InputResponders
 
     # parses the error type into a more useful error message defined in errors.rb
     # returns new error object or the original if error cannot be parsed
@@ -43,6 +42,10 @@ module PuppetDebugger
       else
         error
       end
+    end
+
+    def static_responder_list
+      PuppetDebugger::InputResponders::Commands.command_list
     end
 
     # this is the lib directory of this gem
