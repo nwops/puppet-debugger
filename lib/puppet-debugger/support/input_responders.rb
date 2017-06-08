@@ -6,7 +6,7 @@ module PuppetDebugger
     module InputResponders
 
       def static_responder_list
-        %w[exit classification vars facterdb_filter krt facts play reset help ] +
+        %w[exit classification vars facterdb_filter krt play reset help ] +
             PuppetDebugger::InputResponders::Commands.command_list
       end
 
@@ -41,11 +41,6 @@ module PuppetDebugger
           end
         end
         output
-      end
-
-      def facts(_args = [])
-        variables = node.facts.values
-        variables.ai(sort_keys: true, indent: -1)
       end
 
       def vars(_args = [])
@@ -94,10 +89,6 @@ module PuppetDebugger
 
       def classification(_args = [])
         node.classes.ai
-      end
-
-      def resources(args = [])
-
       end
 
     end

@@ -7,7 +7,6 @@
   krt: List all the known resource types.
 
 :node:
-  facts: List all the facts associated with the node.
   classification: Show the classification details of the node.
 
 :context:

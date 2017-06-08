@@ -113,7 +113,7 @@ module PuppetDebugger
           return out_buffer.puts output
         when /^exit/
           exit 0
-        when /^play|^classification|^facterdb_filter|^facts|^vars|^krt|^environment|^reset|^help|/
+        when /^play|^classification|^facterdb_filter|^vars|^krt|^environment|^reset|^help|/
           args = input.split(' ')
           command = args.shift.to_sym
           output = send(command, args) if respond_to?(command)
