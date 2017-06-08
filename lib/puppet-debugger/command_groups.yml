@@ -1,5 +1,4 @@
 :help:
-  help: Show the help screen with version information.
   exit: Quit Puppet Debugger.
 
 :scope:

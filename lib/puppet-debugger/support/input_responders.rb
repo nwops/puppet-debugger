@@ -6,7 +6,7 @@ module PuppetDebugger
     module InputResponders
 
       def static_responder_list
-        %w[exit classification vars facterdb_filter krt play reset help ] +
+        %w[exit classification vars facterdb_filter krt play reset ] +
             PuppetDebugger::InputResponders::Commands.command_list
       end
 
@@ -14,10 +14,6 @@ module PuppetDebugger
       # @param [Array] - args is not used
       def facterdb_filter(_args = [])
         dynamic_facterdb_filter.ai
-      end
-
-      def help(_args = [])
-        PuppetDebugger::Cli.print_repl_desc
       end
 
       def handle_set(input)
