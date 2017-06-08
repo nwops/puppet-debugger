@@ -113,7 +113,7 @@ module PuppetDebugger
           return out_buffer.puts output
         when /^exit/
           exit 0
-        when /^play|^facterdb_filter|^environment|^reset|/
+        when /^facterdb_filter|^environment|^reset|/
           args = input.split(' ')
           command = args.shift.to_sym
           output = send(command, args) if respond_to?(command)
@@ -214,8 +214,8 @@ or "help" to show the help screen.
       puts print_repl_desc unless options[:quiet]
       repl_obj = PuppetDebugger::Cli.new(options)
       # TODO: make the output optional so we can have different output destinations
-      puts repl_obj.whereami if options[:source_file] && options[:source_line]
-      repl_obj.play_back(options) if options[:play]
+      repl_obj.handle_input('whereami') if options[:source_file] && options[:source_line]
+      repl_obj.handle_input("play #{options[:play]}") if options[:play]
       repl_obj.read_loop unless options[:run_once]
     end
 
@@ -234,13 +234,13 @@ or "help" to show the help screen.
       puts print_repl_desc unless options[:quiet]
       repl_obj = PuppetDebugger::Cli.new(options)
       if options[:play]
-        repl_obj.play_back(opts)
-      # when the user supplied a file name without using the args (stdin)
+        repl_obj.handle_input("play #{options[:play]}")
       elsif ARGF.filename != '-'
+        # when the user supplied a file name without using the args (stdin)
         path = File.expand_path(ARGF.filename)
-        repl_obj.play_back(play: path)
-      # when the user supplied a file content using stdin, aka. cat,pipe,echo or redirection
+        repl_obj.handle_input("play #{path}")
       elsif (ARGF.filename == '-') && (!STDIN.tty? && !STDIN.closed?)
+        # when the user supplied a file content using stdin, aka. cat,pipe,echo or redirection
         input = ARGF.read
         repl_obj.handle_input(input)
       end

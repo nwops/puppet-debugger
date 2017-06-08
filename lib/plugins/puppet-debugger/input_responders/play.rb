@@ -1,8 +1,20 @@
-# frozen_string_literal: true
-
+require 'puppet-debugger/input_responder_plugin'
 module PuppetDebugger
-  module Support
-    module Play
+  module InputResponders
+    class Play < InputResponderPlugin
+      COMMAND_WORDS = %w(play)
+      SUMMARY = 'Playback a file or URL as input.'
+      COMMAND_GROUP = :editing
+
+      def run(args = [])
+        config = {}
+        config[:play] = args.first
+        play_back(config)
+        nil # we don't want to return anything
+      end
+
+      private
+
       def play_back(config = {})
         if config[:play]
           if config[:play] =~ /^http/
@@ -10,7 +22,7 @@ module PuppetDebugger
           elsif File.exist? config[:play]
             play_back_string(File.read(config[:play]))
           else config[:play]
-               out_buffer.puts "puppet-debugger can't play #{config[:play]}'"
+          debugger.out_buffer.puts "puppet-debugger can't play #{config[:play]}'"
           end
         end
       end
@@ -19,23 +31,23 @@ module PuppetDebugger
         require 'uri'
         url_data = URI(url)
         case url_data.host
-        when /^gist\.github*/
-          url = url += '.txt' unless url_data.path =~ /raw/
-          url
-        when /^github.com/
-          url.gsub('blob', 'raw') if url_data.path =~ /blob/
-        when /^gist.github.com/
-          url = url += '.txt' unless url_data.path =~ /raw/
-          url
-        when /^gitlab.com/
-          if url_data.path =~ /snippets/
-            url += '/raw' unless url_data.path =~ /raw/
+          when /^gist\.github*/
+            url = url += '.txt' unless url_data.path =~ /raw/
             url
+          when /^github.com/
+            url.gsub('blob', 'raw') if url_data.path =~ /blob/
+          when /^gist.github.com/
+            url = url += '.txt' unless url_data.path =~ /raw/
+            url
+          when /^gitlab.com/
+            if url_data.path =~ /snippets/
+              url += '/raw' unless url_data.path =~ /raw/
+              url
+            else
+              url.gsub('blob', 'raw')
+            end
           else
-            url.gsub('blob', 'raw')
-          end
-        else
-          url
+            url
         end
       end
 
@@ -62,7 +74,7 @@ module PuppetDebugger
           begin
             full_buffer += buf
             # unless this is puppet code, otherwise skip repl keywords
-            if keyword_expression.match(buf)
+            if debugger.keyword_expression.match(buf)
               out_buffer.write('>> ')
             else
               parser.parse_string(full_buffer)
@@ -75,7 +87,7 @@ module PuppetDebugger
             end
           end
           out_buffer.puts(full_buffer)
-          handle_input(full_buffer)
+          debugger.handle_input(full_buffer)
           full_buffer = ''
         end
       end

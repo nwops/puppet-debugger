@@ -3,6 +3,3 @@
 
 :context:
   reset: Reset the debugger to a clean state.
-
-:editing:
-  play: Playback a file or URL as input.

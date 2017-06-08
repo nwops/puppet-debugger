@@ -6,8 +6,7 @@ module PuppetDebugger
     module InputResponders
 
       def static_responder_list
-        %w[exit facterdb_filter play reset ] +  PuppetDebugger::InputResponders::Commands.command_list
-
+        %w[exit facterdb_filter reset ] +  PuppetDebugger::InputResponders::Commands.command_list
       end
 
       # displays the facterdb filter
@@ -63,14 +62,6 @@ module PuppetDebugger
         end
         nil
       end
-
-      def play(args = [])
-        config = {}
-        config[:play] = args.first
-        play_back(config)
-        nil # we don't want to return anything
-      end
-
     end
   end
 end
