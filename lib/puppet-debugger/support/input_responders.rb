@@ -6,8 +6,8 @@ module PuppetDebugger
     module InputResponders
 
       def static_responder_list
-        %w[exit functions classification vars facterdb_filter krt facts types
-           resources whereami play reset help ] + PuppetDebugger::InputResponders::Commands.command_list
+        %w[exit functions classification vars facterdb_filter krt facts resources whereami play reset help ] +
+            PuppetDebugger::InputResponders::Commands.command_list
       end
 
       # @source_file and @source_line_num instance variables must be set for this
@@ -26,27 +26,6 @@ module PuppetDebugger
           end
           return code.with_marker(line_num).around(line_num, 5)
                      .with_line_numbers.with_indentation(5).with_file_reference.to_s
-        end
-      end
-
-      # @return - returns a list of types available to the environment
-      # if a error occurs we we run the types function again
-      def types(_args = [])
-        loaded_types = []
-        begin
-          # this loads all the types, if already loaded the file is skipped
-          Puppet::Type.loadall
-          Puppet::Type.eachtype do |t|
-            next if t.name == :component
-            loaded_types << t.name.to_s
-          end
-          loaded_types.ai
-        rescue Puppet::Error => e
-          puts e.message.red
-          Puppet.info(e.message)
-          # prevent more than two calls and recursive loop
-          return if caller_locations(1, 10).find_all { |f| f.label == 'types' }.count > 2
-          types
         end
       end
 
