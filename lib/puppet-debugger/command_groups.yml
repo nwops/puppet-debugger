@@ -2,7 +2,6 @@
   exit: Quit Puppet Debugger.
 
 :scope:
-  vars: List all the variables in the current scopes.
   krt: List all the known resource types.
 
 :node:

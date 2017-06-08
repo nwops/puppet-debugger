@@ -6,7 +6,7 @@ module PuppetDebugger
     module InputResponders
 
       def static_responder_list
-        %w[exit classification vars facterdb_filter krt play reset ] +
+        %w[exit classification facterdb_filter krt play reset ] +
             PuppetDebugger::InputResponders::Commands.command_list
       end
 
@@ -37,14 +37,6 @@ module PuppetDebugger
           end
         end
         output
-      end
-
-      def vars(_args = [])
-        # remove duplicate variables that are also in the facts hash
-        variables = scope.to_hash.delete_if { |key, _value| node.facts.values.key?(key) }
-        variables['facts'] = 'removed by the puppet-debugger' if variables.key?('facts')
-        output = 'Facts were removed for easier viewing'.ai + "\n"
-        output += variables.ai(sort_keys: true, indent: -1)
       end
 
       def environment(_args = [])

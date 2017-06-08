@@ -103,7 +103,7 @@ module PuppetDebugger
       raise ArgumentError unless input.instance_of?(String)
       begin
         output = ''
-        case input
+        case input.strip
         when PuppetDebugger::InputResponders::Commands.command_list_regex
           args = input.split(' ')
           command = args.shift.to_sym
@@ -113,7 +113,7 @@ module PuppetDebugger
           return out_buffer.puts output
         when /^exit/
           exit 0
-        when /^play|^classification|^facterdb_filter|^vars|^krt|^environment|^reset|/
+        when /^play|^classification|^facterdb_filter|^krt|^environment|^reset|/
           args = input.split(' ')
           command = args.shift.to_sym
           output = send(command, args) if respond_to?(command)
