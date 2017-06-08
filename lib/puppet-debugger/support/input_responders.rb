@@ -38,10 +38,6 @@ module PuppetDebugger
         output
       end
 
-      def environment(_args = [])
-        "Puppet Environment: #{puppet_env_name}"
-      end
-
       def reset(_args = [])
         set_scope(nil)
         set_remote_node_name(nil)
