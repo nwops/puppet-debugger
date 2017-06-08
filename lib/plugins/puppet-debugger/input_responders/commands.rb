@@ -26,7 +26,11 @@ module PuppetDebugger
         unless @command_groups
           @command_groups = Psych.load_file(File.join(PuppetDebugger::Support::BASE_DIR, 'command_groups.yml'))
           self.class.command_output.each do | item|
-            @command_groups[item[:group]] = { item[:words].first => item[:summary] }
+            if @command_groups[item[:group]]
+              @command_groups[item[:group]].merge!({ item[:words].first => item[:summary] })
+            else
+              @command_groups[item[:group]] = { item[:words].first => item[:summary] }
+            end
           end
         end
         @command_groups
@@ -62,7 +66,6 @@ module Pluginator
   # a helper for handling name / file / class conversions
   module NameConverter
     private
-
     # full_name => class
     def name2class(name)
       klass = Kernel
