@@ -1,9 +1,6 @@
 :help:
   exit: Quit Puppet Debugger.
 
-:scope:
-  krt: List all the known resource types.
-
 :context:
   reset: Reset the debugger to a clean state.
 

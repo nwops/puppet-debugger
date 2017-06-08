@@ -6,7 +6,7 @@ module PuppetDebugger
     module InputResponders
 
       def static_responder_list
-        %w[exit facterdb_filter krt play reset ] +  PuppetDebugger::InputResponders::Commands.command_list
+        %w[exit facterdb_filter play reset ] +  PuppetDebugger::InputResponders::Commands.command_list
 
       end
 
@@ -62,10 +62,6 @@ module PuppetDebugger
           buffer_log.err_buffer = out_buffer
         end
         nil
-      end
-
-      def krt(_args = [])
-        known_resource_types.ai(sort_keys: true, indent: -1)
       end
 
       def play(args = [])
