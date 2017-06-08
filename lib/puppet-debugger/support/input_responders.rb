@@ -6,27 +6,8 @@ module PuppetDebugger
     module InputResponders
 
       def static_responder_list
-        %w[exit classification vars facterdb_filter krt facts resources whereami play reset help ] +
+        %w[exit classification vars facterdb_filter krt facts resources play reset help ] +
             PuppetDebugger::InputResponders::Commands.command_list
-      end
-
-      # @source_file and @source_line_num instance variables must be set for this
-      # method to show the surrounding code
-      # @return [String] - string output of the code surrounded by the breakpoint or nil if file
-      # or line_num do not exist
-      def whereami(_command = nil, _args = nil)
-        file = @source_file
-        line_num = @source_line_num
-        if file && line_num
-          if file == :code
-            source_code = Puppet[:code]
-            code = DebuggerCode.from_string(source_code, :puppet)
-          else
-            code = DebuggerCode.from_file(file, :puppet)
-          end
-          return code.with_marker(line_num).around(line_num, 5)
-                     .with_line_numbers.with_indentation(5).with_file_reference.to_s
-        end
       end
 
       # displays the facterdb filter

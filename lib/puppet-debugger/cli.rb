@@ -11,6 +11,7 @@ module PuppetDebugger
     include PuppetDebugger::Support
 
     attr_accessor :settings, :log_level, :in_buffer, :out_buffer, :html_mode, :extra_prompt, :bench
+    attr_reader :source_file, :source_line_num
 
     def initialize(options = {})
       do_initialize if Puppet[:codedir].nil?
@@ -112,7 +113,7 @@ module PuppetDebugger
           return out_buffer.puts output
         when /^exit/
           exit 0
-        when /^play|^classification|^whereami|^facterdb_filter|^facts|^vars|^resources|^krt|^environment|^reset|^help|/
+        when /^play|^classification|^facterdb_filter|^facts|^vars|^resources|^krt|^environment|^reset|^help|/
           args = input.split(' ')
           command = args.shift.to_sym
           output = send(command, args) if respond_to?(command)

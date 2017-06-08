@@ -13,7 +13,6 @@
 
 :context:
   reset: Reset the debugger to a clean state.
-  whereami: Show code surrounding the current context.
 
 :editing:
   play: Playback a file or URL as input.
