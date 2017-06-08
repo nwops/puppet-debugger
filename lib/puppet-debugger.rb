@@ -8,7 +8,9 @@ require_relative 'trollop'
 require 'puppet/util/log'
 require_relative 'puppet-debugger/debugger_code'
 require_relative 'puppet-debugger/support/errors'
-require_relative 'plugins/puppet-debugger/input_responders/benchmark'
+require 'plugins/puppet-debugger/input_responders/commands'
+
+
 # monkey patch in some color effects string methods
 class String
   def red

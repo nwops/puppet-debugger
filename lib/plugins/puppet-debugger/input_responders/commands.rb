@@ -1,0 +1,78 @@
+require 'puppet-debugger/input_responder_plugin'
+module PuppetDebugger
+  module InputResponders
+    class Commands < InputResponderPlugin
+      COMMAND_WORDS = %w(commands)
+      SUMMARY = 'List all available commands, aka. this screen'
+      COMMAND_GROUP = :help
+
+      def run(args = [])
+        commands_list = ''
+        command_groups.sort.each do |command_group|
+          group_name = command_group[0].to_s.capitalize.bold
+          commands = command_group[1]
+          commands_list += ' ' + group_name + "\n"
+          commands.sort.each do |command|
+            command_name = command[0]
+            command_description = command[1]
+            commands_list += format("   %-20s %s\n", command_name, command_description)
+          end
+          commands_list += "\n"
+        end
+        commands_list
+      end
+
+      def command_groups
+        unless @command_groups
+          @command_groups = Psych.load_file(File.join(PuppetDebugger::Support::BASE_DIR, 'command_groups.yml'))
+          self.class.command_output.each do | item|
+            @command_groups[item[:group]] = { item[:words].first => item[:summary] }
+          end
+        end
+        @command_groups
+      end
+
+      def self.command_list_regex
+        out = command_list.map {|n| "^#{n}"}.join('|')
+        %r(#{out})
+      end
+
+      def self.command_list
+        command_output.map{|f| f[:words] }.flatten
+      end
+
+      def self.command_output
+        plugins.map(&:details)
+      end
+
+      def self.plugins
+        debug_plugins = Pluginator.find('puppet-debugger')
+        debug_plugins["input_responders"]
+      end
+
+      def self.plugin_from_command(name)
+        plugins.find {|p| p::COMMAND_WORDS.include?(name.to_s)}
+      end
+
+    end
+  end
+end
+
+module Pluginator
+  # a helper for handling name / file / class conversions
+  module NameConverter
+    private
+
+    # full_name => class
+    def name2class(name)
+      klass = Kernel
+      name.to_s.split(%r{/}).each do |part|
+        klass = klass.const_get(
+            part.capitalize.gsub(/[_-](.)/) { |match| match[1].upcase }
+        )
+      end
+      klass
+    end
+
+  end
+end

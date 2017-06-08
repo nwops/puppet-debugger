@@ -1,16 +1,25 @@
 require 'benchmark'
-require 'singleton'
+require 'puppet-debugger/input_responder_plugin'
 module PuppetDebugger
   module InputResponders
-    class Benchmark
+    class Benchmark < InputResponderPlugin
       COMMAND_WORDS = %w(benchmark bm)
-      include Singleton
-      attr_accessor :debugger
+      SUMMARY = 'Benchmark your Puppet code.'
+      COMMAND_GROUP = :tools
 
-      def self.execute(args = [], debugger)
-        instance.debugger = debugger
-        instance.run(args)
+      def run(args = [])
+        if args.count > 0
+          enable(false)
+          out = debugger.handle_input(args.first)
+          disable
+          out
+        else
+          status = debugger.bench ? disable : enable(true)
+          "Benchmark Mode #{status}"
+        end
       end
+
+      private
 
       def disable
         debugger.bench = false
@@ -26,17 +35,6 @@ module PuppetDebugger
         end
       end
 
-      def run(args = [])
-        if args.count > 0
-          enable(false)
-          out = debugger.handle_input(args.first)
-          disable
-          out
-        else
-          status = debugger.bench ? disable : enable(true)
-          "Benchmark Mode #{status}"
-        end
-      end
     end
   end
 end

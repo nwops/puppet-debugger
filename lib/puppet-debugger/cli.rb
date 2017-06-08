@@ -100,18 +100,23 @@ module PuppetDebugger
     #
     def handle_input(input)
       raise ArgumentError unless input.instance_of?(String)
-      #responder_list
       begin
         output = ''
         case input
-        when /^play|^classification|^whereami|^facterdb_filter|^facts|^datatypes|^types|^vars|^functions|^classes|^resources|^krt|^environment|^benchmark|^reset|^help|^commands/
+        when PuppetDebugger::InputResponders::Commands.command_list_regex
+          args = input.split(' ')
+          command = args.shift.to_sym
+          plugin = PuppetDebugger::InputResponders::Commands.plugin_from_command(command)
+          return out_buffer.puts "invalid command #{command}".red unless plugin
+          output = plugin.execute(args, self)
+          return out_buffer.puts output
+        when /^exit/
+          exit 0
+        when /^play|^classification|^whereami|^facterdb_filter|^facts|^datatypes|^types|^vars|^functions|^classes|^resources|^krt|^environment|^reset|^help|/
           args = input.split(' ')
           command = args.shift.to_sym
           output = send(command, args) if respond_to?(command)
-          bench = false
           return out_buffer.puts output
-        when /exit/
-          exit 0
         when /^:set/
           output = handle_set(input)
         when '_'

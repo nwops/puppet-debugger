@@ -4,15 +4,10 @@ module PuppetDebugger
   module Support
     BASE_DIR = File.dirname(File.dirname(__FILE__))
     module InputResponders
-      COMMAND_GROUPS = Psych.load_file(File.join(PuppetDebugger::Support::BASE_DIR, 'command_groups.yml'))
 
       def static_responder_list
         %w[exit functions classification vars facterdb_filter krt facts types
-           resources classes whereami datatypes benchmark play reset help commands]
-      end
-
-      def benchmark(args = [])
-        PuppetDebugger::InputResponders::Benchmark.execute(args, self)
+           resources classes whereami datatypes play reset help ] + PuppetDebugger::InputResponders::Commands.command_list
       end
 
       def datatypes(_args = [])
@@ -69,22 +64,6 @@ module PuppetDebugger
 
       def help(_args = [])
         PuppetDebugger::Cli.print_repl_desc
-      end
-
-      def commands(_args = [])
-        commands_list = ''
-        COMMAND_GROUPS.each do |command_group|
-          group_name = command_group[0].bold
-          commands = command_group[1]
-          commands_list += ' ' + group_name + "\n"
-          commands.each do |command|
-            command_name = command[0]
-            command_description = command[1]
-            commands_list += format("   %-20s %s\n", command_name, command_description)
-          end
-          commands_list += "\n"
-        end
-        commands_list
       end
 
       def handle_set(input)
