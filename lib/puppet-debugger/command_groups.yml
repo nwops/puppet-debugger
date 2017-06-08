@@ -7,9 +7,6 @@
   vars: List all the variables in the current scopes.
   krt: List all the known resource types.
 
-:environment:
-  functions: List all the functions available in the environment.
-
 :node:
   facts: List all the facts associated with the node.
   classification: Show the classification details of the node.

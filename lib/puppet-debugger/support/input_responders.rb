@@ -6,7 +6,7 @@ module PuppetDebugger
     module InputResponders
 
       def static_responder_list
-        %w[exit functions classification vars facterdb_filter krt facts resources whereami play reset help ] +
+        %w[exit classification vars facterdb_filter krt facts resources whereami play reset help ] +
             PuppetDebugger::InputResponders::Commands.command_list
       end
 
@@ -65,11 +65,6 @@ module PuppetDebugger
       def facts(_args = [])
         variables = node.facts.values
         variables.ai(sort_keys: true, indent: -1)
-      end
-
-      def functions(args = [])
-        filter = args.first || ''
-        function_map.keys.sort.grep(/^#{Regexp.escape(filter)}/)
       end
 
       def vars(_args = [])
