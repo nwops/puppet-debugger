@@ -6,7 +6,7 @@ module PuppetDebugger
     module InputResponders
 
       def static_responder_list
-        %w[exit facterdb_filter reset ] +  PuppetDebugger::InputResponders::Commands.command_list
+        %w[exit facterdb_filter] +  PuppetDebugger::InputResponders::Commands.command_list
       end
 
       # displays the facterdb filter
@@ -36,16 +36,6 @@ module PuppetDebugger
           end
         end
         output
-      end
-
-      def reset(_args = [])
-        set_scope(nil)
-        set_remote_node_name(nil)
-        set_node(nil)
-        set_facts(nil)
-        set_environment(nil)
-        set_compiler(nil)
-        set_log_level(log_level)
       end
 
       def set_log_level(level)

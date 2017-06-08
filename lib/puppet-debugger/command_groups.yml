@@ -1,5 +1,2 @@
 :help:
   exit: Quit Puppet Debugger.
-
-:context:
-  reset: Reset the debugger to a clean state.
