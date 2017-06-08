@@ -6,8 +6,8 @@ module PuppetDebugger
     module InputResponders
 
       def static_responder_list
-        %w[exit classification facterdb_filter krt play reset ] +
-            PuppetDebugger::InputResponders::Commands.command_list
+        %w[exit facterdb_filter krt play reset ] +  PuppetDebugger::InputResponders::Commands.command_list
+
       end
 
       # displays the facterdb filter
@@ -73,10 +73,6 @@ module PuppetDebugger
         config[:play] = args.first
         play_back(config)
         nil # we don't want to return anything
-      end
-
-      def classification(_args = [])
-        node.classes.ai
       end
 
     end

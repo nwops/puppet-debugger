@@ -4,9 +4,6 @@
 :scope:
   krt: List all the known resource types.
 
-:node:
-  classification: Show the classification details of the node.
-
 :context:
   reset: Reset the debugger to a clean state.
 
