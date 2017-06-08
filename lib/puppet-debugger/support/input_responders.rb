@@ -6,7 +6,7 @@ module PuppetDebugger
     module InputResponders
 
       def static_responder_list
-        %w[exit classification vars facterdb_filter krt facts resources play reset help ] +
+        %w[exit classification vars facterdb_filter krt facts play reset help ] +
             PuppetDebugger::InputResponders::Commands.command_list
       end
 
@@ -97,15 +97,7 @@ module PuppetDebugger
       end
 
       def resources(args = [])
-        res = scope.compiler.catalog.resources.map do |res|
-          res.to_s.gsub(/\[/, "['").gsub(/\]/, "']") # ensure the title has quotes
-        end
-        if !args.first.nil?
-          res[args.first.to_i].ai
-        else
-          output = "Resources not shown in any specific order\n".warning
-          output += res.ai
-        end
+
       end
 
     end
