@@ -6,7 +6,7 @@ module PuppetDebugger
     module InputResponders
 
       def static_responder_list
-        %w[exit] +  PuppetDebugger::InputResponders::Commands.command_list
+        PuppetDebugger::InputResponders::Commands.command_list
       end
 
       def handle_set(input)

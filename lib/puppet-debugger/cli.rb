@@ -111,8 +111,6 @@ module PuppetDebugger
           return out_buffer.puts "invalid command #{command}".red unless plugin
           output = plugin.execute(args, self)
           return out_buffer.puts output
-        when /^exit/
-          exit 0
         when /^:set/
           output = handle_set(input)
         when '_'
