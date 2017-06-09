@@ -106,7 +106,7 @@ module PuppetDebugger
         case input.strip
         when PuppetDebugger::InputResponders::Commands.command_list_regex
           args = input.split(' ')
-          command = args.shift.to_sym
+          command = args.shift
           plugin = PuppetDebugger::InputResponders::Commands.plugin_from_command(command)
           return out_buffer.puts "invalid command #{command}".red unless plugin
           output = plugin.execute(args, self)
@@ -201,9 +201,11 @@ or "help" to show the help screen.
     # or
     # this is primarily used by the debug::break() module function and the puppet debugger face
     # @param [Hash] must contain at least the puppet scope object
+    # @option play - must be a path string
     def self.start_without_stdin(options = { scope: nil })
       puts print_repl_desc unless options[:quiet]
       repl_obj = PuppetDebugger::Cli.new(options)
+      options[:play] = options[:play].path if options[:play].respond_to?(:path)
       # TODO: make the output optional so we can have different output destinations
       repl_obj.handle_input('whereami') if options[:source_file] && options[:source_line]
       repl_obj.handle_input("play #{options[:play]}") if options[:play]
@@ -223,6 +225,7 @@ or "help" to show the help screen.
       end
       options = opts.merge(options)
       puts print_repl_desc unless options[:quiet]
+      options[:play] = options[:play].path if options[:play].respond_to?(:path)
       repl_obj = PuppetDebugger::Cli.new(options)
       if options[:play]
         repl_obj.handle_input("play #{options[:play]}")

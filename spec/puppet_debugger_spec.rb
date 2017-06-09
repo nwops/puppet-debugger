@@ -136,41 +136,7 @@ describe 'PuppetDebugger' do
     end
   end
 
-  describe 'multiple lines of input' do
-    describe '3 lines' do
-      let(:input) do
-        "$var1 = 'test'\nfile{\"/tmp/${var1}.txt\": ensure => present, mode => '0755'}\nvars"
-      end
-      it do
-        debugger.play_back_string(input)
-        expect(output.string).to match(/server_facts/) if Puppet.version.to_f >= 4.1
-        expect(output.string).to match(/test/)
-        expect(output.string).to match(/Puppet::Type::File/)
-      end
-    end
-    describe '2 lines' do
-      let(:input) do
-        "$var1 = 'test'\n $var2 = 'test2'"
-      end
-      it do
-        debugger.play_back_string(input)
-        expect(output.string).to include("$var1 = 'test'")
-        expect(output.string).to include('"test"')
-        expect(output.string).to include("$var2 = 'test2'")
-        expect(output.string).to include('"test2"')
-      end
-    end
-    describe '1 lines' do
-      let(:input) do
-        "$var1 = 'test'"
-      end
-      it do
-        debugger.play_back_string(input)
-        expect(output.string).to include("$var1 = 'test'")
-        expect(output.string).to include('"test"')
-      end
-    end
-  end
+
 
   describe 'returns a array of resource_types' do
     it 'returns resource type' do
@@ -178,40 +144,40 @@ describe 'PuppetDebugger' do
     end
   end
 
-  describe 'commands' do
-    let(:input) do
-      'commands'
-    end
-
-    it 'shows a list of groups of available commands' do
-      command_groups = {
-        'Important' => { 'help' => 'Get help.' },
-
-        'Misc' => {
-          'do_something' => 'Do something good.',
-          'do_something_else' => 'Do something really good.'
-        }
-      }
-
-      stub_const('PuppetDebugger::Support::InputResponders::COMMAND_GROUPS', command_groups)
-
-      debugger.handle_input(input)
-
-      command_groups.each do |command_group|
-        group_name = command_group[0]
-        group_commands = command_group[1]
-
-        expect(output.string).to match(group_name)
-
-        group_commands.each do |command|
-          command_name = command[0]
-          command_description = command[1]
-          expect(output.string).to match(command_name)
-          expect(output.string).to match(command_description)
-        end
-      end
-    end
-  end
+  # describe 'commands' do
+  #   let(:input) do
+  #     'commands'
+  #   end
+  #
+  #   it 'shows a list of groups of available commands' do
+  #     command_groups = {
+  #       'Important' => { 'help' => 'Get help.' },
+  #
+  #       'Misc' => {
+  #         'do_something' => 'Do something good.',
+  #         'do_something_else' => 'Do something really good.'
+  #       }
+  #     }
+  #
+  #     stub_const('PuppetDebugger::Support::InputResponders::COMMAND_GROUPS', command_groups)
+  #
+  #     debugger.handle_input(input)
+  #
+  #     command_groups.each do |command_group|
+  #       group_name = command_group[0]
+  #       group_commands = command_group[1]
+  #
+  #       expect(output.string).to match(group_name)
+  #
+  #       group_commands.each do |command|
+  #         command_name = command[0]
+  #         command_description = command[1]
+  #         expect(output.string).to match(command_name)
+  #         expect(output.string).to match(command_description)
+  #       end
+  #     end
+  #   end
+  # end
 
   describe 'help' do
     let(:input) do
@@ -257,28 +223,6 @@ describe 'PuppetDebugger' do
       debugger_output = /hostclasses/
       debugger.handle_input(input)
       expect(output.string).to match(debugger_output)
-    end
-  end
-
-  describe 'play' do
-    let(:fixtures_file) do
-      File.join(fixtures_dir, 'sample_manifest.pp')
-    end
-
-    before(:each) do
-      allow(debugger).to receive(:fetch_url_data).with(file_url + '.txt').and_return(File.read(fixtures_file))
-    end
-
-    let(:file_url) do
-      'https://gist.githubusercontent.com/logicminds/f9b1ac65a3a440d562b0'
-    end
-    it 'file' do
-      debugger.handle_input("play #{fixtures_file}")
-      expect(output.string).to match(/Puppet::Type::File/)
-    end
-    it 'url' do
-      debugger.handle_input("play #{file_url}")
-      expect(output.string).to match(/Puppet::Type::File/)
     end
   end
 
@@ -509,11 +453,16 @@ describe 'PuppetDebugger' do
       }
     end
 
-    it 'runs' do
-      expect(debugger.whereami).to match(/\s+5/)
+    before(:each) do
+      debugger.handle_input('whereami')
     end
+
+    it 'runs' do
+      expect(output.string).to match(/\s+5/)
+    end
+
     it 'contains marker' do
-      expect(debugger.whereami).to match(/\s+=>\s10/)
+      expect(output.string).to match(/\s+=>\s10/)
     end
   end
 

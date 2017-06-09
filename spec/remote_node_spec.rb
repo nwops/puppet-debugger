@@ -41,7 +41,7 @@ describe 'PuppetDebugger' do
 
     describe 'set' do
       it 'sends message about resetting' do
-        expect(output.string).to eq("\n => Resetting to use node puppetdev.localdomain\n")
+        expect(output.string).to eq("\nResetting to use node puppetdev.localdomain\n")
       end
 
       it 'return node name' do

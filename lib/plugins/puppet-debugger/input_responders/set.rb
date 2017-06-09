@@ -2,32 +2,36 @@ require 'puppet-debugger/input_responder_plugin'
 module PuppetDebugger
   module InputResponders
     class Set < InputResponderPlugin
-      COMMAND_WORDS = [':set']
+      COMMAND_WORDS = %w(set :set)
       SUMMARY = 'Set the a puppet debugger config'
       COMMAND_GROUP = :scope
 
       def run(args = [])
-        handle_set(input)
+        handle_set(args)
       end
 
       private
 
       def handle_set(input)
         output = ''
-        args = input.split(' ')
-        args.shift # throw away the set
-        case args.shift
+        # args = input.split(' ')
+        # args.shift # throw away the set
+        case input.shift
           when /node/
-            if name = args.shift
+            if name = input.shift
               output = "Resetting to use node #{name}"
-              debugger.handle_input('reset')
+              debugger.set_scope(nil)
+              debugger.set_node(nil)
+              debugger.set_facts(nil)
+              debugger.set_environment(nil)
+              debugger.set_compiler(nil)
+              set_log_level(debugger.log_level)
               debugger.set_remote_node_name(name)
             else
               debugger.out_buffer.puts 'Must supply a valid node name'
             end
           when /loglevel/
-            if level = args.shift
-              @log_level = level
+            if level = input.shift
               set_log_level(level)
               output = "loglevel #{Puppet::Util::Log.level} is set"
             end
@@ -36,12 +40,13 @@ module PuppetDebugger
       end
 
       def set_log_level(level)
+        debugger.log_level = level
         Puppet::Util::Log.level = level.to_sym
         buffer_log = Puppet::Util::Log.newdestination(:buffer)
         if buffer_log
           # if this is already set the buffer_log is nil
-          buffer_log.out_buffer = out_buffer
-          buffer_log.err_buffer = out_buffer
+          buffer_log.out_buffer = debugger.out_buffer
+          buffer_log.err_buffer = debugger.out_buffer
         end
         nil
       end

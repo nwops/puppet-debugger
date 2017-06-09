@@ -7,24 +7,30 @@ module PuppetDebugger
       COMMAND_GROUP = :help
 
       def run(args = [])
-        commands_list = ''
-        command_groups.sort.each do |command_group|
-          group_name = command_group[0].to_s.capitalize.bold
-          commands = command_group[1]
-          commands_list += ' ' + group_name + "\n"
-          commands.sort.each do |command|
-            command_name = command[0]
-            command_description = command[1]
-            commands_list += format("   %-20s %s\n", command_name, command_description)
-          end
-          commands_list += "\n"
-        end
         commands_list
+      end
+
+      def commands_list
+        unless @commands_list
+          @commands_list = ''
+          command_groups.sort.each do |command_group|
+            group_name = command_group[0].to_s.capitalize.bold
+            commands = command_group[1]
+            @commands_list += ' ' + group_name + "\n"
+            commands.sort.each do |command|
+              command_name = command[0]
+              command_description = command[1]
+              @commands_list += format("   %-20s %s\n", command_name, command_description)
+            end
+            @commands_list += "\n"
+          end
+        end
+        @commands_list
       end
 
       def command_groups
         unless @command_groups
-          @command_groups = Psych.load_file(File.join(PuppetDebugger::Support::BASE_DIR, 'command_groups.yml'))
+          @command_groups = {}
           self.class.command_output.each do | item|
             if @command_groups[item[:group]]
               @command_groups[item[:group]].merge!({ item[:words].first => item[:summary] })
@@ -55,7 +61,7 @@ module PuppetDebugger
       end
 
       def self.plugin_from_command(name)
-        plugins.find {|p| p::COMMAND_WORDS.include?(name.to_s)}
+        plugins.find {|p| p::COMMAND_WORDS.include?(name)}
       end
 
     end

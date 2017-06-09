@@ -13,7 +13,8 @@ module PuppetDebugger
         debugger.set_facts(nil)
         debugger.set_environment(nil)
         debugger.set_compiler(nil)
-        debugger.set_log_level(debugger.log_level)
+        #debugger.handle_input(":set loglevel #{debugger.log_level}")
+        nil
       end
     end
   end
