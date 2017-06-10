@@ -42,12 +42,26 @@ For reference you can use the following doc [How to create a gem](http://bundler
 1. Create the gem via `bundle gem <plugin_name>`
 
     ```
-    bundle gem fancy_plugin
+    bundle gem --test=rspec fancy_plugin
     cd fancy_plugin
-    mkdir -p lib/puppet-debugger/input_responders
+    mkdir -p lib/plugins/puppet-debugger/input_responders
     
     ```
-
+    
+2. Add the following to your Gemfile
+    ```ruby
+    group :dev, :test do
+      gem 'puppet-debugger'
+      gem 'pry'
+      gem 'CFPropertyList'
+      gem 'rake'
+      gem 'rspec', '>= 3.6'
+      # loads itself so you don't have to update RUBYLIB path
+      gem 'your_plugin', path: './'
+    end
+    ```
+    
+3. bundle install    
 2. Follow the [New Plugin Instructions](#new-plugin-instructions)
 3. Version the gem
 4. Package and push the gem to rubygems.
@@ -75,7 +89,7 @@ Once this is set, puppet-debugger will discover your gem automatically and you s
     require 'puppet-debugger/input_responder_plugin'
     module PuppetDebugger
       module InputResponders
-        class FancyPlugin < InputResponderPlugin
+        class Fancy < InputResponderPlugin
           COMMAND_WORDS = %w(fancy)
           SUMMARY = 'This is a fancy plugin'
           COMMAND_GROUP = :tools
@@ -99,7 +113,7 @@ You can review the [Required Constants](#required-constants) docs for more info.
 
 ## Required Directory layout
 In order for you plugin to be discovered you must create this exact directly layout.  Your plugin file must be in
-the following directory `lib/puppet-debugger/input_responders/`
+the following directory `lib/plugins/puppet-debugger/input_responders/`
 
 If you are packaging as a gem you must still provide this directory layout in addition to whatever other supporting files
 are also in your gem.
@@ -218,6 +232,7 @@ Replace `:plugin_name ` with the name of your plugin command word.
 
 ```ruby
 require 'spec_helper'
+require 'puppet-debugger'
 require 'puppet-debugger/plugin_test_helper'
 
 describe :plugin_name do
@@ -231,3 +246,7 @@ describe :plugin_name do
 end
   
 ```
+
+## Examples
+There are plenty of examples of plugins that are in the core code base.  See lib/plugins/puppet-debugger/input_responders 
+for examples.
