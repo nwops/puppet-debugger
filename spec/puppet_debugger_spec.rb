@@ -179,21 +179,6 @@ describe 'PuppetDebugger' do
   #   end
   # end
 
-  describe 'help' do
-    let(:input) do
-      'help'
-    end
-    it 'can show the help screen' do
-      expected_debugger_output = /Type \"commands\" for a list of debugger commands\nor \"help\" to show the help screen.\n\n/
-      debugger.handle_input(input)
-      expect(output.string).to match(/Ruby Version: #{RUBY_VERSION}\n/)
-      expect(output.string).to match(/Puppet Version: \d.\d\d?.\d\n/)
-      expect(output.string).to match(/Puppet Debugger Version: \d.\d.\d\n/)
-      expect(output.string).to match(/Created by: NWOps <corey@nwops.io>\n/)
-      expect(output.string).to match(expected_debugger_output)
-    end
-  end
-
   describe 'empty' do
     let(:input) do
       ''
@@ -212,17 +197,6 @@ describe 'PuppetDebugger' do
         debugger.handle_input(input)
         expect(output.string).to eq(debugger_output)
       end
-    end
-  end
-
-  describe 'krt' do
-    let(:input) do
-      'krt'
-    end
-    it 'can run' do
-      debugger_output = /hostclasses/
-      debugger.handle_input(input)
-      expect(output.string).to match(debugger_output)
     end
   end
 

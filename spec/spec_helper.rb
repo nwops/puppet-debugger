@@ -65,4 +65,5 @@ end
 
 RSpec.configure do |config|
   config.filter_run_excluding native_functions: !supports_native_functions?
+  RSpec::Expectations.configuration.on_potential_false_positives = :nothing
 end
