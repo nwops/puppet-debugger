@@ -56,12 +56,20 @@ module PuppetDebugger
       end
 
       def self.plugins
-        debug_plugins = Pluginator.find('puppet-debugger')
-        debug_plugins["input_responders"]
+        begin
+          debug_plugins = Pluginator.find('puppet-debugger')
+          debug_plugins["input_responders"]
+        rescue NoMethodError => e
+          raise PuppetDebugger::Exception::InvalidCommand.new(message: "Unsupported gem version.  Please update with: gem update --system")
+        end
       end
 
+      # @param name [String] - the name of the command that is associated with a plugin
+      # @return [PuppetDebugger::InputResponders::InputResponderPlugin]
       def self.plugin_from_command(name)
-        plugins.find {|p| p::COMMAND_WORDS.include?(name)}
+        p = plugins.find {|p| p::COMMAND_WORDS.include?(name)}
+        raise PuppetDebugger::Exception::InvalidCommand.new(message: "invalid command #{command}") unless p
+        p
       end
 
     end

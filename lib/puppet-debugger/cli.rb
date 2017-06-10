@@ -108,7 +108,6 @@ module PuppetDebugger
           args = input.split(' ')
           command = args.shift
           plugin = PuppetDebugger::InputResponders::Commands.plugin_from_command(command)
-          return out_buffer.puts "invalid command #{command}".red unless plugin
           output = plugin.execute(args, self)
           return out_buffer.puts output
         when '_'
@@ -119,6 +118,8 @@ module PuppetDebugger
           output = normalize_output(result)
           output = output.nil? ? '' : output.ai
         end
+      rescue PuppetDebugger::Exception::InvalidCommand => e
+        output = e.message.fatal
       rescue LoadError => e
         output = e.message.fatal
       rescue Errno::ETIMEDOUT => e

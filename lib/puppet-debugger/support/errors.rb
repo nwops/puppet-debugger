@@ -12,6 +12,12 @@ module PuppetDebugger
     class FatalError < Error
     end
 
+    class InvalidCommand < Error
+      def message
+        data[:message]
+      end
+    end
+
     class ConnectError < Error
       def message
         out = <<-EOF
