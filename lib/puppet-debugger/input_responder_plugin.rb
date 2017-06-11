@@ -1,9 +1,16 @@
 require 'singleton'
 require 'puppet-debugger/support/errors'
+require 'forwardable'
+
 module PuppetDebugger
     class InputResponderPlugin
       include Singleton
+      extend Forwardable
       attr_accessor :debugger
+      def_delegators :debugger, :scope, :node, :environment,
+                     :add_hook, :handle_input, :delete_hook, :function_map
+      def_delegators :scope, :compiler, :catalog
+      def_delegators :node, :facts
 
       def self.command_words
         self::COMMAND_WORDS

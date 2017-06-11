@@ -8,7 +8,7 @@ module PuppetDebugger
 
       def run(args = [])
         filter = args.first || ''
-        debugger.function_map.keys.sort.grep(/^#{Regexp.escape(filter)}/)
+        function_map.keys.sort.grep(/^#{Regexp.escape(filter)}/)
       end
     end
   end

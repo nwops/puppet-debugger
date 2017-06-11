@@ -8,6 +8,7 @@ module PuppetDebugger
       def puppet_environment
         @puppet_environment ||= create_environment
       end
+      alias :environment :puppet_environment
 
       # returns an array of module directories, generally this is the only place
       # to look for puppet code by default.  This is read from the puppet configuration

@@ -14,11 +14,14 @@
     - [Command words](#command-words)
     - [Summary](#summary)
     - [Command groups](#command-groups)
-  - [Available Scope](#available-scope)
+  - [Plugin API](#plugin-api)
+  - [Debugger Hooks](#debugger-hooks)
+    - [Hook Events](#hook-events)
   - [Calling other plugins](#calling-other-plugins)
     - [Indirectly](#indirectly)
     - [Directly](#directly)
   - [Testing your plugin code](#testing-your-plugin-code)
+  - [Examples](#examples)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -182,17 +185,63 @@ a new group name.
 * `:editing`
 * `:context`
  
-## Available Scope
-Every plugin has access to the debugger scope.  This means that you can access everything in the debugger codebase.
-When you want access to this scope you must use the `debugger` object. 
+## Plugin API
+Every plugin has access to debugger central objects.  You may need to use these objects to implemention your plugin.
 
-Useful objects you might want access to
+Objects exposed that you might want access to
 
-* scope             `debugger.scope`
-* node              `debugger.node`
-* environment       `debugger.environment`
-* facts             `debugger.facts`
-* compiler          `debugger.compiler`
+* debugger (direct use is not recommended)
+* scope             
+* node              
+* environment       
+* facts            
+* compiler         
+* catalog
+* function_map
+
+While you do have access to the `debugger` object and everything inside this object.  I would recommend not using the debugger
+object directly since the debugger code base is changing rapidly.  Usage can result in a broken plugin.  If you are using
+the debugger object directly please open an issue so we can create a interface for your use case to provide future compatibility. 
+
+## Debugger Hooks
+In addition the plugin API you can run code during certain events in the debugger lifecycle.  This allows you to run your plugin code
+on events.
+
+### Hook Events
+Below is a list of the current events that you can hook into.
+
+ * after_output  (After the debugger has returned control back to the console)
+ * before_eval   (Occurs before puppet evaluates the code)
+ * after_eval    (Occurs after puppet evaluates the code and before the debugger sends the output to the console)
+ 
+To hook into a debugger event you just add a hook via `add_hook` method with the name of the event you wish to hook into.
+ 
+Some example plugin code that uses hooks.  In this example, when `graph` is entered the plugin toggles the execution
+of creating a graph after the output is sent to the console.  The toggle either adds or deletes the hook.  Since creating the graph
+can take a while we also create a thread so we don't hold the console hostage.
+
+```ruby
+def run(args = [])
+    toggle_status
+end
+
+def toggle_status
+    status = !status
+    if status
+      add_hook(:after_output, :create_graph) do |code, debugger|
+        # ensure we only start a single thread, otherwise they could stack up
+        # and try to write to the same file.
+        Thread.kill(@graph_thread) if @graph_thread
+        @graph_thread = Thread.new { create_html(create_graph_content) }
+      end
+      out = "Graph mode enabled at #{get_url}"
+    else
+      delete_hook(:after_output, :create_graph_content)
+      out = "Graph mode disabled"
+    end
+    out
+end
+```
 
 ## Calling other plugins
 There are two ways to call other plugins.
