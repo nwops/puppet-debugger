@@ -9,6 +9,10 @@ module PuppetDebugger
       # @return - returns a list of types available to the environment
       # if a error occurs we we run the types function again
       def run(args = [])
+        types
+      end
+
+      def types
         loaded_types = []
         begin
           # this loads all the types, if already loaded the file is skipped
