@@ -9,6 +9,8 @@ module PuppetDebugger
       end
     end
 
+
+
     class FatalError < Error
     end
 

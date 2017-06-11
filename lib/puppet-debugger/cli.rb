@@ -5,13 +5,16 @@ require 'readline'
 require 'json'
 require_relative 'support'
 require 'pluginator'
+require 'puppet-debugger/hooks'
+require 'forwardable'
 
 module PuppetDebugger
   class Cli
     include PuppetDebugger::Support
-
+    extend Forwardable
     attr_accessor :settings, :log_level, :in_buffer, :out_buffer, :html_mode, :extra_prompt, :bench
-    attr_reader :source_file, :source_line_num
+    attr_reader :source_file, :source_line_num, :hooks
+    def_delegators :hooks, :exec_hook, :add_hook, :delete_hook
 
     def initialize(options = {})
       do_initialize if Puppet[:codedir].nil?
@@ -37,6 +40,10 @@ module PuppetDebugger
         sort_keys: true,
         indent: 2
       }
+    end
+
+    def hooks
+      @hooks ||= PuppetDebugger::Hooks.new
     end
 
     # returns a cached list of key words
@@ -142,6 +149,7 @@ module PuppetDebugger
       unless output.empty?
         out_buffer.print ' => '
         out_buffer.puts output unless output.empty?
+        exec_hook :after_output, out_buffer, self, self
       end
     end
 

@@ -135,15 +135,18 @@ module PuppetDebugger
         # because the repl is not a module we leave the modname blank
         scope.environment.known_resource_types.import_ast(ast, '')
 
+        exec_hook :before_eval, '', self, self
         if bench
           result = nil
           time = Benchmark.realtime do
             result = parser.evaluate_string(scope, input, File.expand_path(file))
           end
-          [result, "Time elapsed #{(time * 1000).round(2)} ms"]
+          out = [result, "Time elapsed #{(time * 1000).round(2)} ms"]
         else
-          parser.evaluate_string(scope, input, File.expand_path(file))
+          out = parser.evaluate_string(scope, input, File.expand_path(file))
         end
+        exec_hook :after_eval, out, self, self
+        out
       end
     end
 
