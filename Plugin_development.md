@@ -77,6 +77,7 @@ In order to test your plugin gem with the puppet-debugger you will need to add y
 
 Once this is set, puppet-debugger will discover your gem automatically and you should see it in the commands list.
 
+Note: if you add the your plugin to the Gemfile as shown above in step 2 there is no need to set the RUBYLIB variable.
 
 ## Creating a plugin to be merged into core
 1. Fork the puppet-debugger repo
@@ -85,7 +86,7 @@ Once this is set, puppet-debugger will discover your gem automatically and you s
 
 
 ## New Plugin Instructions
-1. Create a file with the name of your plugin lib/puppet-debugger/input_responders/fancy_plugin.rb
+1. Create a file with the name of your plugin lib/plugins/puppet-debugger/input_responders/fancy_plugin.rb
 2. Add the following content to the plugin.
 
     ```
@@ -123,14 +124,14 @@ are also in your gem.
 
 ## Run Method
 
-Your plugin must override the following method.  When your plugin is run, an array is passed as the args variable.
-This variable contains all the arguments that can be supplied to your plugin.  It is not required that you use
-the `args` variable as some plugins run without arguments.
+Your plugin must override the run method.  When your plugin is executed, an array is passed as the args variable.
+This variable contains all the arguments that can be supplied to your plugin.  It is not required that you utilize
+the `args` variable as some plugins run without arguments but it must be the only argument.
 
-For example: `fancy arg1 arg2 arg3` would be passed as ['hello', 'arg2', 'arg3'] to the run method in your plugin.
+For example: `fancy hello there sir` would be passed as ['hello', 'there', 'sir'] to your plugin's run method.
 
 
-```
+```ruby
 def run(args = [])
   greeting = args.first
   "#{greeting} from a fancy plugin"
@@ -186,26 +187,28 @@ a new group name.
 * `:context`
  
 ## Plugin API
-Every plugin has access to debugger central objects.  You may need to use these objects to implemention your plugin.
+Every plugin has access to debugger's central objects.  You may need to use these objects to implement your plugin.
 
-Objects exposed that you might want access to
+Objects exposed that you might want access to:
 
-* debugger (direct use is not recommended)
-* scope             
-* node              
-* environment       
-* facts            
-* compiler         
-* catalog
-* function_map
+* debugger     (direct use is not recommended)
+* scope        (The puppet scope object)        
+* node         (The puppet node object)       
+* environment  (The puppet environment object)
+* facts        (The puppet facts hash)    
+* compiler     (The puppet compiler object)    
+* catalog      (The puppet catalog)
+* function_map (Current map of functions)
 
-While you do have access to the `debugger` object and everything inside this object.  I would recommend not using the debugger
+While you do have access to the `debugger` object itself and everything inside this object.  I would recommend not using the debugger
 object directly since the debugger code base is changing rapidly.  Usage can result in a broken plugin.  If you are using
 the debugger object directly please open an issue so we can create a interface for your use case to provide future compatibility. 
 
 ## Debugger Hooks
 In addition the plugin API you can run code during certain events in the debugger lifecycle.  This allows you to run your plugin code
-on events.
+only when certain actions occur.  Please remember that your hook's code will be run multiple times during the debugger's session.
+
+If your hook code takes a while to run, please ensure it runs fast or throw the code into a separate thread if applicable.
 
 ### Hook Events
 Below is a list of the current events that you can hook into.
@@ -214,11 +217,11 @@ Below is a list of the current events that you can hook into.
  * before_eval   (Occurs before puppet evaluates the code)
  * after_eval    (Occurs after puppet evaluates the code and before the debugger sends the output to the console)
  
-To hook into a debugger event you just add a hook via `add_hook` method with the name of the event you wish to hook into.
+To hook into a debugger event you just add a hook via the `add_hook` method with the name of the event you wish to hook into.
  
-Some example plugin code that uses hooks.  In this example, when `graph` is entered the plugin toggles the execution
+An example of this pattern is below.  In this example, when `graph` is entered by the user, the plugin toggles the execution
 of creating a graph after the output is sent to the console.  The toggle either adds or deletes the hook.  Since creating the graph
-can take a while we also create a thread so we don't hold the console hostage.
+can take a while we also create a thread so we don't hold the console hostage.  A new graph is created each time a puppet evaluation occurs.
 
 ```ruby
 def run(args = [])
@@ -228,7 +231,7 @@ end
 def toggle_status
     status = !status
     if status
-      add_hook(:after_output, :create_graph) do |code, debugger|
+      add_hook(:after_eval, :create_graph) do |code, debugger|
         # ensure we only start a single thread, otherwise they could stack up
         # and try to write to the same file.
         Thread.kill(@graph_thread) if @graph_thread

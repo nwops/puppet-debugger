@@ -1,5 +1,12 @@
 ## Unreleased
-  * Adds new commands and help command 
+
+## 0.7.0
+  * Adds new commands command 
+  * Adds new help command 
+  * Adds plugin framework
+  * Adds hooks framework
+  * Moves all commands to plugins
+  * Adds pluginator gem
 ## 0.6.1
   * Adds benchmark feature
 ## 0.6.0

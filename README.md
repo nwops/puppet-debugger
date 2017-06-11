@@ -23,16 +23,10 @@
   - [Setting the puppet log level](#setting-the-puppet-log-level)
   - [Remote nodes](#remote-nodes)
     - [Setup](#setup)
-    - [Usage](#usage-1)
-      - [Command line:](#command-line)
-      - [From repl session:](#from-repl-session)
-  - [Auto Complete](#auto-complete)
-  - [Playback support](#playback-support)
-  - [Troubleshooting](#troubleshooting)
-  - [Copyright](#copyright)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 [![Gem Version](https://badge.fury.io/rb/puppet-debugger.svg)](https://badge.fury.io/rb/puppet-debugger)
+
 # puppet-debugger
 
 A interactive command line tool for evaluating and debugging the puppet language.
@@ -273,6 +267,9 @@ https://www.puppet-debugger.com/play?content=vars
 Please note the web based debugger only contains a minimal amount of puppet modules.  So its likely
 that your code may not work if using third party modules.  This may change in the future though.
 
+## Development
+ * [Plugin Development Guide](Plugin_development.md)
+ 
 ## Troubleshooting
 Please file an issue so we can track bugs.
 

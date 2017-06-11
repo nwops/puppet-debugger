@@ -8,6 +8,6 @@ The puppet command will then load the face so you can use with `puppet debugger`
 `puppet debugger`
 
 
-## Vendoring libraries
-gem unpack pluginator -​-target vendor/gems
-gem specification --ruby pluginator > vendor/gems/pluginator/pluginator.gemspec
+## Plugin Development
+ * [Plugin Development Guide](Plugin_development.md)
+ 
