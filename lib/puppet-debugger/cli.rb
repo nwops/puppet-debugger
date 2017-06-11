@@ -182,7 +182,7 @@ or "help" to show the help screen.
         begin
           full_buffer += buf
           # unless this is puppet code, otherwise skip repl keywords
-          unless keyword_expression.match(buf)
+          unless PuppetDebugger::InputResponders::Commands.command_list_regex.match(buf)
             line_number = line_number.next
             parser.parse_string(full_buffer)
           end

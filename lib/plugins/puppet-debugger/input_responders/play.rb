@@ -72,7 +72,7 @@ module PuppetDebugger
           begin
             full_buffer += buf
             # unless this is puppet code, otherwise skip repl keywords
-            if debugger.keyword_expression.match(buf)
+            if PuppetDebugger::InputResponders::Commands.command_list_regex.match(buf)
               debugger.out_buffer.write('>> ')
             else
               debugger.parser.parse_string(full_buffer)
