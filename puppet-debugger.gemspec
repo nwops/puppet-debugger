@@ -34,8 +34,8 @@ Gem::Specification.new do |s|
   s.summary = "A repl based debugger for the puppet language"
   s.add_runtime_dependency(%q<pluginator>, ["~> 1.4.1"])
   s.add_runtime_dependency(%q<puppet>, [">= 3.8"])
-  s.add_runtime_dependency(%q<facterdb>, [">= 0.3.8"])
-  s.add_runtime_dependency(%q<awesome_print>, ["~> 1.6"])
+  s.add_runtime_dependency(%q<facterdb>, ["~> 0.3.1"])
+  s.add_runtime_dependency(%q<awesome_print>, ["~> 1.7"])
   s.add_development_dependency(%q<rdoc>, ["~> 3.12"])
   s.add_development_dependency(%q<rspec>, ["~> 3.6"])
 
