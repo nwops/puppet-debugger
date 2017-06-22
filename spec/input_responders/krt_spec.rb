@@ -8,5 +8,4 @@ describe :krt do
   it 'works' do
     expect(plugin.run(args)).to match(/hostclasses/)
   end
-
 end

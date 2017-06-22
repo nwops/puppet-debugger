@@ -1,0 +1,27 @@
+require 'spec_helper'
+require 'puppet-debugger'
+require 'puppet-debugger/plugin_test_helper'
+require 'pluginator'
+
+describe :vars do
+  include_examples 'plugin_tests'
+  let(:args) { [] }
+
+  it 'display facts variable' do
+    debugger_output = /facts/
+    output = plugin.run(args)
+    expect(output).to match(debugger_output)
+  end
+  it 'display server facts variable' do
+    debugger_output = /server_facts/
+    expect(plugin.run(args)).to match(debugger_output) if Puppet.version.to_f >= 4.1
+  end
+  it 'display serverversion variable' do
+    debugger_output = /serverversion/
+    expect(plugin.run(args)).to match(debugger_output) if Puppet.version.to_f >= 4.1
+  end
+  it 'display local variable' do
+    debugger.handle_input("$var1 = 'value1'")
+    expect(plugin.run(args)).to match(/value1/)
+  end
+end

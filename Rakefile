@@ -31,3 +31,27 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
+
+desc 'Creates generic input_responder spec files'
+task :make_input_responder_tests do
+  files =  Dir.glob("lib/plugins/**/*.rb")
+  new_files = files.collect do |pathname|
+    orig_file = File.basename(pathname, ".*")
+    test_file = File.join('spec', 'input_responders', "#{orig_file}_spec.rb")
+    unless File.exist?(test_file)
+      new_file = File.new(test_file, "w")
+      contents = <<-EOS
+        require 'spec_helper'
+        require 'puppet-debugger'
+        require 'puppet-debugger/plugin_test_helper'
+
+        describe :#{orig_file} do
+        include_examples 'plugin_tests'
+        let(:args) { [] }
+
+        end
+      EOS
+      File.write(test_file, contents)
+    end
+  end
+end

@@ -113,28 +113,7 @@ describe 'PuppetDebugger' do
     end
   end
 
-  describe 'types' do
-    describe 'string' do
-      let(:input) do
-        'String'
-      end
-      it 'shows type' do
-        debugger.handle_input(input)
-        expect(output.string).to eq("\n => String\n")
-      end
-    end
-    describe 'Array', type_function: true do
-      let(:input) do
-        'type([1,2,3,4])'
-      end
-      it 'shows type' do
-        if Gem::Version.new(Puppet.version) > Gem::Version.new('4.4')
-          debugger.handle_input(input)
-          expect(output.string).to eq("\n => Tuple[Integer[1, 1], Integer[2, 2], Integer[3, 3], Integer[4, 4]]\n") if supports_type_function?
-        end
-      end
-    end
-  end
+
 
 
 
@@ -144,40 +123,7 @@ describe 'PuppetDebugger' do
     end
   end
 
-  # describe 'commands' do
-  #   let(:input) do
-  #     'commands'
-  #   end
-  #
-  #   it 'shows a list of groups of available commands' do
-  #     command_groups = {
-  #       'Important' => { 'help' => 'Get help.' },
-  #
-  #       'Misc' => {
-  #         'do_something' => 'Do something good.',
-  #         'do_something_else' => 'Do something really good.'
-  #       }
-  #     }
-  #
-  #     stub_const('PuppetDebugger::Support::InputResponders::COMMAND_GROUPS', command_groups)
-  #
-  #     debugger.handle_input(input)
-  #
-  #     command_groups.each do |command_group|
-  #       group_name = command_group[0]
-  #       group_commands = command_group[1]
-  #
-  #       expect(output.string).to match(group_name)
-  #
-  #       group_commands.each do |command|
-  #         command_name = command[0]
-  #         command_description = command[1]
-  #         expect(output.string).to match(command_name)
-  #         expect(output.string).to match(command_description)
-  #       end
-  #     end
-  #   end
-  # end
+
 
   describe 'empty' do
     let(:input) do
@@ -232,43 +178,6 @@ describe 'PuppetDebugger' do
     end
   end
 
-  describe 'classification' do
-    let(:input) do
-      'classification'
-    end
-
-    it 'can process a file' do
-      debugger.handle_input(input)
-      expect(output.string).to eq("\n[]\n")
-    end
-  end
-
-  describe 'reset' do
-    let(:input) do
-      "file{'/tmp/reset': ensure => present}"
-    end
-
-    it 'can process a file' do
-      debugger_output = /Puppet::Type::File/
-      debugger.handle_input(input)
-      expect(output.string).to match(debugger_output)
-      debugger.handle_input('reset')
-      debugger.handle_input(input)
-      expect(output.string).to match(debugger_output)
-    end
-
-    describe 'loglevel' do
-      it 'has not changed' do
-        debugger.handle_input(':set loglevel debug')
-        expect(Puppet::Util::Log.level).to eq(:debug)
-        expect(Puppet::Util::Log.destinations[:buffer].name).to eq(:buffer)
-        debugger.handle_input('reset')
-        expect(Puppet::Util::Log.level).to eq(:debug)
-        expect(Puppet::Util::Log.destinations[:buffer].name).to eq(:buffer)
-      end
-    end
-  end
-
   describe 'map block' do
     let(:input) do
       "['/tmp/test3', '/tmp/test4'].map |String $path| { file{$path: ensure => present} }"
@@ -291,162 +200,24 @@ describe 'PuppetDebugger' do
     end
   end
 
-  describe 'facts' do
+  describe 'string' do
     let(:input) do
-      '$::fqdn'
+      'String'
     end
-    it 'should be able to resolve fqdn' do
-      debugger_output = /foo\.example\.com/
+    it 'shows type' do
       debugger.handle_input(input)
-      expect(output.string).to match(debugger_output)
+      expect(output.string).to eq("\n => String\n")
     end
   end
-
-  describe 'print facts' do
+  describe 'Array', type_function: true do
     let(:input) do
-      'facts'
+      'type([1,2,3,4])'
     end
-    it 'should be able to print facts' do
-      debugger_output = /kernel/
-      debugger.handle_input(input)
-      expect(output.string).to match(debugger_output)
-    end
-  end
-
-  describe 'print resources' do
-    let(:input) do
-      'resources'
-    end
-    it 'should be able to print resources' do
-      debugger_output = /main/
-      debugger.handle_input(input)
-      expect(output.string).to match(debugger_output)
-    end
-  end
-
-  describe 'print class' do
-    let(:input) do
-      "Class['settings']"
-    end
-    it 'should be able to print classes' do
-      debugger_output = /Settings/
-      debugger.handle_input(input)
-      expect(output.string).to match(debugger_output)
-    end
-  end
-
-  describe 'print classes' do
-    let(:input) do
-      'resources'
-    end
-    it 'should be able to print classes' do
-      debugger_output = /Settings/
-      debugger.handle_input(input)
-      expect(output.string).to match(debugger_output)
-    end
-  end
-
-  describe 'set' do
-    let(:input) do
-      ':set loglevel debug'
-    end
-    it 'should set the loglevel' do
-      debugger_output = /loglevel debug is set/
-      debugger.handle_input(input)
-      expect(output.string).to match(debugger_output)
-      expect(Puppet::Util::Log.level).to eq(:debug)
-      expect(Puppet::Util::Log.destinations[:buffer].name).to eq(:buffer)
-    end
-  end
-
-  describe 'vars' do
-    let(:input) do
-      'vars'
-    end
-    it 'display facts variable' do
-      debugger_output = /facts/
-      debugger.handle_input(input)
-      expect(output.string).to match(debugger_output)
-    end
-    it 'display server facts variable' do
-      debugger_output = /server_facts/
-      debugger.handle_input(input)
-      expect(output.string).to match(debugger_output) if Puppet.version.to_f >= 4.1
-    end
-    it 'display serverversion variable' do
-      debugger_output = /serverversion/
-      debugger.handle_input(input)
-      expect(output.string).to match(debugger_output) if Puppet.version.to_f >= 4.1
-    end
-    it 'display local variable' do
-      debugger.handle_input("$var1 = 'value1'")
-      expect(output.string).to match(/value1/)
-      debugger.handle_input('$var1')
-      expect(output.string).to match(/value1/)
-    end
-  end
-
-  describe 'execute functions' do
-    let(:input) do
-      "md5('hello')"
-    end
-    it 'execute md5' do
-      debugger_output = /5d41402abc4b2a76b9719d911017c592/
-      debugger.handle_input(input)
-      expect(output.string).to match(debugger_output)
-    end
-    it 'execute swapcase' do
-      debugger_output = /HELLO/
-      debugger.handle_input("swapcase('hello')")
-      expect(output.string).to match(debugger_output)
-    end
-  end
-
-  describe 'datatypes' do
-    let(:input) do
-      'datatypes'
-    end
-    it 'handle datatypes' do
-      debugger.handle_input(input)
-      if Gem::Version.new(Puppet.version) < Gem::Version.new('4.5.0')
-        expect(output.string).to eq("\n[]\n")
-      else
-        expect(output.string).to match(/.*Array.*/)
+    it 'shows type' do
+      if Gem::Version.new(Puppet.version) > Gem::Version.new('4.4')
+        debugger.handle_input(input)
+        expect(output.string).to eq("\n => Tuple[Integer[1, 1], Integer[2, 2], Integer[3, 3], Integer[4, 4]]\n") if supports_type_function?
       end
-    end
-  end
-
-  describe 'whereami' do
-    let(:input) do
-      File.expand_path File.join(fixtures_dir, 'sample_start_debugger.pp')
-    end
-    let(:options) do
-      {
-        source_file: input,
-        source_line: 10
-      }
-    end
-
-    before(:each) do
-      debugger.handle_input('whereami')
-    end
-
-    it 'runs' do
-      expect(output.string).to match(/\s+5/)
-    end
-
-    it 'contains marker' do
-      expect(output.string).to match(/\s+=>\s10/)
-    end
-  end
-
-  describe 'types' do
-    let(:input) do
-      'types'
-    end
-    it 'runs' do
-      debugger.handle_input(input)
-      expect(output.string).to match(/service/)
     end
   end
 
@@ -469,32 +240,4 @@ describe 'PuppetDebugger' do
     end
   end
 
-  describe 'benchmark' do
-    let(:input) do
-      "benchmark md5('12345')"
-    end
-    describe 'mode' do
-      before(:each) do
-        debugger.handle_input('benchmark') # enable
-      end
-      it 'enable' do
-        debugger.handle_input("md5('12345')")
-        expect(output.string).to match(/Benchmark\ Mode\ On/)
-        expect(output.string).to match(/Time\ elapsed/)
-      end
-      it 'disable' do
-        debugger.handle_input('benchmark') # disable
-        expect(output.string).to match(/Benchmark\ Mode\ Off/)
-      end
-    end
-
-    describe 'onetime' do
-      it 'run' do
-        debugger.handle_input("benchmark md5('12345')")
-        expect(output.string).to_not match(/Benchmark\ Mode\ On/)
-        expect(output.string).to_not match(/Benchmark\ Mode\ Off/)
-        expect(output.string).to match(/Time\ elapsed/)
-      end
-    end
-  end
 end
