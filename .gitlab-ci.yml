@@ -171,3 +171,9 @@ puppet_410_ruby24:
     PUPPET_GEM_VERSION: "~> 4.10.0"
   <<: *puppet_job_def
   <<: *ruby24
+
+puppet_5_ruby24:
+  variables:
+    PUPPET_GEM_VERSION: "~> 5.0"
+  <<: *puppet_job_def
+  <<: *ruby24
