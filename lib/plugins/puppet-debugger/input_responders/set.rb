@@ -5,6 +5,26 @@ module PuppetDebugger
       COMMAND_WORDS = %w(set :set)
       SUMMARY = 'Set the a puppet debugger config'
       COMMAND_GROUP = :scope
+      KEYWORDS = %w(node loglevel)
+      LOGLEVELS = %w(debug info)
+
+      def self.command_completion(buffer_words)
+        next_word = buffer_words.shift
+        case next_word
+          when 'loglevel'
+            if buffer_words.count > 0
+              LOGLEVELS.grep(/^#{Regexp.escape(buffer_words.first)}/)
+            else
+              LOGLEVELS
+            end
+          when 'debug', 'info','node'
+            []
+          when nil
+            %w(node loglevel)
+          else
+            KEYWORDS.grep(/^#{Regexp.escape(next_word)}/)
+        end
+      end
 
       def run(args = [])
         handle_set(args)

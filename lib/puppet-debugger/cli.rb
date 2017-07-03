@@ -29,17 +29,27 @@ module PuppetDebugger
       @source_file = options[:source_file] || nil
       @source_line_num = options[:source_line] || nil
       @in_buffer = options[:in_buffer] || $stdin
-      comp = proc do |s|
-        key_words.grep(/^#{Regexp.escape(s)}/)
-      end
       Readline.completion_append_character = ''
       Readline.basic_word_break_characters = ' '
-      Readline.completion_proc = comp
+      Readline.completion_proc = command_completion
       AwesomePrint.defaults = {
         html: @html_mode,
         sort_keys: true,
         indent: 2
       }
+    end
+
+    def command_completion
+      proc do |s|
+        words = Readline.line_buffer.split(Readline.basic_word_break_characters)
+        first_word = words.shift
+        if PuppetDebugger::InputResponders::Commands.command_list_regex.match(first_word)
+          plugin = PuppetDebugger::InputResponders::Commands.plugins.find {|p| p::COMMAND_WORDS.include?(first_word)}
+          plugin.command_completion(words)
+        else
+          key_words.grep(/^#{Regexp.escape(s)}/)
+        end
+      end
     end
 
     def hooks

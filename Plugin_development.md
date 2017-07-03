@@ -273,6 +273,45 @@ output = plugin.execute(args, debugger)
 
 If the command used to find the plugin is incorrect a `PuppetDebugger::Exception::InvalidCommand` error will be raised.
 
+## Command Completion
+If your plugin takes extra arguments you may want to incorporate command completion to help the user.  This can be done 
+by overriding the `self.command_completion` function in your plugin. The return value of this method must return an 
+array of possible words.
+
+```ruby
+# @param buffer_words [Array[String]] a array of words the user has typed in
+# @return Array[String] - an array of words that will help the user with word completion
+# By default this returns an empty array, your plugin can chose to override this method in order to
+# provide the user with a list of key words based on the user's input
+def self.command_completion(buffer_words)
+  ['one', 'two', 'three']
+end
+```
+
+A real example of this can be found in the set plugin
+
+```ruby
+KEYWORDS = %w(node loglevel)
+LOGLEVELS = %w(debug info)
+
+def self.command_completion(buffer_words)
+next_word = buffer_words.shift
+    case next_word
+      when 'loglevel'
+        if buffer_words.count > 0
+          LOGLEVELS.grep(/^#{Regexp.escape(buffer_words.first)}/)
+        else
+          LOGLEVELS
+        end
+      when 'debug', 'info','node'
+        []
+      when nil
+        %w(node loglevel)
+      else
+        KEYWORDS.grep(/^#{Regexp.escape(next_word)}/)
+    end
+end
+```
 ## Testing your plugin code
 1. Create a new rspec test file as `spec/input_responders/plugin_name_spec.rb`
 
