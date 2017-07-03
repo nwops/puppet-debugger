@@ -3,7 +3,8 @@ source 'http://rubygems.org'
 gem 'awesome_print', '~> 1.7'
 gem 'facterdb', '~> 0.3.8'
 gem 'puppet', ENV['PUPPET_GEM_VERSION'] || '~> 4.10.1'
-gem 'pluginator', '~> 1.4.1'
+gem 'pluginator', '~> 1.5.0'
+
 group :test, :development do
   # ruby versions prior to 2.0 cannot install json_pure 2.0.2+
   gem 'bundler'

@@ -39,15 +39,20 @@ module PuppetDebugger
       }
     end
 
+    # @return [Proc] the proc used in the command completion for readline
+    # if a plugin keyword is found lets return keywords using the plugin's command completion
+    # otherwise return the default set of keywords and filter out based on input
     def command_completion
-      proc do |s|
+      proc do |input|
         words = Readline.line_buffer.split(Readline.basic_word_break_characters)
         first_word = words.shift
-        if PuppetDebugger::InputResponders::Commands.command_list_regex.match(first_word)
-          plugin = PuppetDebugger::InputResponders::Commands.plugins.find {|p| p::COMMAND_WORDS.include?(first_word)}
-          plugin.command_completion(words)
+        plugins = PuppetDebugger::InputResponders::Commands.plugins.find_all do |p|
+          p::COMMAND_WORDS.find { |word| word.start_with?(first_word)}
+        end
+        if plugins.count == 1 and /\A#{first_word}\s/.match(Readline.line_buffer)
+          plugins.first.command_completion(words)
         else
-          key_words.grep(/^#{Regexp.escape(s)}/)
+          key_words.grep(/^#{Regexp.escape(input)}/)
         end
       end
     end

@@ -239,5 +239,4 @@ describe 'PuppetDebugger' do
       end
     end
   end
-
 end

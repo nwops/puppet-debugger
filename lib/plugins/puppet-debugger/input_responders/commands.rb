@@ -75,21 +75,3 @@ module PuppetDebugger
     end
   end
 end
-
-module Pluginator
-  # a helper for handling name / file / class conversions
-  module NameConverter
-    private
-    # full_name => class
-    def name2class(name)
-      klass = Kernel
-      name.to_s.split(%r{/}).each do |part|
-        klass = klass.const_get(
-            part.capitalize.gsub(/[_-](.)/) { |match| match[1].upcase }
-        )
-      end
-      klass
-    end
-
-  end
-end

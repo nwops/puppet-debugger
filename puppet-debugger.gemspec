@@ -32,7 +32,7 @@ Gem::Specification.new do |s|
   s.licenses = ["MIT"]
   s.rubygems_version = "2.4.5.1"
   s.summary = "A repl based debugger for the puppet language"
-  s.add_runtime_dependency(%q<pluginator>, ["~> 1.4.1"])
+  s.add_runtime_dependency(%q<pluginator>, ["~> 1.5.0"])
   s.add_runtime_dependency(%q<puppet>, [">= 3.8"])
   s.add_runtime_dependency(%q<facterdb>, ["~> 0.3.1"])
   s.add_runtime_dependency(%q<awesome_print>, ["~> 1.7"])
