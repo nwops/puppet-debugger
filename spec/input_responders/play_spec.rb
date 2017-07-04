@@ -131,6 +131,20 @@ describe :play do
         expect(output.string).to include('"test"')
       end
     end
+    describe 'multiple lines puppet code' do
+      let(:input) do
+        <<-EOF
+if $osfamily {
+  $var = '3'
+}
+$var
+        EOF
+      end
+      it do
+        plugin.play_back_string(input)
+        expect(output.string).to include('"3"')
+      end
+    end
   end
 
   describe 'play' do

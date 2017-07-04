@@ -79,7 +79,7 @@ module PuppetDebugger
               debugger.out_buffer.write('>> ')
             end
           rescue Puppet::ParseErrorWithIssue => e
-            if multiline_input?(e)
+            if debugger.multiline_input?(e)
               full_buffer += "\n"
               next
             end
