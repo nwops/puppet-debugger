@@ -140,7 +140,7 @@ if $osfamily {
 $var
         EOF
       end
-      it do
+      xit do
         plugin.play_back_string(input)
         expect(output.string).to include('"3"')
       end
