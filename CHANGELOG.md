@@ -1,5 +1,12 @@
 ## Unreleased
 
+## 0.8.0
+  * Fixes bug with playback of multiline input
+  * Updates pluginator Gem to 1.5.0
+  * Adds ability to provide command completion for plugins
+  * Fixes error with commands plugin where id didn't detect bad names
+  * Fixes #3 - Move old input responder test code to individual plugin tests
+  * Adds puppet 5 to testing matrix
 ## 0.7.0
   * Adds new commands command 
   * Adds new help command 

@@ -42,7 +42,7 @@ to install on your production puppet master. Please do not install because of th
 `gem install puppet-debugger`
 
 ## Load path
-puppet-debugger will load all functions from your basemodulepath and environmentpath.
+puppet-debugger will load all puppet functions from your basemodulepath and environmentpath.
 
 This means if you run `puppet module install puppetlabs-stdlib` and they will be available
 in the debugger.
@@ -266,6 +266,18 @@ https://www.puppet-debugger.com/play?content=vars
 
 Please note the web based debugger only contains a minimal amount of puppet modules.  So its likely
 that your code may not work if using third party modules.  This may change in the future though.
+
+## Plugins
+The puppet debugger has a plugin system that allows anyone to create new functionality
+for the puppet debugger.  By default the puppet debugger ships with serveral core
+plugins that provide basic usage.  Any non core plugin can be installed as a separate
+gem.  The following is a list of plugins we wrote or know about.
+
+
+| Name        | Project Url           | Type  | Description |
+| ------------- |:-------------:| -----:| -------------:|
+| playbooks      | [playbooks](https://gitlab.com/puppet-debugger/puppet-debugger-playbooks) | editing | Allows group playback of scripted puppet commands |
+
 
 ## Development
  * [Plugin Development Guide](Plugin_development.md)
