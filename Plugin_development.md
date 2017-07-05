@@ -20,6 +20,7 @@
   - [Calling other plugins](#calling-other-plugins)
     - [Indirectly](#indirectly)
     - [Directly](#directly)
+  - [Command Completion](#command-completion)
   - [Testing your plugin code](#testing-your-plugin-code)
   - [Examples](#examples)
 
@@ -199,6 +200,8 @@ Objects exposed that you might want access to:
 * compiler     (The puppet compiler object)    
 * catalog      (The puppet catalog)
 * function_map (Current map of functions)
+* add_hook, delete_hook
+* handle_input (use instead of debugger.handle_input)
 
 While you do have access to the `debugger` object itself and everything inside this object.  I would recommend not using the debugger
 object directly since the debugger code base is changing rapidly.  Usage can result in a broken plugin.  If you are using
@@ -267,7 +270,7 @@ play_plugin = PuppetDebugger::InputResponders::Commands.plugin_from_command('pla
 # execute the plugin  
 args = ['https://gists.github.com/sdalfsdfadsfds.txt']
 # pass an instance of the debugger (always do this)
-output = plugin.execute(args, debugger)
+output = play_plugin.execute(args, debugger)
 
 ```
 
