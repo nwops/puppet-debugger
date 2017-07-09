@@ -1,5 +1,5 @@
 ## Unreleased
-
+ * Fixes bug with command completion and blank inputs
 ## 0.8.0
   * Fixes bug with playback of multiline input
   * Updates pluginator Gem to 1.5.0

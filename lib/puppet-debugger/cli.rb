@@ -45,6 +45,7 @@ module PuppetDebugger
     def command_completion
       proc do |input|
         words = Readline.line_buffer.split(Readline.basic_word_break_characters)
+        next key_words.grep(/^#{Regexp.escape(input)}/) if words.empty?
         first_word = words.shift
         plugins = PuppetDebugger::InputResponders::Commands.plugins.find_all do |p|
           p::COMMAND_WORDS.find { |word| word.start_with?(first_word)}

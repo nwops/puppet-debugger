@@ -221,6 +221,13 @@ describe 'PuppetDebugger' do
     end
   end
 
+  describe 'command_completion' do
+    it 'should complete on tabs' do
+      allow(Readline).to receive(:line_buffer).and_return("\n")
+      expect(debugger.command_completion.call("").count).to be >= 200
+    end
+  end
+
   describe 'error message' do
     let(:input) do
       "file{'/tmp/test': ensure => present, contact => 'blah'}"
