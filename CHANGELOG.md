@@ -1,4 +1,6 @@
 ## Unreleased
+
+## 0.8.1
  * Fixes bug with command completion and blank inputs
 ## 0.8.0
   * Fixes bug with playback of multiline input
