@@ -200,6 +200,8 @@ Objects exposed that you might want access to:
 * compiler     (The puppet compiler object)    
 * catalog      (The puppet catalog)
 * function_map (Current map of functions)
+* loaders      ( The puppet loaders )
+* puppet_environment
 * add_hook, delete_hook
 * handle_input (use instead of debugger.handle_input)
 

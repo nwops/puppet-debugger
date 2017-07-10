@@ -14,4 +14,12 @@ describe :datatypes do
       expect(output).to match(/.*Array.*/)
     end
   end
+
+  it 'returns core datatypes' do
+    expect(plugin.all_data_types.count).to be >= 30 if supports_datatypes?
+  end
+
+  it 'returns environment datatypes' do
+    expect(plugin.environment_data_types.count).to be >= 0
+  end
 end

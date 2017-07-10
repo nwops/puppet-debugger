@@ -80,6 +80,16 @@ describe 'PuppetDebugger' do
     end
   end
 
+  describe 'key_words' do
+    it do
+      expect(debugger.key_words.count).to be >= 30 if supports_datatypes?
+    end
+
+    it do
+      expect(debugger.key_words.count).to be >= 0 unless supports_datatypes?
+    end
+  end
+
   describe 'native functions', native_functions: true do
     let(:func) do
       <<-EOF
