@@ -1,5 +1,19 @@
 # frozen_string_literal: true
 
+module Kernel
+  class Hash
+    def to_h
+      hash = extra_hash_attributes.dup
+
+      self.class.hash_attribute_names.each do |name|
+        hash[name] = __send__(name)
+      end
+
+      hash
+    end
+  end
+end
+
 module AwesomePrint
   module Puppet
     def self.included(base)
@@ -26,13 +40,19 @@ module AwesomePrint
 
     def awesome_puppet_resource(object)
       return '' if object.nil?
-      awesome_puppet_type(object.to_ral)
+      resource_object = object.to_ral
+      awesome_puppet_type(resource_object)
     end
 
     def awesome_puppet_type(object)
       return '' if object.nil?
-      return object.to_s unless object.respond_to?(:name) && object.respond_to?(:title)
-      h = object.to_hash.merge(name: object.name, title: object.title)
+      return object.to_s unless object.respond_to?(:name) && object.respond_to?(:title) && object.respond_to?(:to_hash)
+      if Array.new.respond_to?(:to_h)
+        # to_h is only supported in ruby 2.1+
+        h = object.to_hash.merge(name: object.name, title: object.title).sort.to_h
+      else
+        h = object.to_hash.merge(name: object.name, title: object.title)
+      end
       res_str = awesome_hash(h)
       "#{object.class} #{res_str.delete(':')}"
     end

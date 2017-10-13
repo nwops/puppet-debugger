@@ -1,5 +1,7 @@
 ## Unreleased
-
+ * Fixes #59 - Unhandled puppet type with awesome_print
+ * Fixes loading of multiple data types
+ * Add Puppet 5.1, 5.2, 5.3 to test matrix
 ## 0.8.1
  * Fixes bug with command completion and blank inputs
 ## 0.8.0

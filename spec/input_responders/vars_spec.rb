@@ -24,4 +24,15 @@ describe :vars do
     debugger.handle_input("$var1 = 'value1'")
     expect(plugin.run(args)).to match(/value1/)
   end
+
+  describe 'resource' do
+    let(:input) do
+      "$service_require = Package['httpd']"
+    end
+    it 'can process a resource' do
+      debugger_output = /Facts/
+      debugger.handle_input(input)
+      expect(plugin.run(args)).to match(debugger_output)
+    end
+  end
 end
