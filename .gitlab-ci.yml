@@ -154,26 +154,32 @@ puppet_47_ruby22:
   <<: *puppet_job_def
   <<: *ruby22
 
-puppet_48_ruby22:
-  variables:
-    PUPPET_GEM_VERSION: "~> 4.8.0"
-  <<: *puppet_job_def
-  <<: *ruby22
-
-puppet_49_ruby23:
-  variables:
-    PUPPET_GEM_VERSION: "~> 4.9.0"
-  <<: *puppet_job_def
-  <<: *ruby23
-
 puppet_410_ruby24:
   variables:
     PUPPET_GEM_VERSION: "~> 4.10.0"
   <<: *puppet_job_def
   <<: *ruby24
 
-puppet_5_ruby24:
+puppet_50_ruby24:
   variables:
     PUPPET_GEM_VERSION: "~> 5.0"
+  <<: *puppet_job_def
+  <<: *ruby24
+
+puppet_51_ruby24:
+  variables:
+    PUPPET_GEM_VERSION: "~> 5.1"
+  <<: *puppet_job_def
+  <<: *ruby24
+
+puppet_52_ruby24:
+  variables:
+    PUPPET_GEM_VERSION: "~> 5.2"
+  <<: *puppet_job_def
+  <<: *ruby24
+
+puppet_53_ruby24:
+  variables:
+    PUPPET_GEM_VERSION: "~> 5.3"
   <<: *puppet_job_def
   <<: *ruby24
