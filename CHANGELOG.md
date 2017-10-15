@@ -1,4 +1,8 @@
 ## Unreleased
+
+## 0.9.0
+Released October 24, 2017
+ * Adds FacterDB as 0.4.0 dependency for external facts support
  * Fixes #59 - Unhandled puppet type with awesome_print
  * Fixes loading of multiple data types
  * Add Puppet 5.1, 5.2, 5.3 to test matrix

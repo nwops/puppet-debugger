@@ -55,7 +55,7 @@ useful for other people.
 https://github.com/nwops/puppet-debugger-demo
 
 ## Web demo
-There is a web version of the [puppet-debugger](https://www.puppet-debugger.com) online but is somewhat
+There is a web version of the [puppet-debugger](https://demo.puppet-debugger.com) online but is somewhat
 limited at this time. In the future we will be adding lots of awesome features to the web debugger.
 
 ## Usage
@@ -239,7 +239,45 @@ depending on the puppet version currently running.
 
 You can display the current facterdb filter by running `facterdb_filter` from the debugger session.
 
-Why do facter versions matter? While facter and puppet work independently just fine, newer forge modules utilize certain data structures found only in newer versions of facter. So its really up to the puppet code you use. With facter 3, almost every fact is now a data structure.  So if you are having issues with facts not existing in the debugger you may need to change the facter version `REPL_FACTER_VERSION` to something different.
+Why do facter versions matter? While facter and puppet work independently just fine, newer forge modules utilize certain data structures found only in newer versions of facter. 
+So its really up to the puppet code you use. With facter 3, almost every fact is now a data structure.  So if you are having issues with facts not existing in the debugger you may need to change the facter version `REPL_FACTER_VERSION` to something different.
+
+## Custom FacterDB Facts
+As of FacterDB 0.4.0 we can now supply custom [external fact sets](https://github.com/camptocamp/facterdb#supplying-custom-external-facts) to facterDB..  This is a huge deal because you can take the facts from any system and play around with the fact data in the debugger.  This makes the debugger appear as it was run on that system.  Moreover, you can create shareable fact sets for your entire team. To use an external fact set you first need to grab the facts from the system you wish to "mock".  This can be done with `puppet facts` or even puppetdb queries and then create a file with the values hash.
+
+
+Take the values from the values hash only and place inside a new file.
+```
+{
+  "name": "macbook-pro-10.domain",
+  "values": {
+    "custom_datacenter_fact": "iceland",
+    "puppetversion": "5.3.2",
+    "architecture": "x86_64",
+    "kernel": "Darwin",
+    "domain": "domain"
+  }
+}
+
+```
+
+This can be easily done if you have `jq` installed. 
+
+`puppet facts | jq '.values' > /tmp/custom_facts/datacenter_a/2.4/os_x.facts`
+
+Once you have created a directory with one or more fact files you just need to set an environment variable to tell facterDB about the custom fact sets.
+
+`export FACTERDB_SEARCH_PATHS="/tmp/custom_facts/"`
+
+Now everytime you start the puppet debugger, facterDB will use these custom fact files
+as part of the facterDB database.  However, you will still need to provide a search filter that references your custom fact because there are over a thousand facterDB fact sets.  
+
+`puppet debugger --facterdb-filter 'custom_datacenter_fact=iceland'`
+
+
+Alternatively you can bypass the internal facterDB database by setting `export FACTERDB_SKIP_DEFAULTDB=true` and force your custom facts to be the only facts facterDB uses.
+
+*Note: when exporting facterDB environment variables you will also change the behavior for rspec_puppet_facts and other gems that also rely on facterDB.  So please remember to unset the variables if not needed*
 
 ## Playback support
 puppet-debugger now supports playing back files or urls and loading the content into the debugger session.  This means if you want to start a debugger session from an existing file or url you can play the content back in the debugger.

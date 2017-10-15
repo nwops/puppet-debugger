@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 source 'http://rubygems.org'
 gem 'awesome_print', '~> 1.7'
-gem 'facterdb', '~> 0.3.8'
+gem 'facterdb', '~> 0.4.0'
 gem 'puppet', ENV['PUPPET_GEM_VERSION'] || '~> 4.10.1'
 gem 'pluginator', '~> 1.5.0'
 
