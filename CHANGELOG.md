@@ -1,5 +1,8 @@
 ## Unreleased
 
+## 0.9.1
+ * Pin facterdb to >= 0.4.0
+
 ## 0.9.0
 Released October 24, 2017
  * Adds FacterDB as 0.4.0 dependency for external facts support
