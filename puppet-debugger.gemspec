@@ -1,7 +1,5 @@
-
 # frozen_string_literal: true
-
-require './lib/version'
+require_relative 'lib/puppet-debugger/version'
 require 'date'
 
 Gem::Specification.new do |s|

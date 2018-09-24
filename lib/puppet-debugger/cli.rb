@@ -3,7 +3,7 @@
 require 'puppet'
 require 'readline'
 require 'json'
-require_relative 'support'
+require 'puppet-debugger/support'
 require 'pluginator'
 require 'puppet-debugger/hooks'
 require 'forwardable'

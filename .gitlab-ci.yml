@@ -58,9 +58,6 @@ bump_and_tag:
 #  script:
 #    - "curl -X POST -F token=$PREPL_BUILD_TRIGGER_TOKEN -F ref=$REF https://gitlab.com/api/v3/projects/1146764/trigger/builds"
 
-.ruby_193: &ruby193
-  image: ruby:1.9.3
-
 .ruby_20: &ruby20
   image: ruby:2.0
 
@@ -90,12 +87,6 @@ gem_production:
     - dpl --provider=rubygems --api-key=$RUBYGEMS_API_KEY
   only:
     - tags
-
-puppet_38_ruby193:
-  variables:
-    PUPPET_GEM_VERSION: "~> 3.8.0"
-  <<: *puppet_job_def
-  <<: *ruby193
 
 puppet_38_ruby20:
   variables:

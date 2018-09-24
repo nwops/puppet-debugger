@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require_relative 'puppet-debugger/cli'
-require_relative 'version'
+require 'puppet-debugger/cli'
+require 'puppet-debugger/version'
 require 'awesome_print'
-require_relative 'awesome_print/ext/awesome_puppet'
-require_relative 'trollop'
+require 'awesome_print/ext/awesome_puppet'
+require 'puppet-debugger/trollop'
 require 'puppet/util/log'
-require_relative 'puppet-debugger/debugger_code'
-require_relative 'puppet-debugger/support/errors'
+require 'puppet-debugger/debugger_code'
+require 'puppet-debugger/support/errors'
 require 'plugins/puppet-debugger/input_responders/commands'
 
 

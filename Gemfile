@@ -17,8 +17,7 @@ group :test, :development do
   gem 'release_me'
   gem 'rspec', '~> 3.6'
   gem 'simplecov', '>= 0'
+  gem 'rubocop', '= 0.48.0'
+
 end
 
-group :validate do
-  gem 'rubocop'
-end

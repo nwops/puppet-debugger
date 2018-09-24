@@ -1,4 +1,5 @@
 ## Unreleased
+ * remove usage of require_relative
 
 ## 0.9.1
  * Pin facterdb to >= 0.4.0

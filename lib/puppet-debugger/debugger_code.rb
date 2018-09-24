@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative 'code/loc'
-require_relative 'code/code_range'
-require_relative 'code/code_file'
+require 'puppet-debugger/code/loc'
+require 'puppet-debugger/code/code_range'
+require 'puppet-debugger/code/code_file'
 
 # `Pry::Code` is a class that encapsulates lines of source code and their
 # line numbers and formats them for terminal output. It can read from a file
