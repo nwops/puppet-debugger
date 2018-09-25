@@ -1,4 +1,8 @@
 ## Unreleased
+
+## 0.10.0
+ * Fix for puppet 6 and trusted server facts
+ * Adds puppet 6 support and remove ruby 1.9.3 from test matrix
  * remove usage of require_relative
 
 ## 0.9.1
