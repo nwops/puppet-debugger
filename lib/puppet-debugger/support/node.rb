@@ -8,7 +8,7 @@ module PuppetDebugger
       # creates a node object using defaults or gets the remote node
       # object if the remote_node_name is defined
       def create_node
-        Puppet[:trusted_server_facts] = true if Puppet.version.to_f >= 4.1
+        Puppet[:trusted_server_facts] = true if Puppet.version.to_f >= 4.1 && Puppet.version.to_f < 6.0
 
         if remote_node_name
           # refetch
