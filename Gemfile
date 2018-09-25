@@ -9,7 +9,6 @@ group :test, :development do
   # ruby versions prior to 2.0 cannot install json_pure 2.0.2+
   gem 'bundler'
   gem 'CFPropertyList'
-  gem 'json_pure', '<= 2.0.1'
   gem 'pry'
   gem 'puppet-debugger', path: './'
   gem 'rake'
