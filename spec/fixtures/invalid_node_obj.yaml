@@ -1,8 +1,9 @@
 --- !ruby/object:Puppet::Node
   name: invalid
   classes: []
-  parameters: []
+  parameters: {}
   facts:
   time: 2016-05-10 16:28:21.502653 -07:00
   environment_name: production
+  environment: production
   expiration: 2016-05-10 16:58:21.502660 -07:00

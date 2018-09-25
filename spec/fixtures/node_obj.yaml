@@ -294,5 +294,6 @@
     environment: production
   facts:
   time: 2016-05-10 13:14:57.080352 -07:00
+  environment: production
   environment_name: production
   expiration: 2016-05-10 13:44:57.080364 -07:00

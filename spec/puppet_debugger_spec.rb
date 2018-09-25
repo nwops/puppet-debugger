@@ -182,9 +182,8 @@ describe 'PuppetDebugger' do
       'Service{'
     end
     it 'can process' do
-      debugger_output = "\n => \e[31mSyntax error at end of file\e[0m\n"
       debugger.handle_input(input)
-      expect(output.string).to eq(debugger_output)
+      expect(output.string).to match(%r(Syntax error at end of))
     end
   end
 

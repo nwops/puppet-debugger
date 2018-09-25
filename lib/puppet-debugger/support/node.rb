@@ -67,8 +67,7 @@ module PuppetDebugger
       def get_remote_node(name)
         indirection = Puppet::Indirector::Indirection.instance(:node)
         indirection.terminus_class = 'rest'
-        remote_node = indirection.find(name, environment: puppet_environment)
-        remote_node
+        indirection.find(name, environment: puppet_environment)
       end
 
       # this is a hack to get around that the puppet node fact face does not return
