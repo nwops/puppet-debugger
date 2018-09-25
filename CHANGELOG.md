@@ -1,5 +1,7 @@
 ## Unreleased
-
+ * adds puppet-debugger command in addition to pdb
+ * deprecate pdb command
+ 
 ## 0.10.0
  * Fix for puppet 6 and trusted server facts
  * Adds puppet 6 support and remove ruby 1.9.3 from test matrix

@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require_relative '../lib/puppet-debugger'
+require 'puppet-debugger'
 
+puts "The debugger pdb command will be removed in a future release please use puppet-debugger or puppet debugger instead".warning
 PuppetDebugger::Cli.start
