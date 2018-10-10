@@ -1,4 +1,5 @@
 ## Unreleased
+ * Fixes puppet6 multiline issue
  * adds puppet-debugger command in addition to pdb
  * deprecate pdb command
  

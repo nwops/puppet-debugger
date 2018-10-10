@@ -16,7 +16,12 @@ describe :datatypes do
   end
 
   it 'returns core datatypes' do
-    expect(plugin.all_data_types.count).to be >= 30 if supports_datatypes?
+    if Gem::Version.new(Puppet.version) >= Gem::Version.new('6.0.0')
+      expect(plugin.all_data_types.count).to be >= 19 if supports_datatypes?
+    else
+      expect(plugin.all_data_types.count).to be >= 30 if supports_datatypes?
+    end
+
   end
 
   it 'returns environment datatypes' do

@@ -328,5 +328,5 @@ Pull requests welcomed.
 
 ## Copyright
 
-Copyright (c) 2017 Corey Osman. See LICENSE.txt for
+Copyright (c) 2018 NWOPS, LLC. See LICENSE.txt for
 further details.

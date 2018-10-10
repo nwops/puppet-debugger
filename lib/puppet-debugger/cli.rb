@@ -186,9 +186,10 @@ or "help" to show the help screen.
 
     # tries to determine if the input is going to be a multiline input
     # by reading the parser error message
+    # @return [Boolean] - return true if this is a multiline input, false otherwise
     def multiline_input?(e)
       case e.message
-      when /Syntax error at end of file/i
+      when /Syntax error at end of/i
         true
       else
         false
@@ -209,17 +210,19 @@ or "help" to show the help screen.
           # unless this is puppet code, otherwise skip repl keywords
           unless PuppetDebugger::InputResponders::Commands.command_list_regex.match(buf)
             line_number = line_number.next
-            parser.parse_string(full_buffer)
+            begin
+              parser.parse_string(full_buffer)
+            rescue Puppet::ParseErrorWithIssue => e
+              if multiline_input?(e)
+                out_buffer.print '  '
+                full_buffer += "\n"
+                next
+              end
+            end
           end
-        rescue Puppet::ParseErrorWithIssue => e
-          if multiline_input?(e)
-            out_buffer.print '  '
-            full_buffer += "\n"
-            next
-          end
+          handle_input(full_buffer)
+          full_buffer = ''
         end
-        handle_input(full_buffer)
-        full_buffer = ''
       end
     end
 
