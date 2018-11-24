@@ -59,7 +59,7 @@ module PuppetDebugger
       set_scope(value)
       if value
         set_environment(value.environment)
-        set_node(value.compiler.node)
+        set_node(value.compiler.node) if defined?(value.compiler.node)
         set_compiler(value.compiler)
       end
     end
