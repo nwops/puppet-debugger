@@ -168,7 +168,7 @@ Corey Osman <corey@nwops.io>
 
 COPYRIGHT
 ---------
-Copyright (c) 2016 NWOps
+Copyright (c) 2019 NWOps
 
     HELP
   end
@@ -179,9 +179,6 @@ Copyright (c) 2016 NWOps
     @use_stdin = false
     begin
       require 'puppet-debugger'
-      unless ::PuppetDebugger::VERSION >= '0.4.0'
-        Puppet.err('You must install the puppet-debugger gem version >= 0.4.0')
-      end
     rescue LoadError => e
       Puppet.err('You must install the puppet-debugger: gem install puppet-debugger')
     end
