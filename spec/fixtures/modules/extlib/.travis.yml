@@ -1,0 +1,47 @@
+---
+dist: xenial
+language: ruby
+cache: bundler
+before_install:
+  - gem update --system
+  - gem update bundler
+  - bundle --version
+script:
+  - 'bundle exec rake $CHECK'
+matrix:
+  fast_finish: true
+  include:
+  - rvm: 2.4.4
+    bundler_args: --without system_tests development release
+    env: PUPPET_VERSION="~> 5.0" CHECK=test
+  - rvm: 2.5.3
+    bundler_args: --without system_tests development release
+    env: PUPPET_VERSION="~> 6.0" CHECK=test_with_coveralls
+  - rvm: 2.5.3
+    bundler_args: --without system_tests development release
+    env: PUPPET_VERSION="~> 6.0" CHECK=rubocop
+  - rvm: 2.4.4
+    bundler_args: --without system_tests development release
+    env: PUPPET_VERSION="~> 5.0" CHECK=build DEPLOY_TO_FORGE=yes
+branches:
+  only:
+  - master
+  - /^v\d/
+notifications:
+  email: false
+  irc:
+    on_success: always
+    on_failure: always
+    channels:
+      - "chat.freenode.org#voxpupuli-notifications"
+deploy:
+  provider: puppetforge
+  user: puppet
+  password:
+    secure: "IkrfAnec7ovZLMvhvXt8ZihyYdAJTC/nm7KDm4u2G/uD2NGaMdHNOAenkwIwC1vfCzHKcgC5u/lAYFrYvHpQpJW0kHLKnk1SpndfWX9kd5SlDDzEP5mJGjMZeTY6H9sV5fsB6Pt7l/sw5ACL/0bFDl0mYBnVhGv6UxZZ5xMQIUw="
+  on:
+    tags: true
+    # all_branches is required to use tags
+    all_branches: true
+    # Only publish the build marked with "DEPLOY_TO_FORGE"
+    condition: "$DEPLOY_TO_FORGE = yes"

@@ -15,7 +15,6 @@ module PuppetDebugger
     include PuppetDebugger::Support::Environment
     include PuppetDebugger::Support::Facts
     include PuppetDebugger::Support::Scope
-    include PuppetDebugger::Support::Functions
     include PuppetDebugger::Support::Node
     include PuppetDebugger::Support::Loader
 
@@ -44,14 +43,27 @@ module PuppetDebugger
       end
     end
 
+    def lib_dirs(module_dirs = modules_paths)
+      dirs = module_dirs.map do |mod_dir|
+        Dir["#{mod_dir}/*/lib"].entries
+      end.flatten
+      dirs + [puppet_debugger_lib_dir]
+    end
+
     def static_responder_list
       PuppetDebugger::InputResponders::Commands.command_list
+    end
+
+    # returns either the module name or puppet version
+    def mod_finder
+      @mod_finder ||= Regexp.new('\/([\w\-\.]+)\/lib')
     end
 
     # this is the lib directory of this gem
     # in order to load any puppet functions from this gem we need to add the lib path
     # of this gem
-    def puppet_repl_lib_dir
+    # @deprecated
+    def puppet_debugger_lib_dir
       File.expand_path(File.join(File.dirname(File.dirname(File.dirname(__FILE__))), 'lib'))
     end
 

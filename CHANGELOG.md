@@ -1,5 +1,10 @@
 ## Unreleased
 
+- Fixes native functions not shown in functions command
+- Prints functions into a table with proper namespace shown
+- Adds table print gem
+- Adds rb-readline for universal readline support on all platforms
+
 ## 0.10.3
 
 - Remove warning message about incorrect version
