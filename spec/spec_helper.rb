@@ -36,11 +36,11 @@ def stdlib_path
   File.join(Puppet[:basemodulepath].split(':').first, 'stdlib')
 end
 
-# def install_stdlib
-#   `bundle exec puppet module install puppetlabs/stdlib` unless File.exists?(stdlib_path)
-# end
-#
-# install_stdlib
+def install_stdlib
+  `bundle exec puppet module install puppetlabs/stdlib` unless File.exists?(stdlib_path)
+end
+
+#install_stdlib
 
 def fixtures_dir
   File.join(File.dirname(__FILE__), 'fixtures')

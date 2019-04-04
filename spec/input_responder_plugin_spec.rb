@@ -29,7 +29,7 @@ describe :input_responder_plugin do
   end
 
   {scope: Puppet::Parser::Scope, node: Puppet::Node, facts: Puppet::Node::Facts,
-   environment: Puppet::Node::Environment, function_map: Hash,
+   environment: Puppet::Node::Environment,
   compiler: Puppet::Parser::Compiler, catalog: Puppet::Resource::Catalog}.each do |name, klass|
     it "can access #{name}" do
       expect(plugin.send(name).class).to be klass

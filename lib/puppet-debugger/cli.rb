@@ -69,8 +69,7 @@ module PuppetDebugger
       variables = scope.to_hash.keys
       # prepend a :: to topscope variables
       scoped_vars = variables.map { |k, _v| scope.compiler.topscope.exist?(k) ? "$::#{k}" : "$#{k}" }
-      # append a () to functions so we know they are functions
-      funcs = function_map.keys.map { |k| "#{k.split('::').last}()" }
+      funcs = PuppetDebugger::InputResponders::Functions.instance.func_list
       PuppetDebugger::InputResponders::Datatypes.instance.debugger = self
       (scoped_vars + funcs + static_responder_list + PuppetDebugger::InputResponders::Datatypes.instance.all_data_types).uniq.sort
     end

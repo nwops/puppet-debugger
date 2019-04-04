@@ -40,14 +40,6 @@ describe 'support' do
     # manifest_file.close
   end
 
-  context '#function_map' do
-    it 'should list functions' do
-      func = debugger.function_map["#{puppet_version}::hiera"]
-      expect(debugger.function_map).to be_instance_of(Hash)
-      expect(func).to eq(name: 'hiera', parent: puppet_version)
-    end
-  end
-
   it 'should return a puppet version' do
     expect(puppet_version).to match(/puppet-\d\.\d+.\d/)
   end

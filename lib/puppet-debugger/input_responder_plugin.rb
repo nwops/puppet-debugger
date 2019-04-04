@@ -8,7 +8,7 @@ module PuppetDebugger
       extend Forwardable
       attr_accessor :debugger
       def_delegators :debugger, :scope, :node, :environment, :loaders, :puppet_environment,
-                     :add_hook, :handle_input, :delete_hook, :function_map
+                     :add_hook, :handle_input, :delete_hook, :puppet_lib_dir, :modules_paths
       def_delegators :scope, :compiler, :catalog
       def_delegators :node, :facts
 
@@ -52,6 +52,13 @@ module PuppetDebugger
       # @return the output of the plugin command
       def run(args = [])
         raise NotImplementedError
+      end
+
+      # this is the lib directory of this gem
+      # in order to load any puppet functions from this gem we need to add the lib path
+      # of this gem
+      def puppet_debugger_lib_dir
+        File.expand_path(File.join(File.dirname(File.dirname(File.dirname(__FILE__))), 'lib'))
       end
     end
 end
