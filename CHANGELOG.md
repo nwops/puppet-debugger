@@ -1,5 +1,7 @@
 ## Unreleased
 
+- Fixes native functions not shown in functions command
+
 ## 0.10.3
 
 - Remove warning message about incorrect version

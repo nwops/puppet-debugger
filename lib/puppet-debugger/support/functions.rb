@@ -10,6 +10,7 @@ module PuppetDebugger
         search_dirs = lib_dirs.map do |lib_dir|
           [File.join(lib_dir, 'puppet', 'functions', '**', '*.rb'),
            File.join(lib_dir, 'functions', '**', '*.rb'),
+           File.join(File.dirname(lib_dir), 'functions', '**', '*.pp'),
            File.join(lib_dir, 'puppet', 'parser', 'functions', '*.rb')]
         end
         # add puppet lib directories
@@ -42,14 +43,18 @@ module PuppetDebugger
           @functions = {}
           function_files.each do |file|
             obj = {}
-            name = File.basename(file, '.rb')
-            obj[:name] = name
+            obj[:parent], obj[:name] = parent_name(file)
             # return the last matched in cases where rbenv might be involved
-            obj[:parent] = file.scan(mod_finder).flatten.last
-            @functions["#{obj[:parent]}::#{name}"] = obj
+            @functions["#{obj[:parent]}::#{obj[:name]}"] = obj
           end
         end
         @functions
+      end
+
+      def parent_name(file)
+        parent, name = [file.scan(mod_finder).flatten.last, File.basename(file, File.extname(file))] || begin
+          File.read(file).scan(/function\s(\w+)::([:\w]+)/).captures
+        end
       end
 
       # gather all the lib dirs
