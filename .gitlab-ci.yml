@@ -58,14 +58,13 @@ bump_and_tag:
 #  script:
 #    - "curl -X POST -F token=$PREPL_BUILD_TRIGGER_TOKEN -F ref=$REF https://gitlab.com/api/v3/projects/1146764/trigger/builds"
 
-.ruby_20: &ruby20
-  image: ruby:2.0
-
-.ruby_21: &ruby21
-  image: ruby:2.1
-
 .ruby_22: &ruby22
   image: ruby:2.2
+  script:
+  - gem install bundler -v 1.17.3 > /dev/null
+  - bundle install --without development validate
+  - bundle exec puppet module install puppetlabs-stdlib
+  - bundle exec rake spec
 
 .ruby_23: &ruby23
   image: ruby:2.3
@@ -76,8 +75,12 @@ bump_and_tag:
 .ruby_25: &ruby25
   image: ruby:2.5
 
+
+.ruby_25: &ruby26
+  image: ruby:2.6
+
 gem_production:
-  image: ruby:2.1
+  image: ruby:2.5
   tags:
     - ruby
   before_script:
@@ -88,53 +91,17 @@ gem_production:
   only:
     - tags
 
-puppet_38_ruby20:
-  variables:
-    PUPPET_GEM_VERSION: "~> 3.8.0"
-  <<: *puppet_job_def
-  <<: *ruby20
-
-puppet_38_ruby21:
-  variables:
-    PUPPET_GEM_VERSION: "~> 3.8.0"
-  <<: *puppet_job_def
-  <<: *ruby21
-
-puppet_43_ruby20:
-  variables:
-    PUPPET_GEM_VERSION: "~> 4.3.0"
-  <<: *puppet_job_def
-  <<: *ruby20
-
-puppet_43_ruby21:
-  variables:
-    PUPPET_GEM_VERSION: "~> 4.3.0"
-  <<: *puppet_job_def
-  <<: *ruby21
-
 puppet_43_ruby22:
   variables:
     PUPPET_GEM_VERSION: "~> 4.3.0"
   <<: *puppet_job_def
   <<: *ruby22
 
-puppet_44_ruby21:
-  variables:
-    PUPPET_GEM_VERSION: "~> 4.4.0"
-  <<: *puppet_job_def
-  <<: *ruby21
-
 puppet_44_ruby22:
   variables:
     PUPPET_GEM_VERSION: "~> 4.4.0"
   <<: *puppet_job_def
   <<: *ruby22
-
-puppet_45_ruby21:
-  variables:
-    PUPPET_GEM_VERSION: "~> 4.5.0"
-  <<: *puppet_job_def
-  <<: *ruby21
 
 puppet_46_ruby22:
   variables:
@@ -154,37 +121,6 @@ puppet_410_ruby24:
   <<: *puppet_job_def
   <<: *ruby24
 
-puppet_50_ruby24:
-  variables:
-    PUPPET_GEM_VERSION: "~> 5.0"
-  <<: *puppet_job_def
-  <<: *ruby24
-
-puppet_51_ruby24:
-  variables:
-    PUPPET_GEM_VERSION: "~> 5.1"
-  <<: *puppet_job_def
-  <<: *ruby24
-
-puppet_52_ruby24:
-  variables:
-    PUPPET_GEM_VERSION: "~> 5.2"
-  <<: *puppet_job_def
-  <<: *ruby24
-
-puppet_53_ruby24:
-  variables:
-    PUPPET_GEM_VERSION: "~> 5.3"
-  <<: *puppet_job_def
-  <<: *ruby24
-
-
-puppet_54_ruby24:
-  variables:
-    PUPPET_GEM_VERSION: "~> 5.4"
-  <<: *puppet_job_def
-  <<: *ruby24
-
 puppet_55_ruby24:
   variables:
     PUPPET_GEM_VERSION: "~> 5.5"
@@ -194,5 +130,11 @@ puppet_55_ruby24:
 puppet_60_ruby25:
   variables:
     PUPPET_GEM_VERSION: "~> 6.0"
+  <<: *puppet_job_def
+  <<: *ruby25
+
+puppet_60_ruby25:
+  variables:
+    PUPPET_GEM_VERSION: "~> 6.4"
   <<: *puppet_job_def
   <<: *ruby25
