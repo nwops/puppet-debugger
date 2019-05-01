@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.11.0
+
 - Fixes native functions not shown in functions command
 - Prints functions into a table with proper namespace shown
 - Adds table print gem
