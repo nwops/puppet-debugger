@@ -17,7 +17,7 @@ stages:
     - ruby
 
 web_trigger_staging:
-  type: web_deploy
+  stage: web_deploy
   variables:
     REF: staging
   only:
@@ -37,7 +37,7 @@ rubocop_ruby:
     - bundle exec rubocop -D
 
 bump_and_tag:
-  type: release
+  stage: release
   when: manual
   tags:
     - ruby2.2
@@ -76,7 +76,7 @@ bump_and_tag:
   image: ruby:2.5
 
 
-.ruby_25: &ruby26
+.ruby_26: &ruby26
   image: ruby:2.6
 
 gem_production:
@@ -133,8 +133,8 @@ puppet_60_ruby25:
   <<: *puppet_job_def
   <<: *ruby25
 
-puppet_60_ruby25:
+puppet_60_ruby26:
   variables:
     PUPPET_GEM_VERSION: "~> 6.4"
   <<: *puppet_job_def
-  <<: *ruby25
+  <<: *ruby26
