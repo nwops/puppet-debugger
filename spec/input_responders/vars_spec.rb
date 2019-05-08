@@ -35,4 +35,21 @@ describe :vars do
       expect(plugin.run(args)).to match(debugger_output)
     end
   end
+
+  describe 'list variables' do
+    let(:input) do
+      <<-EOF
+      class test( $param1 = "files", $param2 = $param1 ) {}
+      include test
+      EOF
+    end
+    it 'ls test' do
+      debugger.handle_input(input)
+      out = plugin.run(['test'])
+      expect(out).to include('"param1"')
+      expect(out).to include('"param2"')
+    end
+   
+
+  end
 end

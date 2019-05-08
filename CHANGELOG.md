@@ -1,5 +1,7 @@
 ## Unreleased
 
+- Adds ability to list resource parameters as they were evaluated
+
 ## 0.11.0
 
 - Fixes native functions not shown in functions command
