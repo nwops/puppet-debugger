@@ -225,9 +225,21 @@ describe 'PuppetDebugger' do
     it 'shows type' do
       if Gem::Version.new(Puppet.version) > Gem::Version.new('4.4')
         debugger.handle_input(input)
-        expect(output.string).to eq("\n => Tuple[Integer[1, 1], Integer[2, 2], Integer[3, 3], Integer[4, 4]]\n") if supports_type_function?
+        expect(output.string.strip.split("\n").count).to eq(6)
       end
     end
+  end
+
+  describe 'multi diemension array' do
+    let(:input) do
+      '[[1, [23,4], [22], [1,[2232]]]]'
+    end
+   
+    it 'handles multi array' do
+      debugger.handle_input(input)
+      expect(output.string.count('[')).to eq(17)
+    end
+    
   end
 
   describe 'command_completion' do

@@ -93,25 +93,25 @@ module PuppetDebugger
       # don't return anything or returns nil if item is not in the catalog
     end
 
-    # returns a formatted array
+    # 
+    # @return [Array] - returns a formatted array
+    # @param types [Array] - an array or string
     def expand_resource_type(types)
-      output = [types].flatten.map do |t|
-        if t.class.to_s =~ /Puppet::Pops::Types/
-          to_resource_declaration(t)
-        else
-          t
-        end
-      end
-      output
+      Array(types).flatten.map { |t| contains_resources?(t) ? to_resource_declaration(t) : t }
+    end
+
+    def contains_resources?(result)
+      ! Array(result).flatten.find {|r| r.class.to_s =~ /Puppet::Pops::Types/ }.nil?
     end
 
     def normalize_output(result)
-      if result.instance_of?(Array)
+      if contains_resources?(result)
         output = expand_resource_type(result)
+        # the results might be wrapped into an array
+        # if the only output is a resource then return it
+        # otherwise it is multiple items or an actually array
         return output.first if output.count == 1
         return output
-      elsif result.class.to_s =~ /Puppet::Pops::Types/
-        return to_resource_declaration(result)
       end
       result
     end
