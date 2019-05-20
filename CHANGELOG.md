@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.12.0
+
 - Adds ability to list resource parameters as they were evaluated
 - Fixes #61 - array output is misleading
 
