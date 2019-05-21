@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
-require 'puppet'
-require 'readline'
-require 'json'
-require 'puppet-debugger/support'
-require 'pluginator'
-require 'puppet-debugger/hooks'
-require 'forwardable'
+require "puppet"
+require "readline"
+require "json"
+require "puppet-debugger/support"
+require "pluginator"
+require "puppet-debugger/hooks"
+require "forwardable"
+require "plugins/puppet-debugger/input_responders/functions"
+require "plugins/puppet-debugger/input_responders/datatypes"
 
 module PuppetDebugger
   class Cli
@@ -23,19 +25,19 @@ module PuppetDebugger
       Puppet[:static_catalogs] = false unless Puppet.settings[:static_catalogs].nil?
       set_remote_node_name(options[:node_name])
       initialize_from_scope(options[:scope])
-      @log_level = 'notice'
+      @log_level = "notice"
       @out_buffer = options[:out_buffer] || $stdout
       @html_mode = options[:html_mode] || false
       @source_file = options[:source_file] || nil
       @source_line_num = options[:source_line] || nil
       @in_buffer = options[:in_buffer] || $stdin
-      Readline.completion_append_character = ''
-      Readline.basic_word_break_characters = ' '
+      Readline.completion_append_character = ""
+      Readline.basic_word_break_characters = " "
       Readline.completion_proc = command_completion
       AwesomePrint.defaults = {
         html: @html_mode,
         sort_keys: true,
-        indent: 2
+        indent: 2,
       }
     end
 
@@ -48,7 +50,7 @@ module PuppetDebugger
         next key_words.grep(/^#{Regexp.escape(input)}/) if words.empty?
         first_word = words.shift
         plugins = PuppetDebugger::InputResponders::Commands.plugins.find_all do |p|
-          p::COMMAND_WORDS.find { |word| word.start_with?(first_word)}
+          p::COMMAND_WORDS.find { |word| word.start_with?(first_word) }
         end
         if plugins.count == 1 and /\A#{first_word}\s/.match(Readline.line_buffer)
           plugins.first.command_completion(words)
@@ -69,6 +71,7 @@ module PuppetDebugger
       variables = scope.to_hash.keys
       # prepend a :: to topscope variables
       scoped_vars = variables.map { |k, _v| scope.compiler.topscope.exist?(k) ? "$::#{k}" : "$#{k}" }
+      PuppetDebugger::InputResponders::Functions.instance.debugger = self
       funcs = PuppetDebugger::InputResponders::Functions.instance.func_list
       PuppetDebugger::InputResponders::Datatypes.instance.debugger = self
       (scoped_vars + funcs + static_responder_list + PuppetDebugger::InputResponders::Datatypes.instance.all_data_types).uniq.sort
@@ -93,7 +96,7 @@ module PuppetDebugger
       # don't return anything or returns nil if item is not in the catalog
     end
 
-    # 
+    #
     # @return [Array] - returns a formatted array
     # @param types [Array] - an array or string
     def expand_resource_type(types)
@@ -101,7 +104,7 @@ module PuppetDebugger
     end
 
     def contains_resources?(result)
-      ! Array(result).flatten.find {|r| r.class.to_s =~ /Puppet::Pops::Types/ }.nil?
+      !Array(result).flatten.find { |r| r.class.to_s =~ /Puppet::Pops::Types/ }.nil?
     end
 
     def normalize_output(result)
@@ -125,21 +128,21 @@ module PuppetDebugger
     def handle_input(input)
       raise ArgumentError unless input.instance_of?(String)
       begin
-        output = ''
+        output = ""
         case input.strip
         when PuppetDebugger::InputResponders::Commands.command_list_regex
-          args = input.split(' ')
+          args = input.split(" ")
           command = args.shift
           plugin = PuppetDebugger::InputResponders::Commands.plugin_from_command(command)
           output = plugin.execute(args, self)
           return out_buffer.puts output
-        when '_'
+        when "_"
           output = " => #{@last_item}"
         else
           result = puppet_eval(input)
           @last_item = result
           output = normalize_output(result)
-          output = output.nil? ? '' : output.ai
+          output = output.nil? ? "" : output.ai
         end
       rescue PuppetDebugger::Exception::InvalidCommand => e
         output = e.message.fatal
@@ -167,7 +170,7 @@ module PuppetDebugger
         exit 1
       end
       unless output.empty?
-        out_buffer.print ' => '
+        out_buffer.print " => "
         out_buffer.puts output unless output.empty?
         exec_hook :after_output, out_buffer, self, self
       end
@@ -206,7 +209,7 @@ or "help" to show the help screen.
     # input
     def read_loop
       line_number = 1
-      full_buffer = ''
+      full_buffer = ""
       while buf = Readline.readline("#{line_number}:#{extra_prompt}>> ", true)
         begin
           full_buffer += buf
@@ -217,14 +220,14 @@ or "help" to show the help screen.
               parser.parse_string(full_buffer)
             rescue Puppet::ParseErrorWithIssue => e
               if multiline_input?(e)
-                out_buffer.print '  '
+                out_buffer.print "  "
                 full_buffer += "\n"
                 next
               end
             end
           end
           handle_input(full_buffer)
-          full_buffer = ''
+          full_buffer = ""
         end
       end
     end
@@ -239,7 +242,7 @@ or "help" to show the help screen.
       repl_obj = PuppetDebugger::Cli.new(options)
       options[:play] = options[:play].path if options[:play].respond_to?(:path)
       # TODO: make the output optional so we can have different output destinations
-      repl_obj.handle_input('whereami') if options[:source_file] && options[:source_line]
+      repl_obj.handle_input("whereami") if options[:source_file] && options[:source_line]
       repl_obj.handle_input("play #{options[:play]}") if options[:play]
       repl_obj.read_loop unless options[:run_once]
     end
@@ -250,10 +253,10 @@ or "help" to show the help screen.
     # @param [Hash] puppet scope object
     def self.start(options = { scope: nil })
       opts = Trollop.options do
-        opt :play, 'Url or file to load from', required: false, type: String
-        opt :run_once, 'Evaluate and quit', required: false, default: false
-        opt :node_name, 'Remote Node to grab facts from', required: false, type: String
-        opt :quiet, 'Do not display banner', required: false, default: false
+        opt :play, "Url or file to load from", required: false, type: String
+        opt :run_once, "Evaluate and quit", required: false, default: false
+        opt :node_name, "Remote Node to grab facts from", required: false, type: String
+        opt :quiet, "Do not display banner", required: false, default: false
       end
       options = opts.merge(options)
       puts print_repl_desc unless options[:quiet]
@@ -261,11 +264,11 @@ or "help" to show the help screen.
       repl_obj = PuppetDebugger::Cli.new(options)
       if options[:play]
         repl_obj.handle_input("play #{options[:play]}")
-      elsif ARGF.filename != '-'
+      elsif ARGF.filename != "-"
         # when the user supplied a file name without using the args (stdin)
         path = File.expand_path(ARGF.filename)
         repl_obj.handle_input("play #{path}")
-      elsif (ARGF.filename == '-') && (!STDIN.tty? && !STDIN.closed?)
+      elsif (ARGF.filename == "-") && (!STDIN.tty? && !STDIN.closed?)
         # when the user supplied a file content using stdin, aka. cat,pipe,echo or redirection
         input = ARGF.read
         repl_obj.handle_input(input)

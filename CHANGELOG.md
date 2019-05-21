@@ -1,5 +1,9 @@
 ## Unreleased
 
+## 0.12.1
+
+- Fixes issue with command completion
+
 ## 0.12.0
 
 - Adds ability to list resource parameters as they were evaluated

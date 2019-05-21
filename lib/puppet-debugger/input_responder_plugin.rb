@@ -8,13 +8,17 @@ module PuppetDebugger
       extend Forwardable
       attr_accessor :debugger
       def_delegators :debugger, :scope, :node, :environment, :loaders, :puppet_environment,
-                     :add_hook, :handle_input, :delete_hook, :puppet_lib_dir, :modules_paths
+                     :add_hook, :handle_input, :delete_hook, :puppet_lib_dir
       def_delegators :scope, :compiler, :catalog
       def_delegators :node, :facts
 
       # @return [Array[String]] an array of words the user can call the command with
       def self.command_words
         self::COMMAND_WORDS
+      end
+
+      def modules_paths
+        debugger.puppet_environment.full_modulepath
       end
 
       # @return [String] a summary of the plugin
