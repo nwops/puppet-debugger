@@ -164,7 +164,7 @@ module PuppetDebugger
         exit 1 # this can sometimes causes tests to fail
       rescue PuppetDebugger::Exception::Error => e
         output = e.message.fatal
-      rescue RuntimeException => e
+      rescue ::RuntimeError => e
         output = e.message.fatal
         out_buffer.puts output
         exit 1
