@@ -3,6 +3,7 @@
 ## 0.12.1
 
 - Fixes issue with command completion
+- Fixes unqualified runtime error
 
 ## 0.12.0
 
