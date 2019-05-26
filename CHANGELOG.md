@@ -1,5 +1,9 @@
 ## Unreleased
 
+## 0.12.2
+
+- Fixes incorrect puppet namespace when list functions
+
 ## 0.12.1
 
 - Fixes issue with command completion
