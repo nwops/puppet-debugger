@@ -44,7 +44,7 @@ bump_and_tag:
   only:
     - master@puppet-debugger/puppet-debugger
   script:
-    - gem install release_me 
+    - gem install release_me
     - bump_and_tag
 
 #web_trigger_production:
@@ -61,10 +61,10 @@ bump_and_tag:
 .ruby_22: &ruby22
   image: ruby:2.2
   script:
-  - gem install bundler -v 1.17.3 > /dev/null
-  - bundle install --without development validate
-  - bundle exec puppet module install puppetlabs-stdlib
-  - bundle exec rake spec
+    - gem install bundler -v 1.17.3 > /dev/null
+    - bundle install --without development validate
+    - bundle exec puppet module install puppetlabs-stdlib
+    - bundle exec rake spec
 
 .ruby_23: &ruby23
   image: ruby:2.3
@@ -74,7 +74,6 @@ bump_and_tag:
 
 .ruby_25: &ruby25
   image: ruby:2.5
-
 
 .ruby_26: &ruby26
   image: ruby:2.6
@@ -91,33 +90,9 @@ gem_production:
   only:
     - tags
 
-puppet_43_ruby22:
-  variables:
-    PUPPET_GEM_VERSION: "~> 4.3.0"
-  <<: *puppet_job_def
-  <<: *ruby22
-
-puppet_44_ruby22:
-  variables:
-    PUPPET_GEM_VERSION: "~> 4.4.0"
-  <<: *puppet_job_def
-  <<: *ruby22
-
-puppet_46_ruby22:
-  variables:
-    PUPPET_GEM_VERSION: "~> 4.6.0"
-  <<: *puppet_job_def
-  <<: *ruby22
-
-puppet_47_ruby22:
-  variables:
-    PUPPET_GEM_VERSION: "~> 4.7.0"
-  <<: *puppet_job_def
-  <<: *ruby22
-
 puppet_410_ruby24:
   variables:
-    PUPPET_GEM_VERSION: "~> 4.10.0"
+    PUPPET_GEM_VERSION: "~> 4.10"
   <<: *puppet_job_def
   <<: *ruby24
 
@@ -127,13 +102,13 @@ puppet_55_ruby24:
   <<: *puppet_job_def
   <<: *ruby24
 
-puppet_60_ruby25:
+puppet_63_ruby25:
   variables:
     PUPPET_GEM_VERSION: "~> 6.0"
   <<: *puppet_job_def
   <<: *ruby25
 
-puppet_60_ruby26:
+puppet_64_ruby26:
   variables:
     PUPPET_GEM_VERSION: "~> 6.4"
   <<: *puppet_job_def
