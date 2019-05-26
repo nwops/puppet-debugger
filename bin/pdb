@@ -3,5 +3,5 @@
 
 require 'puppet-debugger'
 
-puts "The debugger pdb command will be removed in a future release please use puppet-debugger or puppet debugger instead".warning
+puts 'The debugger pdb command will be removed in a future release please use puppet-debugger or puppet debugger instead'.warning
 PuppetDebugger::Cli.start

@@ -34,7 +34,7 @@ end
 
 desc 'Creates generic input_responder spec files'
 task :make_input_responder_tests do
-  files =  Dir.glob("lib/plugins/**/*.rb")
+  files = Dir.glob("lib/plugins/**/*.rb")
   new_files = files.collect do |pathname|
     orig_file = File.basename(pathname, ".*")
     test_file = File.join('spec', 'input_responders', "#{orig_file}_spec.rb")

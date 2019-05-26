@@ -69,9 +69,9 @@ module PuppetDebugger
       def self.plugin_from_command(name)
         p = plugins.find {|p| p::COMMAND_WORDS.include?(name)}
         raise PuppetDebugger::Exception::InvalidCommand.new(message: "invalid command #{name}") unless p
+
         p
       end
-
     end
   end
 end

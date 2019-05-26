@@ -18,6 +18,7 @@ module PuppetDebugger
 
       def find_resources(resources, filter = [])
         return resources if filter.nil? || filter.empty?
+
         filter_string = filter.join(' ').downcase
         resources.find_all do |resource|
           resource.name.to_s.downcase.include?(filter_string) || resource.type.to_s.downcase.include?(filter_string)

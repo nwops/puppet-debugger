@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'puppet-debugger/input_responder_plugin'
 
@@ -28,9 +30,9 @@ describe :input_responder_plugin do
     expect(plugin.run([])).to eq([])
   end
 
-  {scope: Puppet::Parser::Scope, node: Puppet::Node, facts: Puppet::Node::Facts,
-   environment: Puppet::Node::Environment,
-  compiler: Puppet::Parser::Compiler, catalog: Puppet::Resource::Catalog}.each do |name, klass|
+  { scope: Puppet::Parser::Scope, node: Puppet::Node, facts: Puppet::Node::Facts,
+    environment: Puppet::Node::Environment,
+    compiler: Puppet::Parser::Compiler, catalog: Puppet::Resource::Catalog }.each do |name, klass|
     it "can access #{name}" do
       expect(plugin.send(name).class).to be klass
     end
@@ -41,5 +43,4 @@ describe :input_responder_plugin do
       expect(plugin.respond_to?(name)).to eq(true)
     end
   end
-
 end

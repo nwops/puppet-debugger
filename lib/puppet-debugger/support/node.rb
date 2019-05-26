@@ -32,6 +32,7 @@ module PuppetDebugger
           # Collect our facts.
           facts = Puppet::Node::Facts.indirection.find(Puppet[:node_name_value])
           raise "Could not find facts for #{Puppet[:node_name_value]}" unless facts
+
           Puppet[:node_name_value] = facts.values[Puppet[:node_name_fact]]
           facts.name = Puppet[:node_name_value]
         end
@@ -39,6 +40,7 @@ module PuppetDebugger
           # Find our Node
           node = Puppet::Node.indirection.find(Puppet[:node_name_value])
           raise "Could not find node #{Puppet[:node_name_value]}" unless node
+
           # Merge in the facts.
           node.merge(facts.values) if facts
         end

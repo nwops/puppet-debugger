@@ -34,7 +34,6 @@ module PuppetDebugger
           'On'
         end
       end
-
     end
   end
 end

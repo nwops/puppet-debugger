@@ -48,12 +48,14 @@ class DebuggerCode
     # @return [Integer]
     def find_start_index(lines)
       return start_line if start_line < 0
+
       lines.index { |loc| loc.lineno >= start_line } || lines.length
     end
 
     # @return [Integer]
     def find_end_index(lines)
       return end_line if end_line < 0
+
       (lines.index { |loc| loc.lineno > end_line } || 0) - 1
     end
 

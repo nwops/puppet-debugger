@@ -21,7 +21,6 @@ describe :datatypes do
     else
       expect(plugin.all_data_types.count).to be >= 30 if supports_datatypes?
     end
-
   end
 
   it 'returns environment datatypes' do

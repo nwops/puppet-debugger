@@ -30,7 +30,7 @@ def matrix
   unless @matrix
     @matrix = {}
     ci_data.each do |id, data|
-      @matrix[id] = data if id =~ /^puppet/
+      @matrix[id] = data if id.match?(/^puppet/)
     end
   end
   @matrix

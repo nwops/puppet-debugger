@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 source 'http://rubygems.org'
 gem 'awesome_print', '~> 1.7'
 gem 'facterdb', '>= 0.5.0'
-gem 'puppet', ENV['PUPPET_GEM_VERSION'] || '>= 5.5'
 gem 'pluginator', '~> 1.5.0'
+gem 'puppet', ENV['PUPPET_GEM_VERSION'] || '>= 5.5'
 gem 'rb-readline'
 gem 'table_print'
 gem 'tty-pager'
@@ -17,8 +18,8 @@ group :test, :development do
   gem 'rdoc', '~> 3.12'
   gem 'release_me'
   gem 'rspec', '~> 3.6'
+  gem 'rubocop'
+  gem 'rubocop-performance'
+  gem 'rubocop-rspec'
   gem 'simplecov', '>= 0'
-  gem 'rubocop', '= 0.48.0'
-
 end
-

@@ -9,8 +9,6 @@ module PuppetDebugger
       end
     end
 
-
-
     class FatalError < Error
     end
 
@@ -24,7 +22,7 @@ module PuppetDebugger
       def message
         out = <<-EOF
 #{data[:message]}
-EOF
+        EOF
       end
     end
 
@@ -38,7 +36,7 @@ EOF
       def message
         out = <<-EOF
 Cannot find node with name: #{data[:name]} on remote server
-    EOF
+        EOF
       end
     end
 
@@ -53,7 +51,7 @@ Cannot find node with name: #{data[:name]} on remote server
 You are missing puppet classes that are required for compilation.
 Please ensure these classes are installed on this machine in any of the following paths:
 #{data[:default_modules_paths]}
-EOF
+        EOF
       end
     end
 
@@ -66,7 +64,7 @@ Please ensure you have at least the following default node definition
     # include classes here
   }
 in your #{data[:default_site_manifest]} file.
-EOF
+        EOF
         out.fatal
       end
     end
@@ -76,7 +74,7 @@ EOF
         out = <<-EOF
 #{data[:message]}
 You will need to edit your auth.conf or conf.d/auth.conf (puppetserver) to allow node calls.
-EOF
+        EOF
     end
     end
   end

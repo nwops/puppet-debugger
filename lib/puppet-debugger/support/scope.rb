@@ -14,11 +14,13 @@ module PuppetDebugger
 
       def get_catalog_text(c)
         return nil unless c
+
         Puppet::FileSystem.read(c, :encoding => 'utf-8')
       end
 
       def set_catalog(catalog_file)
           return unless catalog_file
+
           catalog_text = get_catalog_text(catalog_file)
           scope # required 
           Puppet.override({:current_environment => environment}, _("For puppet debugger")) do      

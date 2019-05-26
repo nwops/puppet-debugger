@@ -14,6 +14,7 @@ module PuppetDebugger
 
       def find_datatypes(datatypes, filter = [])
         return datatypes if filter.nil? || filter.empty?
+
         filter_string = filter.join(' ').downcase
         datatypes.find_all do |datatype|
           datatype.downcase.include?(filter_string)
@@ -27,6 +28,7 @@ module PuppetDebugger
         files.map do |f|
           m = File.read(f).match(/type\s([a-z\d\:_]+)/i)
           next if m =~ /type|alias/ # can't figure out the best way to filter type and alias out
+
           m[1] if m && m[1] =~ /::/
         end.uniq.compact
       end
@@ -46,7 +48,6 @@ module PuppetDebugger
         end
         core_datatypes + environment_data_types
       end
-
     end
   end
 end

@@ -5,7 +5,7 @@ require "awesome_print/ext/awesome_puppet"
 RSpec.describe do
     let(:output) do
         StringIO.new
-      end
+    end
     
       let(:debugger) do
         PuppetDebugger::Cli.new(options)
@@ -13,7 +13,7 @@ RSpec.describe do
     
       let(:options) do
         {
-            out_buffer: output
+          out_buffer: output
         }
       end
     
@@ -32,6 +32,4 @@ RSpec.describe do
       it 'outputs awesomely' do
         expect(ral_type.ai).to include('ff:gg')
       end
-
-
 end

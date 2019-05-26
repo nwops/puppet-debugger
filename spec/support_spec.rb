@@ -61,6 +61,4 @@ describe 'support' do
     expect(debugger.node.facts.values).to be_instance_of(Hash)
     expect(debugger.node.facts.values['fqdn']).to eq('foo.example.com')
   end
-
-
 end

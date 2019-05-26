@@ -19,6 +19,7 @@ module PuppetDebugger
           Puppet::Type.loadall
           Puppet::Type.eachtype do |t|
             next if t.name == :component
+
             loaded_types << t.name.to_s
           end
           loaded_types.ai
@@ -27,6 +28,7 @@ module PuppetDebugger
           Puppet.info(e.message)
           # prevent more than two calls and recursive loop
           return if caller_locations(1, 10).find_all { |f| f.label == 'types' }.count > 2
+
           types
         end
       end

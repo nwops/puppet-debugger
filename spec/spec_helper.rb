@@ -37,10 +37,10 @@ def stdlib_path
 end
 
 def install_stdlib
-  `bundle exec puppet module install puppetlabs/stdlib` unless File.exists?(stdlib_path)
+  `bundle exec puppet module install puppetlabs/stdlib` unless File.exist?(stdlib_path)
 end
 
-#install_stdlib
+# install_stdlib
 
 def fixtures_dir
   File.join(File.dirname(__FILE__), 'fixtures')
@@ -61,7 +61,6 @@ end
 def supports_datatypes?
   Gem::Version.new(Puppet.version) >= Gem::Version.new('4.5')
 end
-
 
 RSpec.configure do |config|
   config.filter_run_excluding native_functions: !supports_native_functions?

@@ -41,7 +41,6 @@ module PuppetDebugger
           resource.name.to_s.downcase.include?(filter_string) || resource.type.to_s.downcase.include?(filter_string)
         end
       end
-
     end
   end
 end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # lib/trollop.rb -- trollop command-line processing library
 # Copyright (c) 2008-2014 William Morgan.
 # Copyright (c) 2014 Red Hat, Inc.
@@ -164,6 +165,7 @@ module Trollop
         when nil then nil
         else
           raise ArgumentError, "unsupported argument type '#{opts[:type]}'" unless TYPES.include?(opts[:type])
+
           opts[:type]
         end
 
@@ -190,6 +192,7 @@ module Trollop
           if opts[:default].empty?
             if opts[:type]
               raise ArgumentError, 'multiple argument type must be plural' unless MULTI_ARG_TYPES.include?(opts[:type])
+
               nil
             else
               raise ArgumentError, "multiple argument type cannot be deduced from an empty array for '#{opts[:default][0].class.name}'"
@@ -413,6 +416,7 @@ module Trollop
         opts = @specs[sym]
         if params.empty? && opts[:type] != :flag
           raise CommandlineError, "option '#{arg}' needs a parameter" unless opts[:default]
+
           params << (opts[:default].is_a?(Array) ? opts[:default].clone : [opts[:default]])
         end
 
@@ -602,6 +606,7 @@ module Trollop
 
       until i >= args.length
         return remains += args[i..-1] if @stop_words.member? args[i]
+
         case args[i]
         when /^--$/ # arg terminator
           return remains += args[(i + 1)..-1]
@@ -662,11 +667,13 @@ module Trollop
 
     def parse_integer_parameter(param, arg)
       raise CommandlineError, "option '#{arg}' needs an integer" unless param =~ /^-?[\d_]+$/
+
       param.to_i
     end
 
     def parse_float_parameter(param, arg)
       raise CommandlineError, "option '#{arg}' needs a floating-point number" unless param =~ FLOAT_RE
+
       param.to_f
     end
 

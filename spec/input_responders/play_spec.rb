@@ -96,7 +96,6 @@ describe :play do
 
   describe 'multiple lines of input' do
     before(:each) do
-
     end
     describe '3 lines' do
       let(:input) do

@@ -29,23 +29,23 @@ module PuppetDebugger
         require 'uri'
         url_data = URI(url)
         case url_data.host
-          when /^gist\.github*/
-            url = url += '.txt' unless url_data.path =~ /raw/
+        when /^gist\.github*/
+          url = url += '.txt' unless url_data.path =~ /raw/
             url
-          when /^github.com/
-            url.gsub('blob', 'raw') if url_data.path =~ /blob/
-          when /^gist.github.com/
-            url = url += '.txt' unless url_data.path =~ /raw/
+        when /^github.com/
+          url.gsub('blob', 'raw') if url_data.path =~ /blob/
+        when /^gist.github.com/
+          url = url += '.txt' unless url_data.path =~ /raw/
             url
-          when /^gitlab.com/
-            if url_data.path =~ /snippets/
-              url += '/raw' unless url_data.path =~ /raw/
-              url
-            else
-              url.gsub('blob', 'raw')
-            end
+        when /^gitlab.com/
+          if url_data.path =~ /snippets/
+            url += '/raw' unless url_data.path =~ /raw/
+            url
           else
-            url
+            url.gsub('blob', 'raw')
+          end
+        else
+          url
         end
       end
 

@@ -1,4 +1,3 @@
-
 # frozen_string_literal: true
 
 class CodeFile
@@ -10,18 +9,18 @@ class CodeFile
   # List of all supported languages.
   # @return [Hash]
   EXTENSIONS = {
-    %w[.py]        => :python,
-    %w[.js]        => :javascript,
-    %w[.pp]        => :puppet,
-    %w[.css]       => :css,
-    %w[.xml]       => :xml,
-    %w[.php]       => :php,
-    %w[.html]      => :html,
-    %w[.diff]      => :diff,
-    %w[.java]      => :java,
-    %w[.json]      => :json,
-    %w[.c .h]      => :c,
-    %w[.rhtml]     => :rhtml,
+    %w[.py] => :python,
+    %w[.js] => :javascript,
+    %w[.pp] => :puppet,
+    %w[.css] => :css,
+    %w[.xml] => :xml,
+    %w[.php] => :php,
+    %w[.html] => :html,
+    %w[.diff] => :diff,
+    %w[.java] => :java,
+    %w[.json] => :json,
+    %w[.c .h] => :c,
+    %w[.rhtml] => :rhtml,
     %w[.yaml .yml] => :yaml,
     %w[.cpp .hpp .cc .h cxx] => :cpp,
     %w[.rb .ru .irbrc .gemspec .pryrc] => :ruby
@@ -44,7 +43,7 @@ class CodeFile
     File.read(path)
   end
 
-  private
+    private
 
   # @raise [MethodSource::SourceNotFoundError] if the `filename` is not
   #   readable for some reason.

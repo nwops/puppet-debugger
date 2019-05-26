@@ -164,6 +164,7 @@ class DebuggerCode
   # @return [Code]
   def grep(pattern)
     return self unless pattern
+
     pattern = Regexp.new(pattern)
 
     select do |loc|
@@ -238,6 +239,7 @@ class DebuggerCode
 
   def add_file_reference
     return "From inline code: \n" unless filename
+
     "From file: #{File.basename(filename)}\n"
   end
 

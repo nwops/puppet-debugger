@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'spec_helper'
 
 describe PuppetDebugger::Hooks do
@@ -12,8 +14,8 @@ describe PuppetDebugger::Hooks do
   let(:debugger) do
     PuppetDebugger::Cli.new(out_buffer: output)
   end
-  
-  describe "adding a new hook" do
+
+  describe 'adding a new hook' do
     it 'should not execute hook while adding it' do
       run = false
       @hooks.add_hook(:test_hook, :my_name) { run = true }
@@ -27,12 +29,12 @@ describe PuppetDebugger::Hooks do
     end
 
     it 'should create a new hook with a block' do
-      @hooks.add_hook(:test_hook, :my_name) { }
+      @hooks.add_hook(:test_hook, :my_name) {}
       expect(@hooks.hook_count(:test_hook)).to eq 1
     end
 
     it 'should create a new hook with a callable' do
-      @hooks.add_hook(:test_hook, :my_name, proc { })
+      @hooks.add_hook(:test_hook, :my_name, proc {})
       expect(@hooks.hook_count(:test_hook)).to eq 1
     end
 
@@ -61,8 +63,8 @@ describe PuppetDebugger::Hooks do
     end
   end
 
-  describe "PuppetDebugger::Hooks#merge" do
-    describe "merge!" do
+  describe 'PuppetDebugger::Hooks#merge' do
+    describe 'merge!' do
       it 'should merge in the PuppetDebugger::Hooks' do
         h1 = PuppetDebugger::Hooks.new.add_hook(:test_hook, :testing) {}
         h2 = PuppetDebugger::Hooks.new
@@ -101,22 +103,19 @@ describe PuppetDebugger::Hooks do
       end
 
       it 'should preserve hook order' do
-        name = ""
+        test_hook_name = String.new
         h1 = PuppetDebugger::Hooks.new
-        h1.add_hook(:test_hook, :testing3) { name << "h" }
-        h1.add_hook(:test_hook, :testing4) { name << "n" }
+        h1.add_hook(:test_hook, :testing3) { test_hook_name << 'h' }
+        h1.add_hook(:test_hook, :testing4) { test_hook_name << 'n' }
 
         h2 = PuppetDebugger::Hooks.new
-        h2.add_hook(:test_hook, :testing1) { name << "j" }
-        h2.add_hook(:test_hook, :testing2) { name << "o" }
-
+        h2.add_hook(:test_hook, :testing1) { test_hook_name << 'j' }
+        h2.add_hook(:test_hook, :testing2) { test_hook_name << 'o' }
         h2.merge!(h1)
-        h2.exec_hook(:test_hook)
-
-        expect(name).to eq "john"
+        expect(h2.exec_hook(:test_hook)).to eq 'john'
       end
 
-      describe "merge" do
+      describe 'merge' do
         it 'should return a fresh, independent instance' do
           h1 = PuppetDebugger::Hooks.new.add_hook(:test_hook, :testing) {}
           h2 = PuppetDebugger::Hooks.new
@@ -146,11 +145,10 @@ describe PuppetDebugger::Hooks do
           expect(h2.get_hook(:test_hook3, :testing)).to eq nil
         end
       end
-
     end
   end
 
-  describe "dupping a PuppetDebugger::Hooks instance" do
+  describe 'dupping a PuppetDebugger::Hooks instance' do
     it 'should share hooks with original' do
       @hooks.add_hook(:test_hook, :testing) do
         :none_such
@@ -177,11 +175,10 @@ describe PuppetDebugger::Hooks do
 
       expect(hooks_dup.get_hook(:test_hook, :testing2)).not_to eq @hooks.get_hook(:test_hook, :testing2)
     end
-
   end
 
-  describe "getting hooks" do
-    describe "get_hook" do
+  describe 'getting hooks' do
+    describe 'get_hook' do
       it 'should return the correct requested hook' do
         run = false
         fun = false
@@ -197,7 +194,7 @@ describe PuppetDebugger::Hooks do
       end
     end
 
-    describe "get_hooks" do
+    describe 'get_hooks' do
       it 'should return a hash of hook names/hook functions for an event' do
         hook1 = proc { 1 }
         hook2 = proc { 2 }
@@ -215,17 +212,17 @@ describe PuppetDebugger::Hooks do
     end
   end
 
-  describe "clearing all hooks for an event" do
+  describe 'clearing all hooks for an event' do
     it 'should clear all hooks' do
-      @hooks.add_hook(:test_hook, :my_name) { }
-      @hooks.add_hook(:test_hook, :my_name2) { }
-      @hooks.add_hook(:test_hook, :my_name3) { }
+      @hooks.add_hook(:test_hook, :my_name) {}
+      @hooks.add_hook(:test_hook, :my_name2) {}
+      @hooks.add_hook(:test_hook, :my_name3) {}
       @hooks.clear_event_hooks(:test_hook)
       expect(@hooks.hook_count(:test_hook)).to eq 0
     end
   end
 
-  describe "deleting a hook" do
+  describe 'deleting a hook' do
     it 'should successfully delete a hook' do
       @hooks.add_hook(:test_hook, :my_name) {}
       @hooks.delete_hook(:test_hook, :my_name)
@@ -244,7 +241,7 @@ describe PuppetDebugger::Hooks do
     end
   end
 
-  describe "executing a hook" do
+  describe 'executing a hook' do
     it 'should execute block hook' do
       run = false
       @hooks.add_hook(:test_hook, :my_name) { run = true }
@@ -264,7 +261,9 @@ describe PuppetDebugger::Hooks do
         obj.instance_variable_set(:@test_var, nil)
         class << obj
           attr_accessor :test_var
-          def call() @test_var = true; end
+          def call
+            @test_var = true
+          end
         end
       end
 
@@ -304,7 +303,7 @@ describe PuppetDebugger::Hooks do
       @hooks.add_hook(:test_hook, :foo2) { raise 'two' }
       @hooks.add_hook(:test_hook, :foo3) { raise 'three' }
       @hooks.exec_hook(:test_hook)
-      expect(@hooks.errors.map(&:message)).to eq ['one', 'two', 'three']
+      expect(@hooks.errors.map(&:message)).to eq %w[one two three]
     end
 
     it 'should return the last exception raised as the return value' do
@@ -315,15 +314,15 @@ describe PuppetDebugger::Hooks do
     end
   end
 
-  describe "anonymous hooks" do
+  describe 'anonymous hooks' do
     it 'should allow adding of hook without a name' do
       @hooks.add_hook(:test_hook, nil) {}
       expect(@hooks.hook_count(:test_hook)).to eq 1
     end
 
     it 'should only allow one anonymous hook to exist' do
-      @hooks.add_hook(:test_hook, nil) {  }
-      @hooks.add_hook(:test_hook, nil) {  }
+      @hooks.add_hook(:test_hook, nil) {}
+      @hooks.add_hook(:test_hook, nil) {}
       expect(@hooks.hook_count(:test_hook)).to eq 1
     end
 
@@ -337,5 +336,4 @@ describe PuppetDebugger::Hooks do
       expect(x).to eq 2
     end
   end
-
 end

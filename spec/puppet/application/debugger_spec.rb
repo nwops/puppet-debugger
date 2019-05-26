@@ -109,8 +109,8 @@ $var1
       end
       it 'list resources in catalog' do
         allow(debugger).to receive(:options).and_return(code: "resources",
-          quiet: true, run_once: true, use_facterdb: true, 
-          catalog: File.expand_path(File.join(fixtures_dir, 'pe-xl-core-0.puppet.vm.json')))
+                                                        quiet: true, run_once: true, use_facterdb: true, 
+                                                        catalog: File.expand_path(File.join(fixtures_dir, 'pe-xl-core-0.puppet.vm.json')))
         expect { debugger.run_command }.to output(/Puppet_enterprise/).to_stdout
       end
     end

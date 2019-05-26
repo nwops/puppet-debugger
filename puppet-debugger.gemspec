@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative 'lib/puppet-debugger/version'
 require 'date'
 
@@ -31,15 +32,14 @@ Gem::Specification.new do |s|
   s.licenses = ["MIT"]
   s.rubygems_version = "2.4.5.1"
   s.summary = "A repl based debugger for the puppet language"
-  s.add_runtime_dependency(%q<table_print>, [">= 1.0.0"])
-  s.add_runtime_dependency(%q<pluginator>, ["~> 1.5.0"])
-  s.add_runtime_dependency(%q<rb-readline>, ['>= 0.5.5'])
-  s.add_runtime_dependency(%q<puppet>, [">= 5.5"])
-  s.add_runtime_dependency(%q<facterdb>, [">= 0.4.0"])
   s.add_runtime_dependency(%q<awesome_print>, ["~> 1.7"])
   s.add_runtime_dependency(%q<bundler>)
+  s.add_runtime_dependency(%q<facterdb>, [">= 0.4.0"])
+  s.add_runtime_dependency(%q<pluginator>, ["~> 1.5.0"])
+  s.add_runtime_dependency(%q<puppet>, [">= 5.5"])
+  s.add_runtime_dependency(%q<rb-readline>, ['>= 0.5.5'])
+  s.add_runtime_dependency(%q<table_print>, [">= 1.0.0"])
   s.add_runtime_dependency(%q<tty-pager>, ['~> 0.13.0'])
   s.add_development_dependency(%q<rdoc>, ["~> 3.12"])
   s.add_development_dependency(%q<rspec>, ["~> 3.6"])
-
 end

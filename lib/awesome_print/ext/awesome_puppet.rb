@@ -52,6 +52,7 @@ module AwesomePrint
 
     def awesome_puppet_resource(object)
       return '' if object.nil?
+
       resource_object = object.to_ral
       awesome_puppet_type(resource_object)
     end
@@ -59,6 +60,7 @@ module AwesomePrint
     def awesome_puppet_type(object)
       return '' if object.nil?
       return object.to_s unless object.respond_to?(:name) && object.respond_to?(:title) && object.respond_to?(:to_hash)
+
       if Array.new.respond_to?(:to_h)
         # to_h is only supported in ruby 2.1+
         h = object.to_hash.merge(name: object.name, title: object.title).sort.to_h

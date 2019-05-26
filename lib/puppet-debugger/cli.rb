@@ -50,6 +50,7 @@ module PuppetDebugger
       proc do |input|
         words = Readline.line_buffer.split(Readline.basic_word_break_characters)
         next key_words.grep(/^#{Regexp.escape(input)}/) if words.empty?
+
         first_word = words.shift
         plugins = PuppetDebugger::InputResponders::Commands.plugins.find_all do |p|
           p::COMMAND_WORDS.find { |word| word.start_with?(first_word) }
@@ -116,6 +117,7 @@ module PuppetDebugger
         # if the only output is a resource then return it
         # otherwise it is multiple items or an actually array
         return output.first if output.count == 1
+
         return output
       end
       result
@@ -148,20 +150,21 @@ module PuppetDebugger
     # @param input [String] - the input content to parse or run 
     def handle_input(input)
       raise ArgumentError unless input.instance_of?(String)
+
       output = begin
         case input.strip
-          when PuppetDebugger::InputResponders::Commands.command_list_regex
-            args = input.split(" ")
-            command = args.shift
-            plugin = PuppetDebugger::InputResponders::Commands.plugin_from_command(command)
-            plugin.execute(args, self) || ""
-          when "_"
-            " => #{@last_item}"
-          else
-            result = puppet_eval(input)
-            @last_item = result
-            o = normalize_output(result)
-            o.nil? ? "" : o.ai
+        when PuppetDebugger::InputResponders::Commands.command_list_regex
+          args = input.split(" ")
+          command = args.shift
+          plugin = PuppetDebugger::InputResponders::Commands.plugin_from_command(command)
+          plugin.execute(args, self) || ""
+        when "_"
+          " => #{@last_item}"
+        else
+          result = puppet_eval(input)
+          @last_item = result
+          o = normalize_output(result)
+          o.nil? ? "" : o.ai
         end
       rescue PuppetDebugger::Exception::InvalidCommand => e
         e.message.fatal

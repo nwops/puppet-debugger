@@ -23,7 +23,7 @@ RSpec.shared_examples "plugin_tests" do |parameter|
   end
 
   it "commands must contain at least one word" do
-    expect(plugin.class::COMMAND_WORDS.count).to  be > 0
+    expect(plugin.class::COMMAND_WORDS.count).to be > 0
   end
 
   it "summary must be a string" do
@@ -40,5 +40,4 @@ RSpec.shared_examples "plugin_tests" do |parameter|
       expect(actual).to eq(plugin.class)
     end
   end
-
 end

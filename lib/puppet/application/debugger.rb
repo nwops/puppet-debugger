@@ -28,7 +28,7 @@ class Puppet::Application::Debugger < Puppet::Application
     Puppet::Util::Log.level = arg.to_sym
   end
 
-  option("--catalog catalog",  "-c catalog") do |arg|
+  option("--catalog catalog", "-c catalog") do |arg|
     options[:catalog] = arg
   end
 
@@ -187,8 +187,8 @@ Copyright (c) 2019 NWOps
   def initialize(command_line = Puppet::Util::CommandLine.new)
     @command_line = CommandLineArgs.new(command_line.subcommand_name, command_line.args.dup)
     @options = { use_facterdb: true, play: nil, run_once: false,
-      node_name: nil, quiet: false, help: false, scope: nil,
-      catalog: nil }
+                 node_name: nil, quiet: false, help: false, scope: nil,
+                 catalog: nil }
     @use_stdin = false
     begin
       require "puppet-debugger"
@@ -219,6 +219,7 @@ Copyright (c) 2019 NWOps
     elsif !command_line.args.empty?
       manifest = command_line.args.shift
       raise "Could not find file #{manifest}" unless Puppet::FileSystem.exist?(manifest)
+
       Puppet.warning("Only one file can be used per run.  Skipping #{command_line.args.join(", ")}") unless command_line.args.empty?
       options[:play] = file
     end
@@ -258,6 +259,7 @@ Copyright (c) 2019 NWOps
       unless facts = Puppet::Node::Facts.indirection.find(Puppet[:node_name_value])
         raise "Could not find facts for #{Puppet[:node_name_value]}"
       end
+
       Puppet[:node_name_value] = facts.values[Puppet[:node_name_fact]]
       facts.name = Puppet[:node_name_value]
     end
@@ -266,6 +268,7 @@ Copyright (c) 2019 NWOps
       unless node = Puppet::Node.indirection.find(Puppet[:node_name_value])
         raise "Could not find node #{Puppet[:node_name_value]}"
       end
+
       # Merge in the facts.
       node.merge(facts.values) if facts
     end
