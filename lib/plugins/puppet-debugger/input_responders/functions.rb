@@ -75,7 +75,7 @@ module PuppetDebugger
         # fetch the puppet version if this is a function from puppet gem
         captures = file.match(/(puppet-[\d\.]+)/)
         file_namespace = captures[1] if captures
-        mod_name = match.nil? ? file_namespace : match[:mod]
+        mod_name = file_namespace || match[:mod]
         full_name = namespace.nil? || namespace.empty? ? name : name.prepend("#{namespace}::")
         { namespace: namespace, summary: summary, mod_name: mod_name, name: name, full_name: full_name, file: file }
       end
