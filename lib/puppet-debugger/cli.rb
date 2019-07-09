@@ -31,6 +31,8 @@ module PuppetDebugger
       @source_file = options[:source_file] || nil
       @source_line_num = options[:source_line] || nil
       @in_buffer = options[:in_buffer] || $stdin
+      Readline.input = @in_buffer
+      Readline.output = @out_buffer
       Readline.completion_append_character = ""
       Readline.basic_word_break_characters = " "
       Readline.completion_proc = command_completion
@@ -238,9 +240,10 @@ or "help" to show the help screen.
     # @param [Hash] must contain at least the puppet scope object
     # @option play - must be a path string
     def self.start_without_stdin(options = { scope: nil })
-      puts print_repl_desc unless options[:quiet]
-      repl_obj = PuppetDebugger::Cli.new(options)
       options[:play] = options[:play].path if options[:play].respond_to?(:path)
+      repl_obj = PuppetDebugger::Cli.new(options)
+      repl_obj.out_buffer.puts print_repl_desc unless options[:quiet]
+
       # TODO: make the output optional so we can have different output destinations
       repl_obj.handle_input("whereami") if options[:source_file] && options[:source_line]
       repl_obj.handle_input("play #{options[:play]}") if options[:play]
@@ -259,9 +262,9 @@ or "help" to show the help screen.
         opt :quiet, "Do not display banner", required: false, default: false
       end
       options = opts.merge(options)
-      puts print_repl_desc unless options[:quiet]
       options[:play] = options[:play].path if options[:play].respond_to?(:path)
       repl_obj = PuppetDebugger::Cli.new(options)
+      repl_obj.out_buffer.puts print_repl_desc unless options[:quiet]
       if options[:play]
         repl_obj.handle_input("play #{options[:play]}")
       elsif ARGF.filename != "-"

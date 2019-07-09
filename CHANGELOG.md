@@ -1,6 +1,7 @@
 ## Unreleased
 
 - Fixes issue where stack traces where not being shown
+- Ensure output goes to proper buffer
 
 ## 0.12.3
 

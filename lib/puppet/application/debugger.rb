@@ -1,44 +1,44 @@
 # frozen_string_literal: true
 
-require 'puppet/application'
-require 'optparse'
-require 'puppet/util/command_line'
+require "puppet/application"
+require "optparse"
+require "puppet/util/command_line"
 
 class Puppet::Application::Debugger < Puppet::Application
   attr_reader :use_stdin
 
-  option('--execute EXECUTE', '-e') do |arg|
+  option("--execute EXECUTE", "-e") do |arg|
     options[:code] = arg
   end
 
-  option('--facterdb-filter FILTER') do |arg|
+  option("--facterdb-filter FILTER") do |arg|
     options[:use_facterdb] = true unless options[:node_name]
-    ENV['DEBUGGER_FACTERDB_FILTER'] = arg if arg
+    ENV["DEBUGGER_FACTERDB_FILTER"] = arg if arg
   end
 
-  option('--test') do |_arg|
+  option("--test") do |_arg|
     options[:quiet] = true
     options[:run_once] = true
     @use_stdin = true
   end
 
-  option('--no-facterdb') { |_arg| options[:use_facterdb] = false }
+  option("--no-facterdb") { |_arg| options[:use_facterdb] = false }
 
-  option('--log-level LEVEL', '-l') do |arg|
+  option("--log-level LEVEL", "-l") do |arg|
     Puppet::Util::Log.level = arg.to_sym
   end
 
-  option('--quiet', '-q') { |_arg| options[:quiet] = true }
+  option("--quiet", "-q") { |_arg| options[:quiet] = true }
 
-  option('--play URL', '-p') do |arg|
+  option("--play URL", "-p") do |arg|
     options[:play] = arg
   end
 
-  option('--stdin', '-s') { |_arg| @use_stdin = true }
+  option("--stdin", "-s") { |_arg| @use_stdin = true }
 
-  option('--run-once', '-r') { |_arg| options[:run_once] = true }
+  option("--run-once", "-r") { |_arg| options[:run_once] = true }
 
-  option('--node-name CERTNAME', '-n') do |arg|
+  option("--node-name CERTNAME", "-n") do |arg|
     options[:use_facterdb] = false
     options[:node_name] = arg
   end
@@ -178,9 +178,9 @@ Copyright (c) 2019 NWOps
     @options = { use_facterdb: true, play: nil, run_once: false, node_name: nil, quiet: false, help: false, scope: nil }
     @use_stdin = false
     begin
-      require 'puppet-debugger'
+      require "puppet-debugger"
     rescue LoadError => e
-      Puppet.err('You must install the puppet-debugger: gem install puppet-debugger')
+      Puppet.err("You must install the puppet-debugger: gem install puppet-debugger")
     end
   end
 
@@ -191,22 +191,22 @@ Copyright (c) 2019 NWOps
 
     if options[:code]
       code_input = options.delete(:code)
-      file = Tempfile.new(['puppet_repl_input', '.pp'])
-      File.open(file, 'w') do |f|
+      file = Tempfile.new(["puppet_repl_input", ".pp"])
+      File.open(file, "w") do |f|
         f.write(code_input)
       end
       options[:play] = file
     elsif command_line.args.empty? && use_stdin
       code_input = STDIN.read
-      file = Tempfile.new(['puppet_repl_input', '.pp'])
-      File.open(file, 'w') do |f|
+      file = Tempfile.new(["puppet_repl_input", ".pp"])
+      File.open(file, "w") do |f|
         f.write(code_input)
       end
       options[:play] = file
     elsif !command_line.args.empty?
       manifest = command_line.args.shift
       raise "Could not find file #{manifest}" unless Puppet::FileSystem.exist?(manifest)
-      Puppet.warning("Only one file can be used per run.  Skipping #{command_line.args.join(', ')}") unless command_line.args.empty?
+      Puppet.warning("Only one file can be used per run.  Skipping #{command_line.args.join(", ")}") unless command_line.args.empty?
       options[:play] = file
     end
     begin
@@ -242,7 +242,7 @@ Copyright (c) 2019 NWOps
       Puppet[:node_name_value] = facts.values[Puppet[:node_name_fact]]
       facts.name = Puppet[:node_name_value]
     end
-    Puppet.override({ current_environment: environment }, 'For puppet debugger') do
+    Puppet.override({ current_environment: environment }, "For puppet debugger") do
       # Find our Node
       unless node = Puppet::Node.indirection.find(Puppet[:node_name_value])
         raise "Could not find node #{Puppet[:node_name_value]}"
@@ -273,7 +273,7 @@ Copyright (c) 2019 NWOps
       # options[:source_file], options[:source_line] = stacktrace.last
       ::PuppetRepl::Cli.start(options)
     else
-      Puppet.info 'puppet debug: refusing to start the debugger without a tty'
+      Puppet.info "puppet debug: refusing to start the debugger without a tty"
     end
   end
 
