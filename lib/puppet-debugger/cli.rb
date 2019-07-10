@@ -238,12 +238,18 @@ or "help" to show the help screen.
     # or
     # this is primarily used by the debug::break() module function and the puppet debugger face
     # @param [Hash] must contain at least the puppet scope object
-    # @option play - must be a path string
+    # @option play [String] - must be a path to a file
+    # @option content [String] - play back the string content passed in
+    # @option source_file [String] - the file from which the breakpoint was used
+    # @option source_line [Integer] - the line in the sourcefile from which the breakpoint was used
+    # @option in_buffer [IO] - the input buffer to read from
+    # @option out_buffer [IO] - the output buffer to write to
+    # @option scope [Scope] - the puppet scope
     def self.start_without_stdin(options = { scope: nil })
       options[:play] = options[:play].path if options[:play].respond_to?(:path)
       repl_obj = PuppetDebugger::Cli.new(options)
       repl_obj.out_buffer.puts print_repl_desc unless options[:quiet]
-
+      repl_obj.handle_input(options[:content]) if options[:content]
       # TODO: make the output optional so we can have different output destinations
       repl_obj.handle_input("whereami") if options[:source_file] && options[:source_line]
       repl_obj.handle_input("play #{options[:play]}") if options[:play]

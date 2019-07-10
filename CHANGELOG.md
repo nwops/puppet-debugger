@@ -1,5 +1,6 @@
 ## Unreleased
 
+- Adds ability to send content as an option at start
 - Fixes issue where stack traces where not being shown
 - Ensure output goes to proper buffer
 
