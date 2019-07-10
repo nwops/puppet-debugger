@@ -1,5 +1,7 @@
 ## Unreleased
 
+- Fixes issue where stack traces where not being shown
+
 ## 0.12.3
 
 - Fixes incorrect puppet namespace when list functions again

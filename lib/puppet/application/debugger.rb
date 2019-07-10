@@ -209,22 +209,27 @@ Copyright (c) 2019 NWOps
       Puppet.warning("Only one file can be used per run.  Skipping #{command_line.args.join(', ')}") unless command_line.args.empty?
       options[:play] = file
     end
-    if !options[:use_facterdb] && options[:node_name].nil?
-      debug_environment = create_environment(nil)
-      Puppet.notice('Gathering node facts...')
-      node = create_node(debug_environment)
-      scope = create_scope(node)
-      # start_debugger(scope)
-      options[:scope] = scope
+    begin
+      if !options[:use_facterdb] && options[:node_name].nil?
+        debug_environment = create_environment(nil)
+        Puppet.notice('Gathering node facts...')
+        node = create_node(debug_environment)
+        scope = create_scope(node)
+        # start_debugger(scope)
+        options[:scope] = scope
+      end
+      ::PuppetDebugger::Cli.start_without_stdin(options)
+    rescue Exception => e
+      puts e
+      exit 1
     end
-    ::PuppetDebugger::Cli.start_without_stdin(options)
   end
 
   def create_environment(manifest)
     configured_environment = Puppet.lookup(:current_environment)
     manifest ?
-        configured_environment.override_with(manifest: manifest) :
-        configured_environment
+      configured_environment.override_with(manifest: manifest) :
+      configured_environment
   end
 
   def create_node(environment)
