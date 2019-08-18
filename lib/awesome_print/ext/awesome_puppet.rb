@@ -53,8 +53,8 @@ module AwesomePrint
       else
         h = object.to_hash.merge(name: object.name, title: object.title)
       end
-      res_str = awesome_hash(h)
-      "#{object.class} #{res_str.delete(':')}"
+      res_str = awesome_hash(JSON.parse(h.to_json)) #converting to json removes symbols
+      "#{object.class} #{res_str}"
     end
   end
 end
