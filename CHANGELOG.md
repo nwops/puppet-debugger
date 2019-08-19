@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.13.0
+
 - Fixes gh-66 - colon symbol vanishing from variable output
 - Adds ability to send content as an option at start
 - Fixes issue where stack traces where not being shown
