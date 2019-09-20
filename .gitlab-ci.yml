@@ -58,6 +58,14 @@ bump_and_tag:
 #  script:
 #    - "curl -X POST -F token=$PREPL_BUILD_TRIGGER_TOKEN -F ref=$REF https://gitlab.com/api/v3/projects/1146764/trigger/builds"
 
+.ruby_21: &ruby21
+  image: ruby:2.1
+  script:
+    - gem install bundler -v 1.17.3 > /dev/null
+    - bundle install --without development validate
+    - bundle exec puppet module install puppetlabs-stdlib
+    - bundle exec rake spec
+
 .ruby_22: &ruby22
   image: ruby:2.2
   script:
@@ -89,6 +97,12 @@ gem_production:
     - dpl --provider=rubygems --api-key=$RUBYGEMS_API_KEY
   only:
     - tags
+
+puppet_410_ruby21:
+  variables:
+    PUPPET_GEM_VERSION: "~> 4.10"
+  <<: *puppet_job_def
+  <<: *ruby21
 
 puppet_410_ruby24:
   variables:
