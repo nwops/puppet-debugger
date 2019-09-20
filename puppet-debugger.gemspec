@@ -27,7 +27,7 @@ Gem::Specification.new do |s|
     'README.md'
   ]
   s.required_ruby_version = '>= 2.1'
-  s.homepage = "http://github.com/nwops/puppet-debugger"
+  s.homepage = "https://gitlab.com/puppet-debugger/puppet-debugger"
   s.licenses = ["MIT"]
   s.rubygems_version = "2.4.5.1"
   s.summary = "A repl based debugger for the puppet language"
