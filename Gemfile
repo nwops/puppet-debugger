@@ -12,7 +12,7 @@ group :test, :development do
   gem 'CFPropertyList'
   gem 'pry'
   gem 'puppet-debugger', path: './'
-  gem 'rake'
+  gem 'rake', '= 12.3.3'
   gem 'rdoc', '~> 3.12'
   gem 'release_me'
   gem 'rspec', '~> 3.6'

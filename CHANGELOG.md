@@ -1,5 +1,8 @@
 ## Unreleased
 
+## Unreleased
+- Fixes issue with listing native functions when inside module directory
+
 ## 0.13.0
 
 - Fixes gh-66 - colon symbol vanishing from variable output

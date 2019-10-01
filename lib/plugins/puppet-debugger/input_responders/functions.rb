@@ -1,5 +1,6 @@
 require "puppet-debugger/input_responder_plugin"
 require "table_print"
+require 'fileutils'
 
 module PuppetDebugger
   module InputResponders
@@ -39,11 +40,16 @@ module PuppetDebugger
         functions
       end
 
+      # @return [String] - the current module directory or directory that contains a gemfile
+      def current_module_dir
+        @current_module_dir ||= File.dirname(Bundler.default_gemfile)
+      end
+
       def lib_dirs(module_dirs = modules_paths)
         dirs = module_dirs.map do |mod_dir|
           Dir["#{mod_dir}/*/lib"].entries
         end.flatten
-        dirs + [puppet_debugger_lib_dir]
+        dirs + [puppet_debugger_lib_dir, File.join(current_module_dir, 'lib')]
       end
 
       # @return [Array] - returns a array of the parentname and function name
