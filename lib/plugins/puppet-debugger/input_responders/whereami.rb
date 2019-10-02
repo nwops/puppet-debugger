@@ -11,6 +11,7 @@ module PuppetDebugger
       # @return [String] - string output of the code surrounded by the breakpoint or nil if file
       # or line_num do not exist
       def run(args = [])
+        num_lines = parse(args.first)
         file = debugger.source_file
         line_num = debugger.source_line_num
         if file && line_num
@@ -20,9 +21,17 @@ module PuppetDebugger
           else
             code = DebuggerCode.from_file(file, :puppet)
           end
-          return code.with_marker(line_num).around(line_num, 5)
+          return code.with_marker(line_num).around(line_num, num_lines)
                      .with_line_numbers.with_indentation(5).with_file_reference.to_s
         end
+      end
+
+      # @return [Integer]
+      # @param num [String,Integer] number of lines
+      # @param defalt [Integer] - default value to return if supplied is less than 5
+      def parse(num, default = 7)
+        value = num.to_i
+        value >= 5 ? value : default
       end
     end
   end

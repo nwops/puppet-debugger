@@ -1,9 +1,11 @@
 ## Unreleased
 - Fixes issue with listing native functions when inside module directory
 - Adds more puppet versions to matrix for testing
+- Adds ability to specify number of lines in whereami command, defaults to 7
 
 ## 0.14.0
 - Adds back ruby 2.1 support to matrix for pdk console
+- Requires ruby 2.1 for gemspec
 
 ## 0.13.0
 
