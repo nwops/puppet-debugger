@@ -1,7 +1,9 @@
 ## Unreleased
-
-## Unreleased
 - Fixes issue with listing native functions when inside module directory
+- Adds more puppet versions to matrix for testing
+
+## 0.14.0
+- Adds back ruby 2.1 support to matrix for pdk console
 
 ## 0.13.0
 
