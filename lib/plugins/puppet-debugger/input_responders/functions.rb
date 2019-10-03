@@ -1,6 +1,7 @@
 require "puppet-debugger/input_responder_plugin"
 require "table_print"
 require 'fileutils'
+require 'bundler'
 
 module PuppetDebugger
   module InputResponders
@@ -42,7 +43,11 @@ module PuppetDebugger
 
       # @return [String] - the current module directory or directory that contains a gemfile
       def current_module_dir
-        @current_module_dir ||= File.dirname(::Bundler.default_gemfile)
+        @current_module_dir ||= begin
+          File.dirname(::Bundler.default_gemfile)
+        rescue ::Bundler::GemfileNotFound
+          Dir.pwd
+        end
       end
 
       def lib_dirs(module_dirs = modules_paths)

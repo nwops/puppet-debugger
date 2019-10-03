@@ -1,5 +1,9 @@
 ## Unreleased
 
+## 0.15.2
+- Fixes issue with bundler and auto complete again
+
+
 ## 0.15.1
 - Fixes issue with bundler and auto complete
 
