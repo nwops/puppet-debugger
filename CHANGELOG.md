@@ -1,4 +1,6 @@
 ## Unreleased
+
+## 0.15.0
 - Fixes issue with listing native functions when inside module directory
 - Adds more puppet versions to matrix for testing
 - Adds ability to specify number of lines in whereami command, defaults to 7
