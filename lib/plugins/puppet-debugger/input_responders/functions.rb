@@ -42,7 +42,7 @@ module PuppetDebugger
 
       # @return [String] - the current module directory or directory that contains a gemfile
       def current_module_dir
-        @current_module_dir ||= File.dirname(Bundler.default_gemfile)
+        @current_module_dir ||= File.dirname(::Bundler.default_gemfile)
       end
 
       def lib_dirs(module_dirs = modules_paths)

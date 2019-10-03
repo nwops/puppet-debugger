@@ -1,5 +1,8 @@
 ## Unreleased
 
+## 0.15.1
+- Fixes issue with bundler and auto complete
+
 ## 0.15.0
 - Fixes issue with listing native functions when inside module directory
 - Adds more puppet versions to matrix for testing
