@@ -1,5 +1,6 @@
 ## Unreleased
-
+- Fix bolt datatype rendering issues
+  
 ## 0.15.2
 - Fixes issue with bundler and auto complete again
 

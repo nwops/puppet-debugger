@@ -34,8 +34,20 @@ module AwesomePrint
         cast = :puppet_resource
       elsif /Puppet::Pops::Types/.match(object.class.to_s)
         cast = :puppet_type
+      elsif /Bolt::/.match(object.class.to_s)
+        cast = :bolt_type
       end
       cast
+    end
+
+    def awesome_bolt_type(object)
+      if object.class.to_s.include?('Result')
+        object.to_data.ai
+      elsif object.is_a?(::Bolt::Target)
+        object.to_h.merge(object.detail).ai
+      else
+        object.ai
+      end
     end
 
     def awesome_puppet_resource(object)
