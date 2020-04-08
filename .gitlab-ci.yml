@@ -101,12 +101,6 @@ gem_production:
   only:
     - tags
 
-puppet_410_ruby21:
-  variables:
-    PUPPET_GEM_VERSION: "~> 4.10"
-  <<: *puppet_job_def
-  <<: *ruby21
-
 puppet_410_ruby24:
   variables:
     PUPPET_GEM_VERSION: "~> 4.10"
