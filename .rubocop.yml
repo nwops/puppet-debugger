@@ -111,14 +111,13 @@ Style/NumericPredicate:
 ## Offense count: 152
 ## Configuration parameters: AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives.
 ## URISchemes: http, https
-Metrics/LineLength:
- Max: 586
+# Metrics/LineLength:
+#  Max: 586
 
 ## Offense count: 30
 ## Configuration parameters: CountComments.
 #Metrics/MethodLength:
 #  Max: 100
-#
 ## Offense count: 2
 ## Configuration parameters: CountComments.
 #Metrics/ModuleLength:
