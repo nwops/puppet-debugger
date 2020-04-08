@@ -125,22 +125,15 @@ puppet_6_ruby25:
   <<: *puppet_job_def
   <<: *ruby25
 
-
 puppet_6_ruby26:
   variables:
     PUPPET_GEM_VERSION: "~> 6.0"
   <<: *puppet_job_def
   <<: *ruby26
 
-puppet_7_ruby27:
+puppet_6_ruby27:
   allow_failure: true
   variables:
     PUPPET_GEM_VERSION: "~> 6.0"
   <<: *puppet_job_def
   <<: *ruby27
-
-puppet_5_ruby24:
-  variables:
-    PUPPET_GEM_VERSION: "~> 5.5"
-  <<: *puppet_job_def
-  <<: *ruby24
