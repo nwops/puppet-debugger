@@ -86,6 +86,9 @@ bump_and_tag:
 .ruby_26: &ruby26
   image: ruby:2.6
 
+.ruby_27: &ruby27
+  image: ruby:2.7
+
 gem_production:
   image: ruby:2.5
   tags:
@@ -110,32 +113,34 @@ puppet_410_ruby24:
   <<: *puppet_job_def
   <<: *ruby24
 
-puppet_55_ruby24:
+puppet_5_ruby24:
   variables:
     PUPPET_GEM_VERSION: "~> 5.5"
   <<: *puppet_job_def
   <<: *ruby24
 
-puppet_63_ruby25:
+puppet_6_ruby25:
   variables:
-    PUPPET_GEM_VERSION: "~> 6.3"
+    PUPPET_GEM_VERSION: "~> 6.0"
   <<: *puppet_job_def
   <<: *ruby25
 
-puppet_64_ruby25:
-  variables:
-    PUPPET_GEM_VERSION: "~> 6.4.0"
-  <<: *puppet_job_def
-  <<: *ruby25
 
-puppet_610_ruby25:
+puppet_6_ruby26:
   variables:
-    PUPPET_GEM_VERSION: "~> 6.10.0"
+    PUPPET_GEM_VERSION: "~> 6.0"
   <<: *puppet_job_def
-  <<: *ruby25
+  <<: *ruby26
 
-puppet_55_ruby24:
+puppet_7_ruby27:
+  allow_failure: true
   variables:
-    PUPPET_GEM_VERSION: "~> 5.5.0"
+    PUPPET_GEM_VERSION: "~> 6.0"
+  <<: *puppet_job_def
+  <<: *ruby27
+
+puppet_5_ruby24:
+  variables:
+    PUPPET_GEM_VERSION: "~> 5.5"
   <<: *puppet_job_def
   <<: *ruby24
