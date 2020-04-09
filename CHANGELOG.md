@@ -1,4 +1,6 @@
 ## Unreleased
+
+## 0.16.0
 - Load bolt puppet modules if bolt exists
 - Fix bolt datatype rendering issues
   
