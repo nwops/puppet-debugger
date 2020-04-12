@@ -35,10 +35,13 @@ module PuppetDebugger
         end.uniq.compact
       end
 
+      # loaders.instance_variable_get(:@loaders_by_name)['boltlib']
+      # [:func_4x, :func_4xpp, :func_3x, :datatype, :type_pp,
+      # :resource_type_pp, :plan, :task]
       # @return [Array[String]] - a list of core data types
       def core_datatypes
-        loaders.implementation_registry
-               .instance_variable_get(:'@implementations_per_type_name')
+        loaders.implementation_registry.instance_variable_get(:@parent)
+               .instance_variable_get(:@implementations_per_type_name)
                .keys.find_all { |t| t !~ /::/ }
       end
 
