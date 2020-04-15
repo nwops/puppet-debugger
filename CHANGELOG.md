@@ -1,4 +1,6 @@
 ## Unreleased
+
+## 0.17.0
 - Fix bolt issue when the catalog is referenced
 - Fix bolt issue when scriptcompiler scope is used
   and the debugger tries to expand the resources
