@@ -1,4 +1,7 @@
 ## Unreleased
+- Fix bolt issue when scriptcompiler scope is used
+  and the debugger tries to expand the resources
+  in the catalog.
 
 ## 0.16.0
 - Load bolt puppet modules if bolt exists

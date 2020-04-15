@@ -106,7 +106,7 @@ module PuppetDebugger
     end
 
     def contains_resources?(result)
-      !Array(result).flatten.find { |r| r.class.to_s =~ /Puppet::Pops::Types/ }.nil?
+      !Array(result).flatten.find { |r| r.class.to_s =~ /Puppet::Pops::Types::PResourceType/ }.nil?
     end
 
     def normalize_output(result)
