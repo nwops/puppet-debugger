@@ -9,51 +9,7 @@ require 'puppet/util/log'
 require 'puppet-debugger/debugger_code'
 require 'puppet-debugger/support/errors'
 require 'plugins/puppet-debugger/input_responders/commands'
-
-
-# monkey patch in some color effects string methods
-class String
-  def red
-    "\033[31m#{self}\033[0m"
-  end
-
-  def bold
-    "\033[1m#{self}\033[22m"
-  end
-
-  def black
-    "\033[30m#{self}\033[0m"
-  end
-
-  def green
-    "\033[32m#{self}\033[0m"
-  end
-
-  def cyan
-    "\033[36m#{self}\033[0m"
-  end
-
-  def yellow
-    "\033[33m#{self}\033[0m"
-  end
-
-  def warning
-    yellow
-  end
-
-  def fatal
-    red
-  end
-
-  def info
-    green
-  end
-
-  def camel_case
-    return self if self !~ /_/ && self =~ /[A-Z]+.*/
-    split('_').map(&:capitalize).join
-  end
-end
+require 'puppet-debugger/monkey_patches'
 
 Puppet::Util::Log.newdesttype :buffer do
   require 'puppet/util/colors'

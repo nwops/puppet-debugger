@@ -218,8 +218,9 @@ describe "PuppetDebugger" do
     end
     it "shows type" do
       if Gem::Version.new(Puppet.version) > Gem::Version.new("4.4")
+        out = "\n => Tuple[Integer[1, 1], Integer[2, 2], Integer[3, 3], Integer[4, 4]]\n"
         debugger.handle_input(input)
-        expect(output.string.strip.split("\n").count).to eq(6)
+        expect(output.string).to eq(out)
       end
     end
   end
