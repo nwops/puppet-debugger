@@ -1,4 +1,5 @@
 ## Unreleased
+- Add bundler as a dependency
 
 ## 0.17.0
 - Fix bolt issue when the catalog is referenced

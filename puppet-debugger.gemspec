@@ -37,6 +37,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency(%q<puppet>, [">= 3.8"])
   s.add_runtime_dependency(%q<facterdb>, [">= 0.4.0"])
   s.add_runtime_dependency(%q<awesome_print>, ["~> 1.7"])
+  s.add_runtime_dependency(%q<bundler>)
   s.add_development_dependency(%q<rdoc>, ["~> 3.12"])
   s.add_development_dependency(%q<rspec>, ["~> 3.6"])
 
