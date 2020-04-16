@@ -7,7 +7,7 @@ module PuppetDebugger
       COMMAND_GROUP = :scope
 
       def run(args = [])
-        debugger.scope.compiler.catalog.classes.ai
+        debugger.catalog.classes.ai
       end
 
     end

@@ -9,7 +9,7 @@ module PuppetDebugger
       def run(args = [])
         filter = args
         unless filter.empty?
-          parameters = resource_parameters(debugger.scope.catalog.resources, filter)
+          parameters = resource_parameters(debugger.catalog.resources, filter)
           return parameters.ai(sort_keys: true, indent: -1)
         end
         # remove duplicate variables that are also in the facts hash
@@ -30,7 +30,7 @@ module PuppetDebugger
       def parameters_to_h(resource)
         resource.parameters.each_with_object({}) do | param, params |
           name = param.first.to_s
-          params[name] = param.last.value
+          params[name] = param.last.respond_to?(:value) ? param.last.value : param.last
           params
         end
       end

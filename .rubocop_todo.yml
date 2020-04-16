@@ -31,7 +31,7 @@ Lint/EndAlignment:
     - "lib/trollop.rb"
 
 # Offense count: 3
-Lint/HandleExceptions:
+Lint/SuppressedException:
   Exclude:
     - "lib/puppet-debugger/support.rb"
     - "lib/trollop.rb"
@@ -170,7 +170,7 @@ Style/IdenticalConditionalBranches:
     - "lib/puppet-debugger/support/play.rb"
 
 # Offense count: 2
-Style/MethodMissing:
+Style/MethodMissingSuper:
   Exclude:
     - "lib/puppet-debugger/debugger_code.rb"
     - "lib/trollop.rb"

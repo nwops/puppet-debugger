@@ -7,7 +7,7 @@ module PuppetDebugger
       COMMAND_GROUP = :scope
 
       def run(args = [])
-        res = debugger.scope.compiler.catalog.resources.map do |res|
+        res = debugger.catalog.resources.map do |res|
           res.to_s.gsub(/\[/, "['").gsub(/\]/, "']") # ensure the title has quotes
         end
         if !args.first.nil?
