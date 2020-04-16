@@ -7,9 +7,18 @@ module PuppetDebugger
       COMMAND_GROUP = :scope
 
       def run(args = [])
-        debugger.catalog.classes.ai
+        filter = args
+        classes = find_classes(debugger.catalog.classes, filter)
+        classes.ai
       end
 
+      def find_classes(classes, filter = [])
+        return classes if filter.nil? || filter.empty?
+        filter_string = filter.join(' ').downcase
+        classes.find_all do |klass|
+          klass.downcase.include?(filter_string)
+        end
+      end
     end
   end
 end

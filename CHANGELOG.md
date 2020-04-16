@@ -1,5 +1,9 @@
 ## Unreleased
 - Add bundler as a dependency
+- Add ability to filter out classes
+- Add ability to filter out resources
+- Add ability to supply a catalog
+- Add vendormoduledir to module paths
 
 ## 0.17.0
 - Fix bolt issue when the catalog is referenced
