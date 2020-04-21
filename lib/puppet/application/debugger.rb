@@ -233,9 +233,14 @@ Copyright (c) 2019 NWOps
       end
       ::PuppetDebugger::Cli.start_without_stdin(options)
     rescue Exception => e
-      puts e.message
-      puts e.backtrace
-      exit 1
+      case e.class.to_s
+      when 'SystemExit'
+        return
+      else
+        puts e.message
+        puts e.backtrace
+        exit 1
+      end
     end
   end
 
