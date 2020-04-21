@@ -1,4 +1,6 @@
 ## Unreleased
+
+## 0.18.0
 - Add bundler as a dependency
 - Add ability to filter out classes
 - Add ability to filter out resources
