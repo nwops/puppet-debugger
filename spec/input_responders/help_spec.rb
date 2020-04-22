@@ -23,7 +23,7 @@ describe :help do
   end
 
   it 'show debugger version' do
-    expect(help_output).to match(/Puppet Debugger Version: \d.\d\d?.\d+\n/)
+    expect(help_output).to match(/Puppet Debugger Version: \d.\d\d?.\d.*+\n/)
   end
 
   it 'show created by' do
