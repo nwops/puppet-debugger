@@ -7,7 +7,17 @@ module PuppetDebugger
       COMMAND_GROUP = :environment
 
       def run(args = [])
-        all_data_types.sort.ai
+        filter = args
+        datatypes = find_datatypes(all_data_types.sort, filter)
+        datatypes.ai
+      end
+
+      def find_datatypes(datatypes, filter = [])
+        return datatypes if filter.nil? || filter.empty?
+        filter_string = filter.join(' ').downcase
+        datatypes.find_all do |datatype|
+          datatype.downcase.include?(filter_string)
+        end
       end
 
       # @return [Array[String]] - returns a list of all the custom data types found in all the modules in the environment

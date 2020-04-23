@@ -1,4 +1,5 @@
 ## Unreleased
+- Search datatypes with filter 
 
 ## 0.18.0
 - Add bundler as a dependency

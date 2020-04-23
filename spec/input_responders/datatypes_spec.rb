@@ -27,4 +27,9 @@ describe :datatypes do
   it 'returns environment datatypes' do
     expect(plugin.environment_data_types.count).to be >= 0
   end
+
+  it 'search datatypes' do
+    output = plugin.run(['integer'])
+    expect(output.split("Integer").count).to be >= 2
+  end
 end
