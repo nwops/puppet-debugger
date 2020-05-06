@@ -102,6 +102,7 @@ gem_production:
     - tags
 
 puppet_410_ruby24:
+  allow_failure: true
   variables:
     PUPPET_GEM_VERSION: "~> 4.10"
   <<: *puppet_job_def
