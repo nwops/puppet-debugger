@@ -26,7 +26,7 @@ Gem::Specification.new do |s|
     'LICENSE.txt',
     'README.md'
   ]
-  s.required_ruby_version = '>= 2.1'
+  s.required_ruby_version = '>= 2.4'
   s.homepage = "https://gitlab.com/puppet-debugger/puppet-debugger"
   s.licenses = ["MIT"]
   s.rubygems_version = "2.4.5.1"
@@ -34,7 +34,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency(%q<table_print>, [">= 1.0.0"])
   s.add_runtime_dependency(%q<pluginator>, ["~> 1.5.0"])
   s.add_runtime_dependency(%q<rb-readline>, ['>= 0.5.5'])
-  s.add_runtime_dependency(%q<puppet>, [">= 3.8"])
+  s.add_runtime_dependency(%q<puppet>, [">= 5.5"])
   s.add_runtime_dependency(%q<facterdb>, [">= 0.4.0"])
   s.add_runtime_dependency(%q<awesome_print>, ["~> 1.7"])
   s.add_runtime_dependency(%q<bundler>)
