@@ -1,5 +1,8 @@
 ## Unreleased
+
+## 0.19.0
 - Search datatypes with filter 
+- Fix #8 - trusted_server_facts' as a setting is deprecated
 
 ## 0.18.0
 - Add bundler as a dependency

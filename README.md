@@ -63,20 +63,34 @@ and see what it would actual do when compiling a resource.
 
 Example Usage
 ```
-MacBook-Pro-2/tmp % puppet debugger
-Ruby Version: 2.0.0
-Puppet Version: 4.8.1
-Puppet Debugger Version: 0.4.3
+Ruby Version: 2.6.5
+Puppet Version: 6.14.0
+Puppet Debugger Version: 0.16.0
 Created by: NWOps <corey@nwops.io>
-Type "exit", "functions", "vars", "krt", "whereami", "facts", "resources", "classes",
-     "play", "classification", "reset", or "help" for more information.
+Type "commands" for a list of debugger commands
+or "help" to show the help screen.
 
-1:>> ['/tmp/test3', '/tmp/test4'].each |String $path| { file{$path: ensure => present} }
- => [
-  [0] "/tmp/test3",
-  [1] "/tmp/test4"
-]
-2:>> 
+
+1:>> $os
+ => {
+  "architecture" => "x86_64",
+        "family" => "RedHat",
+      "hardware" => "x86_64",
+          "name" => "Fedora",
+       "release" => {
+     "full" => "23",
+    "major" => "23"
+  },
+       "selinux" => {
+       "config_mode" => "permissive",
+     "config_policy" => "targeted",
+      "current_mode" => "permissive",
+           "enabled" => true,
+          "enforced" => false,
+    "policy_version" => "29"
+  }
+}
+2:>>
 
 
 ```
