@@ -6,6 +6,7 @@ gem 'puppet', ENV['PUPPET_GEM_VERSION'] || '>= 5.5'
 gem 'pluginator', '~> 1.5.0'
 gem 'rb-readline'
 gem 'table_print'
+gem 'tty-pager'
 group :test, :development do
   # ruby versions prior to 2.0 cannot install json_pure 2.0.2+
   gem 'bundler'

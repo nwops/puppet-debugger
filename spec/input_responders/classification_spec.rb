@@ -12,6 +12,6 @@ describe :classification do
 
   it 'can process a file from handle input' do
     debugger.handle_input('classification')
-    expect(output.string).to eq("[]\n")
+    expect(output.string).to eq(" => []\n")
   end
 end

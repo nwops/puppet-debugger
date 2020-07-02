@@ -9,7 +9,7 @@ require "puppet-debugger/hooks"
 require "forwardable"
 require "plugins/puppet-debugger/input_responders/functions"
 require "plugins/puppet-debugger/input_responders/datatypes"
-
+require 'tty-pager'
 module PuppetDebugger
   class Cli
     include PuppetDebugger::Support
@@ -17,7 +17,7 @@ module PuppetDebugger
     attr_accessor :settings, :log_level, :in_buffer, :out_buffer, :html_mode, :extra_prompt, :bench
     attr_reader :source_file, :source_line_num, :hooks
     def_delegators :hooks, :exec_hook, :add_hook, :delete_hook
-
+    OUT_SYMBOL = ' => '
     def initialize(options = {})
       do_initialize if Puppet[:codedir].nil?
       Puppet.settings[:name] = :debugger
@@ -125,57 +125,70 @@ module PuppetDebugger
       plugins = Pluginator.find(PuppetDebugger)
     end
 
+    # @return [TTY::Pager] the pager object, disable if CI or testing is present
+    def pager
+      @pager ||= TTY::Pager.new(output: out_buffer, enabled: ENV['CI'].nil? )
+    end
+
+    # @param output [String] - the content to output
+    # @summary outputs the output to the output buffer
+    #   uses the pager if the screen height is less than the height of the 
+    #   output content
+    #   Disabled if CI or testing is being done
+    def handle_output(output)
+      if output.lines.count >= TTY::Screen.height && ENV['CI'].nil?
+        output << "\n"
+        pager.page(output)
+      else
+        out_buffer.puts(output) unless output.empty?
+      end
+    end
+
     # this method handles all input and expects a string of text.
-    #
+    # @param input [String] - the input content to parse or run 
     def handle_input(input)
       raise ArgumentError unless input.instance_of?(String)
-      begin
-        output = ""
+      output = begin
         case input.strip
-        when PuppetDebugger::InputResponders::Commands.command_list_regex
-          args = input.split(" ")
-          command = args.shift
-          plugin = PuppetDebugger::InputResponders::Commands.plugin_from_command(command)
-          output = plugin.execute(args, self)
-          return out_buffer.puts output
-        when "_"
-          output = " => #{@last_item}"
-        else
-          result = puppet_eval(input)
-          @last_item = result
-          output = normalize_output(result)
-          output = output.nil? ? "" : output.ai
+          when PuppetDebugger::InputResponders::Commands.command_list_regex
+            args = input.split(" ")
+            command = args.shift
+            plugin = PuppetDebugger::InputResponders::Commands.plugin_from_command(command)
+            plugin.execute(args, self) || ""
+          when "_"
+            " => #{@last_item}"
+          else
+            result = puppet_eval(input)
+            @last_item = result
+            o = normalize_output(result)
+            o.nil? ? "" : o.ai
         end
       rescue PuppetDebugger::Exception::InvalidCommand => e
-        output = e.message.fatal
+        e.message.fatal
       rescue LoadError => e
-        output = e.message.fatal
+        e.message.fatal
       rescue Errno::ETIMEDOUT => e
-        output = e.message.fatal
+        e.message.fatal
       rescue ArgumentError => e
-        output = e.message.fatal
+        e.message.fatal
       rescue Puppet::ResourceError => e
-        output = e.message.fatal
+        e.message.fatal
       rescue Puppet::Error => e
-        output = e.message.fatal
+        e.message.fatal
       rescue Puppet::ParseErrorWithIssue => e
-        output = e.message.fatal
+        e.message.fatal
       rescue PuppetDebugger::Exception::FatalError => e
-        output = e.message.fatal
-        out_buffer.puts output
+        handle_output(e.message.fatal)
         exit 1 # this can sometimes causes tests to fail
       rescue PuppetDebugger::Exception::Error => e
-        output = e.message.fatal
+        e.message.fatal
       rescue ::RuntimeError => e
-        output = e.message.fatal
-        out_buffer.puts output
+        handle_output(e.message.fatal)
         exit 1
       end
-      unless output.empty?
-        out_buffer.print " => "
-        out_buffer.puts output unless output.empty?
-        exec_hook :after_output, out_buffer, self, self
-      end
+      output = OUT_SYMBOL + output unless output.empty?
+      handle_output(output)
+      exec_hook :after_output, out_buffer, self, self
     end
 
     def self.print_repl_desc

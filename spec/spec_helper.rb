@@ -4,6 +4,7 @@ require 'simplecov'
 require_relative '../lib/puppet-debugger'
 require 'yaml'
 ENV['COVERAGE'] = 'true'
+ENV['CI'] = 'true'
 
 module SimpleCov::Configuration
   def clean_filters
