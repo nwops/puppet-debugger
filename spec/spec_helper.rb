@@ -3,7 +3,6 @@
 require 'simplecov'
 require_relative '../lib/puppet-debugger'
 require 'yaml'
-ENV['COVERAGE'] = 'true'
 ENV['CI'] = 'true'
 
 module SimpleCov::Configuration
@@ -21,7 +20,7 @@ SimpleCov.start do
   add_filter '/.rvm/'
   add_filter 'vendor'
   add_filter 'bundler'
-end
+end if ENV['COVERAGE']
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
