@@ -268,20 +268,24 @@ or "help" to show the help screen.
         opt :catalog, "Import a catalog file to inspect", required: false, type: String
         opt :quiet, "Do not display banner", required: false, default: false
       end
+      if !STDIN.tty? && !STDIN.closed?
+        options[:run_once] = true 
+        options[:quiet] = true
+      end
       options = opts.merge(options)
       options[:play] = options[:play].path if options[:play].respond_to?(:path)
       repl_obj = PuppetDebugger::Cli.new(options)
       repl_obj.out_buffer.puts print_repl_desc unless options[:quiet]
       if options[:play]
         repl_obj.handle_input("play #{options[:play]}")
-      elsif ARGF.filename != "-"
-        # when the user supplied a file name without using the args (stdin)
-        path = File.expand_path(ARGF.filename)
-        repl_obj.handle_input("play #{path}")
       elsif (ARGF.filename == "-") && (!STDIN.tty? && !STDIN.closed?)
         # when the user supplied a file content using stdin, aka. cat,pipe,echo or redirection
         input = ARGF.read
         repl_obj.handle_input(input)
+      elsif ARGF.filename != "-"
+        # when the user supplied a file name without using the args (stdin)
+        path = File.expand_path(ARGF.filename)
+        repl_obj.handle_input("play #{path}")
       end
       # helper code to make tests exit the loop
       repl_obj.read_loop unless options[:run_once]
