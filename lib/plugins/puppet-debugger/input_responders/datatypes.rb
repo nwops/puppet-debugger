@@ -36,8 +36,8 @@ module PuppetDebugger
       # @return [Array[String]] - a list of core data types
       def core_datatypes
         loaders.implementation_registry
-            .instance_variable_get(:'@implementations_per_type_name')
-            .keys.find_all { |t| t !~ /::/ }
+               .instance_variable_get(:'@implementations_per_type_name')
+               .keys.find_all { |t| t !~ /::/ }
       end
 
       # @return [Array[String]] - combined list of core data types and environment data types

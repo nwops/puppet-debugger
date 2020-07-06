@@ -5,7 +5,7 @@ describe :exit do
   let(:args) { [] }
 
   xit 'exits' do
-    expect{plugin.run(args)}.to eq('')
+    expect { plugin.run(args) }.to eq('')
   end
 
   let(:plugin) do
@@ -39,7 +39,7 @@ describe :exit do
   end
 
   it 'implements run' do
-    expect{plugin.run([])}.not_to raise_error(NotImplementedError)
+    expect { plugin.run([]) }.not_to raise_error(NotImplementedError)
   end
 
   it 'be looked up via any command words' do

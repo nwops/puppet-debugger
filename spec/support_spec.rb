@@ -21,7 +21,7 @@ describe 'support' do
   end
 
   let(:manifest_file) do
-    file = File.open('/tmp/debugger_puppet_manifest.pp', 'w') do |f|
+    File.open('/tmp/debugger_puppet_manifest.pp', 'w') do |f|
       f.write(manifest_code)
     end
     '/tmp/debugger_puppet_manifest.pp'

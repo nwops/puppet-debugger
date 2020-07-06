@@ -8,7 +8,7 @@ module PuppetDebugger
       def puppet_environment
         @puppet_environment ||= create_environment
       end
-      alias :environment :puppet_environment
+      alias environment puppet_environment
 
       # returns an array of module directories, generally this is the only place
       # to look for puppet code by default.  This is read from the puppet configuration
@@ -24,7 +24,7 @@ module PuppetDebugger
 
       def bolt_modules
         spec = Gem::Specification.latest_specs.find { |spec| spec.name.eql?('bolt') }
-        bolt_modules = File.join(spec.full_gem_path, 'bolt-modules') if spec
+        File.join(spec.full_gem_path, 'bolt-modules') if spec
       end
 
       # returns all the modules paths defined in the environment
@@ -67,7 +67,7 @@ module PuppetDebugger
 
       # currently this is not being used
       def environment_loaders
-        name = compiler.loaders.public_environment_loader.loader_name
+        compiler.loaders.public_environment_loader.loader_name
       end
     end
   end

@@ -132,11 +132,11 @@ describe :play do
     end
     describe 'multiple lines puppet code' do
       let(:input) do
-        <<-EOF
-if $osfamily {
-  $var = '3'
-}
-$var
+        <<~EOF
+          if $osfamily {
+            $var = '3'
+          }
+          $var
         EOF
       end
       xit do

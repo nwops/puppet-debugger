@@ -6,7 +6,7 @@ module PuppetDebugger
       SUMMARY = 'List all the facts associated with the node.'
       COMMAND_GROUP = :node
 
-      def run(args = [])
+      def run(_args = [])
         variables = debugger.node.facts.values
         variables.ai(sort_keys: true, indent: -1)
       end

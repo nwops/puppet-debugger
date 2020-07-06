@@ -76,4 +76,4 @@ class DebuggerCode
       tuple[0] = "#{' ' * distance}#{line}"
     end
   end
-  end
+end

@@ -43,7 +43,7 @@ class CodeFile
     File.read(path)
   end
 
-    private
+  private
 
   # @raise [MethodSource::SourceNotFoundError] if the `filename` is not
   #   readable for some reason.
@@ -95,4 +95,4 @@ class CodeFile
   def from_load_path
     $LOAD_PATH.map { |path| File.expand_path(@filename, path) }
   end
-  end
+end

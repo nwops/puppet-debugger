@@ -8,7 +8,7 @@ module PuppetDebugger
 
       # @return - returns a list of types available to the environment
       # if a error occurs we we run the types function again
-      def run(args = [])
+      def run(_args = [])
         types
       end
 

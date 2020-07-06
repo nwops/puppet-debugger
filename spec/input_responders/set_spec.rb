@@ -7,7 +7,7 @@ describe 'set' do
   let(:input) do
     ':set loglevel debug'
   end
-  
+
   it 'should set the loglevel' do
     debugger_output = /loglevel debug is set/
     debugger.handle_input(input)

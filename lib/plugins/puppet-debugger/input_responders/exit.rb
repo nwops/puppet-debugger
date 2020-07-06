@@ -6,7 +6,7 @@ module PuppetDebugger
       SUMMARY = 'Quit Puppet Debugger.'
       COMMAND_GROUP = :help
 
-      def run(args = [])
+      def run(_args = [])
         exit 0
       end
     end

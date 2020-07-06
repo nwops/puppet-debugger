@@ -39,7 +39,7 @@ module PuppetDebugger
       AwesomePrint.defaults = {
         html: @html_mode,
         sort_keys: true,
-        indent: 2,
+        indent: 2
       }
     end
 
@@ -55,7 +55,7 @@ module PuppetDebugger
         plugins = PuppetDebugger::InputResponders::Commands.plugins.find_all do |p|
           p::COMMAND_WORDS.find { |word| word.start_with?(first_word) }
         end
-        if plugins.count == 1 and /\A#{first_word}\s/.match(Readline.line_buffer)
+        if (plugins.count == 1) && /\A#{first_word}\s/.match(Readline.line_buffer)
           plugins.first.command_completion(words)
         else
           key_words.grep(/^#{Regexp.escape(input)}/)
@@ -124,17 +124,17 @@ module PuppetDebugger
     end
 
     def responder_list
-      plugins = Pluginator.find(PuppetDebugger)
+      Pluginator.find(PuppetDebugger)
     end
 
     # @return [TTY::Pager] the pager object, disable if CI or testing is present
     def pager
-      @pager ||= TTY::Pager.new(output: out_buffer, enabled: ENV['CI'].nil? )
+      @pager ||= TTY::Pager.new(output: out_buffer, enabled: ENV['CI'].nil?)
     end
 
     # @param output [String] - the content to output
     # @summary outputs the output to the output buffer
-    #   uses the pager if the screen height is less than the height of the 
+    #   uses the pager if the screen height is less than the height of the
     #   output content
     #   Disabled if CI or testing is being done
     def handle_output(output)
@@ -147,7 +147,7 @@ module PuppetDebugger
     end
 
     # this method handles all input and expects a string of text.
-    # @param input [String] - the input content to parse or run 
+    # @param input [String] - the input content to parse or run
     def handle_input(input)
       raise ArgumentError unless input.instance_of?(String)
 
@@ -166,28 +166,28 @@ module PuppetDebugger
           o = normalize_output(result)
           o.nil? ? "" : o.ai
         end
-      rescue PuppetDebugger::Exception::InvalidCommand => e
-        e.message.fatal
-      rescue LoadError => e
-        e.message.fatal
-      rescue Errno::ETIMEDOUT => e
-        e.message.fatal
-      rescue ArgumentError => e
-        e.message.fatal
-      rescue Puppet::ResourceError => e
-        e.message.fatal
-      rescue Puppet::Error => e
-        e.message.fatal
-      rescue Puppet::ParseErrorWithIssue => e
-        e.message.fatal
-      rescue PuppetDebugger::Exception::FatalError => e
-        handle_output(e.message.fatal)
-        exit 1 # this can sometimes causes tests to fail
-      rescue PuppetDebugger::Exception::Error => e
-        e.message.fatal
-      rescue ::RuntimeError => e
-        handle_output(e.message.fatal)
-        exit 1
+               rescue PuppetDebugger::Exception::InvalidCommand => e
+                 e.message.fatal
+               rescue LoadError => e
+                 e.message.fatal
+               rescue Errno::ETIMEDOUT => e
+                 e.message.fatal
+               rescue ArgumentError => e
+                 e.message.fatal
+               rescue Puppet::ResourceError => e
+                 e.message.fatal
+               rescue Puppet::Error => e
+                 e.message.fatal
+               rescue Puppet::ParseErrorWithIssue => e
+                 e.message.fatal
+               rescue PuppetDebugger::Exception::FatalError => e
+                 handle_output(e.message.fatal)
+                 exit 1 # this can sometimes causes tests to fail
+               rescue PuppetDebugger::Exception::Error => e
+                 e.message.fatal
+               rescue ::RuntimeError => e
+                 handle_output(e.message.fatal)
+                 exit 1
       end
       output = OUT_SYMBOL + output unless output.empty?
       handle_output(output)
@@ -195,13 +195,13 @@ module PuppetDebugger
     end
 
     def self.print_repl_desc
-      output = <<-EOT
-Ruby Version: #{RUBY_VERSION}
-Puppet Version: #{Puppet.version}
-Puppet Debugger Version: #{PuppetDebugger::VERSION}
-Created by: NWOps <corey@nwops.io>
-Type "commands" for a list of debugger commands
-or "help" to show the help screen.
+      output = <<~EOT
+        Ruby Version: #{RUBY_VERSION}
+        Puppet Version: #{Puppet.version}
+        Puppet Debugger Version: #{PuppetDebugger::VERSION}
+        Created by: NWOps <corey@nwops.io>
+        Type "commands" for a list of debugger commands
+        or "help" to show the help screen.
 
 
       EOT
@@ -285,7 +285,7 @@ or "help" to show the help screen.
         opt :quiet, "Do not display banner", required: false, default: false
       end
       if !STDIN.tty? && !STDIN.closed?
-        options[:run_once] = true 
+        options[:run_once] = true
         options[:quiet] = true
       end
       options = opts.merge(options)

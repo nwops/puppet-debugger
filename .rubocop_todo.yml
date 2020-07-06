@@ -5,57 +5,12 @@
 # one by one as the offenses are removed from the code base.
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again. 
-
-# Offense count: 11
-# Cop supports --auto-correct.
-Layout/HeredocIndentation:
-  Exclude:
-    - 'lib/puppet-debugger/cli.rb'
-    - 'lib/puppet-debugger/support/errors.rb'
-    - 'lib/puppet-debugger/support/facts.rb'
-    - 'lib/puppet/application/debugger.rb'
-    - 'spec/input_responders/play_spec.rb'
-    - 'spec/puppet/application/debugger_spec.rb'
-
-# Offense count: 10
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: normal, indented_internal_methods
-Layout/IndentationConsistency:
-  Exclude:
-    - 'lib/plugins/puppet-debugger/input_responders/play.rb'
-    - 'spec/awesome_print/ext/awesome_puppet_spec.rb'
-    - 'spec/input_responders/classes_spec.rb'
-
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: Width, IgnoredPatterns.
-Layout/IndentationWidth:
-  Exclude:
-    - 'lib/puppet-debugger/input_responder_plugin.rb'
-    - 'lib/puppet-debugger/support/scope.rb'
-    - 'spec/awesome_print/ext/awesome_puppet_spec.rb'
-
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: AllowDoxygenCommentStyle, AllowGemfileRubyComment.
-Layout/LeadingCommentSpace:
-  Exclude:
-    - 'Gemfile'
-    - 'lib/awesome_print/ext/awesome_puppet.rb'
-    - 'lib/plugins/puppet-debugger/input_responders/reset.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Layout/LeadingEmptyLines:
-  Exclude:
-    - 'lib/puppet-debugger/code/code_file.rb'
-
 # Offense count: 30
 # Cop supports --auto-correct.
 # Configuration parameters: AutoCorrect, AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
 # URISchemes: http, https
 Layout/LineLength:
+  Enabled: false
   Max: 586
 
 # Offense count: 2
@@ -64,56 +19,7 @@ Layout/LineLength:
 # SupportedStyles: aligned, indented, indented_relative_to_receiver
 Layout/MultilineMethodCallIndentation:
   Exclude:
-    - 'lib/plugins/puppet-debugger/input_responders/datatypes.rb'
-
-# Offense count: 11
-# Cop supports --auto-correct.
-Layout/RescueEnsureAlignment:
-  Exclude:
-    - 'lib/plugins/puppet-debugger/input_responders/functions.rb'
-    - 'lib/puppet-debugger/cli.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Layout/SpaceAfterComma:
-  Exclude:
-    - 'lib/plugins/puppet-debugger/input_responders/set.rb'
-
-# Offense count: 4
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyleInsidePipes.
-# SupportedStylesInsidePipes: space, no_space
-Layout/SpaceAroundBlockParameters:
-  Exclude:
-    - 'lib/plugins/puppet-debugger/input_responders/commands.rb'
-    - 'lib/plugins/puppet-debugger/input_responders/vars.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: space, no_space
-Layout/SpaceAroundEqualsInParameterDefault:
-  Exclude:
-    - 'lib/puppet-debugger/hooks.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: AllowForAlignment, EnforcedStyleForExponentOperator.
-# SupportedStylesForExponentOperator: space, no_space
-Layout/SpaceAroundOperators:
-  Exclude:
-    - 'Rakefile'
-
-# Offense count: 4
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces.
-# SupportedStyles: space, no_space
-# SupportedStylesForEmptyBraces: space, no_space
-Layout/SpaceBeforeBlockBraces:
-  Exclude:
-    - 'lib/plugins/puppet-debugger/input_responders/commands.rb'
-    - 'lib/puppet-debugger/plugin_test_helper.rb'
-    - 'spec/input_responders/exit_spec.rb'
+  #  - 'lib/plugins/puppet-debugger/input_responders/datatypes.rb'
 
 # Offense count: 2
 # Cop supports --auto-correct.
@@ -131,62 +37,6 @@ Layout/SpaceBeforeFirstArg:
 Layout/SpaceInsideArrayLiteralBrackets:
   Exclude:
     - 'spec/input_responders/benchmark_spec.rb'
-
-# Offense count: 12
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces, SpaceBeforeBlockParameters.
-# SupportedStyles: space, no_space
-# SupportedStylesForEmptyBraces: space, no_space
-Layout/SpaceInsideBlockBraces:
-  Exclude:
-    - 'lib/plugins/puppet-debugger/input_responders/commands.rb'
-    - 'lib/puppet-debugger/plugin_test_helper.rb'
-    - 'spec/input_responders/exit_spec.rb'
-    - 'spec/input_responders/resources_spec.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces.
-# SupportedStyles: space, no_space, compact
-# SupportedStylesForEmptyBraces: space, no_space
-Layout/SpaceInsideHashLiteralBraces:
-  Exclude:
-    - 'lib/puppet-debugger/support/scope.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: space, no_space
-Layout/SpaceInsideParens:
-  Exclude:
-    - 'lib/puppet-debugger/cli.rb'
-
-# Offense count: 8
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: final_newline, final_blank_line
-Layout/TrailingEmptyLines:
-  Exclude:
-    - 'Gemfile'
-    - 'lib/plugins/puppet-debugger/input_responders/benchmark.rb'
-    - 'lib/plugins/puppet-debugger/input_responders/commands.rb'
-    - 'lib/puppet-debugger/hooks.rb'
-    - 'lib/puppet-debugger/monkey_patches.rb'
-    - 'lib/puppet-debugger/plugin_test_helper.rb'
-    - 'spec/input_responders/help_spec.rb'
-    - 'spec/input_responders/play_spec.rb'
-
-# Offense count: 14
-# Cop supports --auto-correct.
-# Configuration parameters: AllowInHeredoc.
-Layout/TrailingWhitespace:
-  Exclude:
-    - 'lib/puppet-debugger/cli.rb'
-    - 'lib/puppet-debugger/support/scope.rb'
-    - 'spec/awesome_print/ext/awesome_puppet_spec.rb'
-    - 'spec/input_responders/set_spec.rb'
-    - 'spec/input_responders/vars_spec.rb'
-    - 'spec/puppet/application/debugger_spec.rb'
 
 # Offense count: 7
 # Configuration parameters: AllowSafeAssignment.
@@ -238,39 +88,6 @@ Lint/UnusedBlockArgument:
     - 'lib/plugins/puppet-debugger/input_responders/functions.rb'
     - 'lib/puppet-debugger/hooks.rb'
     - 'lib/puppet-debugger/plugin_test_helper.rb'
-
-# Offense count: 12
-# Cop supports --auto-correct.
-# Configuration parameters: AllowUnusedKeywordArguments, IgnoreEmptyMethods, IgnoreNotImplementedMethods.
-Lint/UnusedMethodArgument:
-  Exclude:
-    - 'lib/plugins/puppet-debugger/input_responders/classification.rb'
-    - 'lib/plugins/puppet-debugger/input_responders/commands.rb'
-    - 'lib/plugins/puppet-debugger/input_responders/environment.rb'
-    - 'lib/plugins/puppet-debugger/input_responders/exit.rb'
-    - 'lib/plugins/puppet-debugger/input_responders/facterdb_filter.rb'
-    - 'lib/plugins/puppet-debugger/input_responders/facts.rb'
-    - 'lib/plugins/puppet-debugger/input_responders/help.rb'
-    - 'lib/plugins/puppet-debugger/input_responders/krt.rb'
-    - 'lib/plugins/puppet-debugger/input_responders/reset.rb'
-    - 'lib/plugins/puppet-debugger/input_responders/types.rb'
-    - 'lib/puppet-debugger/hooks.rb'
-    - 'lib/puppet-debugger/input_responder_plugin.rb'
-
-# Offense count: 20
-Lint/UselessAssignment:
-  Exclude:
-    - 'Rakefile'
-    - 'lib/plugins/puppet-debugger/input_responders/commands.rb'
-    - 'lib/plugins/puppet-debugger/input_responders/resources.rb'
-    - 'lib/plugins/puppet-debugger/input_responders/vars.rb'
-    - 'lib/puppet-debugger/cli.rb'
-    - 'lib/puppet-debugger/support.rb'
-    - 'lib/puppet-debugger/support/environment.rb'
-    - 'lib/puppet-debugger/support/errors.rb'
-    - 'lib/puppet-debugger/support/node.rb'
-    - 'lib/puppet/application/debugger.rb'
-    - 'spec/support_spec.rb'
 
 # Offense count: 38
 # Configuration parameters: IgnoredMethods.

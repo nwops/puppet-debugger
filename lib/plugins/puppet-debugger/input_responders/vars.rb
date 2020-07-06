@@ -16,11 +16,11 @@ module PuppetDebugger
         variables = debugger.scope.to_hash.delete_if { |key, _value| debugger.node.facts.values.key?(key) }
         variables['facts'] = 'removed by the puppet-debugger' if variables.key?('facts')
         output = 'Facts were removed for easier viewing'.ai + "\n"
-        output += variables.ai(sort_keys: true, indent: -1)
+        output + variables.ai(sort_keys: true, indent: -1)
       end
 
       def resource_parameters(resources, filter = [])
-        find_resources(resources, filter).each_with_object({}) do | resource, acc|
+        find_resources(resources, filter).each_with_object({}) do |resource, acc|
           name = "#{resource.type}[#{resource.name}]"
           acc[name] = parameters_to_h(resource)
           acc
@@ -28,7 +28,7 @@ module PuppetDebugger
       end
 
       def parameters_to_h(resource)
-        resource.parameters.each_with_object({}) do | param, params |
+        resource.parameters.each_with_object({}) do |param, params|
           name = param.first.to_s
           params[name] = param.last.respond_to?(:value) ? param.last.value : param.last
           params

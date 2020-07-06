@@ -83,14 +83,14 @@ module PuppetDebugger
         nodes: scope.environment.known_resource_types.nodes.keys
       }
       if sites = scope.environment.known_resource_types.instance_variable_get(:@sites)
-        res[:sites] = scope.environment.known_resource_types.instance_variable_get(:@sites).first
+        res[:sites] = sites
       end
-      if scope.environment.known_resource_types.respond_to?(:applications)
-        res[:applications] = scope.environment.known_resource_types.applications.keys
+      if apps = scope.environment.known_resource_types.respond_to?(:applications)
+        res[:applications] = apps
       end
       # some versions of puppet do not support capabilities
-      if scope.environment.known_resource_types.respond_to?(:capability_mappings)
-        res[:capability_mappings] = scope.environment.known_resource_types.capability_mappings.keys
+      if maps = scope.environment.known_resource_types.respond_to?(:capability_mappings)
+        res[:capability_mappings] = maps
       end
       res
     end
@@ -100,8 +100,8 @@ module PuppetDebugger
       Puppet.initialize_settings
       Puppet[:parser] = 'future' # this is required in order to work with puppet 3.8
       Puppet[:trusted_node_data] = true
-    rescue ArgumentError => e
-    rescue Puppet::DevError => e
+    rescue ArgumentError
+    rescue Puppet::DevError
       # do nothing otherwise calling init twice raises an error
     end
 

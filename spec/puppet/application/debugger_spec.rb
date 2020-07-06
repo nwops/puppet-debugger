@@ -9,7 +9,7 @@ describe Puppet::Application::Debugger do
   end
 
   # ideally, we should only be providing args in stead of mocking the options
-  # however during a text, the options in the puppet application are not merged from 
+  # however during a text, the options in the puppet application are not merged from
   # the command line opts so the args never get passed through to options
   let(:args) do
     []
@@ -72,12 +72,12 @@ describe Puppet::Application::Debugger do
 
     describe 'can reset correctly' do
       let(:input) do
-        <<-EOF
-$var1 = 'dsfasd'
-$var1
-reset
-$var1 = '111111'
-$var1
+        <<~EOF
+          $var1 = 'dsfasd'
+          $var1
+          reset
+          $var1 = '111111'
+          $var1
         EOF
       end
 
@@ -89,7 +89,6 @@ $var1
   end
 
   describe 'without facterdb' do
-    
     it 'run md5 function' do
       allow(debugger).to receive(:options).and_return(code: "md5('sdafsd')", quiet: true, run_once: true, use_facterdb: false)
       expect { debugger.run_command }.to output(/569ebc3d91672e7d3dce25de1684d0c9/).to_stdout
@@ -109,7 +108,7 @@ $var1
       end
       it 'list resources in catalog' do
         allow(debugger).to receive(:options).and_return(code: "resources",
-                                                        quiet: true, run_once: true, use_facterdb: true, 
+                                                        quiet: true, run_once: true, use_facterdb: true,
                                                         catalog: File.expand_path(File.join(fixtures_dir, 'pe-xl-core-0.puppet.vm.json')))
         expect { debugger.run_command }.to output(/Puppet_enterprise/).to_stdout
       end
@@ -117,12 +116,12 @@ $var1
 
     describe 'can reset correctly' do
       let(:input) do
-        <<-EOF
-$var1 = 'dsfasd'
-$var1
-reset
-$var1 = '111111'
-$var1
+        <<~EOF
+          $var1 = 'dsfasd'
+          $var1
+          reset
+          $var1 = '111111'
+          $var1
         EOF
       end
 

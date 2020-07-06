@@ -49,6 +49,5 @@ describe :vars do
       expect(out).to include('"param1"')
       expect(out).to include('"param2"')
     end
-   
   end
 end

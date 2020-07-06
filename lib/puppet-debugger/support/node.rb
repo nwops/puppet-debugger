@@ -93,11 +93,8 @@ module PuppetDebugger
       def set_node_from_name(name)
         out_buffer.puts "Fetching node #{name}"
         remote_node = get_remote_node(name)
-        if remote_node && remote_node.parameters.empty?
-          remote_node_name = nil # clear out the remote name
-          raise PuppetDebugger::Exception::UndefinedNode, name: remote_node.name
-        end
-        remote_node_name = remote_node.name
+        raise PuppetDebugger::Exception::UndefinedNode, name: remote_node.name if remote_node&.parameters&.empty?
+
         node_object = convert_remote_node(remote_node)
         set_node(node_object)
       end

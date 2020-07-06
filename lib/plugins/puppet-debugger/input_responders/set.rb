@@ -17,7 +17,7 @@ module PuppetDebugger
           else
             LOGLEVELS
           end
-        when 'debug', 'info','node'
+        when 'debug', 'info', 'node'
           []
         when nil
           %w(node loglevel)

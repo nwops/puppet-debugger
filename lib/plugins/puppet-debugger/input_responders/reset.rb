@@ -6,14 +6,14 @@ module PuppetDebugger
       SUMMARY = 'Reset the debugger to a clean state.'
       COMMAND_GROUP = :context
 
-      def run(args = [])
+      def run(_args = [])
         debugger.set_scope(nil)
         debugger.set_remote_node_name(nil)
         debugger.set_node(nil)
         debugger.set_facts(nil)
         debugger.set_environment(nil)
         debugger.set_compiler(nil)
-        #debugger.handle_input(":set loglevel #{debugger.log_level}")
+        # debugger.handle_input(":set loglevel #{debugger.log_level}")
         nil
       end
     end

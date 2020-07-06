@@ -31,7 +31,7 @@ RSpec.shared_examples "plugin_tests" do |parameter|
   end
 
   it 'implements run' do
-    expect{plugin.run([])}.not_to raise_error(NotImplementedError)
+    expect { plugin.run([]) }.not_to raise_error(NotImplementedError)
   end
 
   it 'be looked up via any command words' do

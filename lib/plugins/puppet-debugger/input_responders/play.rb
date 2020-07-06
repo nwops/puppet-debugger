@@ -20,7 +20,7 @@ module PuppetDebugger
           elsif File.exist? config[:play]
             play_back_string(File.read(config[:play]))
           else config[:play]
-          debugger.out_buffer.puts "puppet-debugger can't play #{config[:play]}'"
+               debugger.out_buffer.puts "puppet-debugger can't play #{config[:play]}'"
           end
         end
       end
@@ -31,12 +31,12 @@ module PuppetDebugger
         case url_data.host
         when /^gist\.github*/
           url = url += '.txt' unless url_data.path =~ /raw/
-            url
+          url
         when /^github.com/
           url.gsub('blob', 'raw') if url_data.path =~ /blob/
         when /^gist.github.com/
           url = url += '.txt' unless url_data.path =~ /raw/
-            url
+          url
         when /^gitlab.com/
           if url_data.path =~ /snippets/
             url += '/raw' unless url_data.path =~ /raw/

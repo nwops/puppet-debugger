@@ -18,7 +18,7 @@ module PuppetDebugger
     end
 
     # Ensure that duplicates have their @hooks object.
-    def initialize_copy(orig)
+    def initialize_copy(_orig)
       hooks_dup = @hooks.dup
       @hooks.each do |k, v|
         hooks_dup[k] = v.dup
@@ -68,7 +68,7 @@ module PuppetDebugger
     # @param [#call] callable The callable.
     # @yield The block to use as the callable (if no `callable` provided).
     # @return [PuppetDebugger::Hooks] The receiver.
-    def add_hook(event_name, hook_name, callable=nil, &block)
+    def add_hook(event_name, hook_name, callable = nil, &block)
       event_name = event_name.to_s
 
       # do not allow duplicates, but allow multiple `nil` hooks

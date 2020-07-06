@@ -8,7 +8,7 @@ module PuppetDebugger
 
       # displays the facterdb filter
       # @param [Array] - args is not used
-      def run(args = [])
+      def run(_args = [])
         debugger.dynamic_facterdb_filter.ai
       end
     end

@@ -6,7 +6,7 @@ module PuppetDebugger
       SUMMARY = 'List all available commands, aka. this screen'
       COMMAND_GROUP = :help
 
-      def run(args = [])
+      def run(_args = [])
         commands_list
       end
 
@@ -31,9 +31,9 @@ module PuppetDebugger
       def command_groups
         unless @command_groups
           @command_groups = {}
-          self.class.command_output.each do | item|
+          self.class.command_output.each do |item|
             if @command_groups[item[:group]]
-              @command_groups[item[:group]].merge!({ item[:words].first => item[:summary] })
+              @command_groups[item[:group]].merge!(item[:words].first => item[:summary])
             else
               @command_groups[item[:group]] = { item[:words].first => item[:summary] }
             end
@@ -43,12 +43,12 @@ module PuppetDebugger
       end
 
       def self.command_list_regex
-        out = command_list.map {|n| "^#{n}"}.join('|')
-        %r(#{out})
+        out = command_list.map { |n| "^#{n}" }.join('|')
+        /#{out}/
       end
 
       def self.command_list
-        command_output.map{|f| f[:words] }.flatten
+        command_output.map { |f| f[:words] }.flatten
       end
 
       def self.command_output
@@ -56,18 +56,16 @@ module PuppetDebugger
       end
 
       def self.plugins
-        begin
-          debug_plugins = Pluginator.find('puppet-debugger')
-          debug_plugins["input_responders"]
-        rescue NoMethodError => e
-          raise PuppetDebugger::Exception::InvalidCommand.new(message: "Unsupported gem version.  Please update with: gem update --system")
-        end
+        debug_plugins = Pluginator.find('puppet-debugger')
+        debug_plugins["input_responders"]
+      rescue NoMethodError
+        raise PuppetDebugger::Exception::InvalidCommand.new(message: "Unsupported gem version.  Please update with: gem update --system")
       end
 
       # @param name [String] - the name of the command that is associated with a plugin
       # @return [PuppetDebugger::InputResponders::InputResponderPlugin]
       def self.plugin_from_command(name)
-        p = plugins.find {|p| p::COMMAND_WORDS.include?(name)}
+        p = plugins.find { |p| p::COMMAND_WORDS.include?(name) }
         raise PuppetDebugger::Exception::InvalidCommand.new(message: "invalid command #{name}") unless p
 
         p

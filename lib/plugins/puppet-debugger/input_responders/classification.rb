@@ -6,7 +6,7 @@ module PuppetDebugger
       SUMMARY = 'Show the classification details of the node.'
       COMMAND_GROUP = :node
 
-      def run(args = [])
+      def run(_args = [])
         debugger.node.classes.ai
       end
     end

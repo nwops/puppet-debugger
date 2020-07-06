@@ -46,10 +46,10 @@ module PuppetDebugger
       def node_facts
         node_facts = FacterDB.get_facts(dynamic_facterdb_filter).first
         if node_facts.nil?
-          message = <<-EOS
-Using filter: #{dynamic_facterdb_filter}
-Bad FacterDB filter, please change the filter so it returns a result set.
-See https://github.com/camptocamp/facterdb/#with-a-string-filter
+          message = <<~EOS
+            Using filter: #{dynamic_facterdb_filter}
+            Bad FacterDB filter, please change the filter so it returns a result set.
+            See https://github.com/camptocamp/facterdb/#with-a-string-filter
           EOS
           raise PuppetDebugger::Exception::BadFilter, message: message
         end

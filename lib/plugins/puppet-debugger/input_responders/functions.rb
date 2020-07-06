@@ -45,8 +45,8 @@ module PuppetDebugger
       def current_module_dir
         @current_module_dir ||= begin
           File.dirname(::Bundler.default_gemfile)
-        rescue ::Bundler::GemfileNotFound
-          Dir.pwd
+                                rescue ::Bundler::GemfileNotFound
+                                  Dir.pwd
         end
       end
 

@@ -13,7 +13,7 @@ module PuppetDebugger
           res.to_s.gsub(/\[/, "['").gsub(/\]/, "']") # ensure the title has quotes
         end
         output = "Resources not shown in any specific order\n".warning
-        output += modified.ai
+        output + modified.ai
       end
 
       def find_resources(resources, filter = [])

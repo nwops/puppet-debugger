@@ -6,7 +6,7 @@ module PuppetDebugger
       SUMMARY = 'Show the help screen with version information.'
       COMMAND_GROUP = :help
 
-      def run(args = [])
+      def run(_args = [])
         PuppetDebugger::Cli.print_repl_desc
       end
     end

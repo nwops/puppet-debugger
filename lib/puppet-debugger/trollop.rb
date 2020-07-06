@@ -152,8 +152,7 @@ module Trollop
         when :doubles        then :floats
         when Class
           case opts[:type].name
-          when 'TrueClass',
-               'FalseClass'  then :flag
+          when 'TrueClass', 'FalseClass' then :flag
           when 'String'      then :string
           when 'Integer'     then :int
           when 'Float'       then :float
@@ -177,14 +176,13 @@ module Trollop
                                 opts[:default].first
                               else
                                 opts[:default]
-      end
+                              end
 
       type_from_default =
         case disambiguated_default
         when Integer     then :int
         when Numeric     then :float
-        when TrueClass,
-             FalseClass  then :flag
+        when TrueClass, FalseClass then :flag
         when String      then :string
         when IO          then :io
         when Date        then :date
@@ -223,7 +221,7 @@ module Trollop
                     when /^--([^-].*)$/ then Regexp.last_match(1)
                     when /^[^-]/        then opts[:long]
                     else raise ArgumentError, "invalid long option name #{opts[:long].inspect}"
-      end
+                    end
       raise ArgumentError, "long option name #{opts[:long].inspect} is already taken; please specify a (different) :long" if @long[opts[:long]]
 
       ## fill in :short
@@ -232,7 +230,7 @@ module Trollop
                      when /^-(.)$/          then Regexp.last_match(1)
                      when nil, :none, /^.$/ then opts[:short]
                      else                   raise ArgumentError, "invalid short option name '#{opts[:short].inspect}'"
-      end
+                     end
 
       if opts[:short]
         raise ArgumentError, "short option name #{opts[:short].inspect} is already taken; please specify a (different) :short" if @short[opts[:short]]
@@ -350,22 +348,20 @@ module Trollop
                                 ["--#{Regexp.last_match(1)}", true]
                               else
                                 [arg, false]
-        end
+                              end
 
         sym = case arg
               when /^-([^-])$/      then @short[Regexp.last_match(1)]
               when /^--([^-]\S*)$/  then @long[Regexp.last_match(1)] || @long["no-#{Regexp.last_match(1)}"]
               else raise CommandlineError, "invalid argument syntax: '#{arg}'"
-        end
+              end
 
         sym = nil if arg =~ /--no-/ # explicitly invalidate --no-no- arguments
 
         next 0 if ignore_invalid_options && !sym
         raise CommandlineError, "unknown argument '#{arg}'" unless sym
 
-        if given_args.include?(sym) && !@specs[sym][:multi]
-          raise CommandlineError, "option '#{arg}' specified multiple times"
-        end
+        raise CommandlineError, "option '#{arg}' specified multiple times" if given_args.include?(sym) && !@specs[sym][:multi]
 
         given_args[sym] ||= {}
         given_args[sym][:arg] = arg
@@ -531,7 +527,7 @@ module Trollop
                         spec[:default].join(', ')
                       else
                         spec[:default].to_s
-          end
+                      end
 
           if spec[:default]
             if spec[:desc] =~ /\.$/
@@ -557,7 +553,7 @@ module Trollop
                    end
                  else
                    80
-      end
+                 end
     end
 
     def legacy_width
@@ -584,15 +580,15 @@ module Trollop
     ## The per-parser version of Trollop::die (see that for documentation).
     def die(arg, msg = nil, error_code = nil)
       if msg
-        $stderr.puts "Error: argument --#{@specs[arg][:long]} #{msg}."
+        warn "Error: argument --#{@specs[arg][:long]} #{msg}."
       else
-        $stderr.puts "Error: #{arg}."
+        warn "Error: #{arg}."
       end
       if @educate_on_error
         $stderr.puts
         educate $stderr
       else
-        $stderr.puts 'Try --help for help.'
+        warn 'Try --help for help.'
       end
       exit(error_code || -1)
     end

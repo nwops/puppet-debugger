@@ -4,7 +4,7 @@ require 'puppet-debugger/plugin_test_helper'
 
 describe :resources do
   include_examples 'plugin_tests'
-  let(:args) { }
+  let(:args) {}
 
   it 'should be able to print resources' do
     debugger_output = /main/
