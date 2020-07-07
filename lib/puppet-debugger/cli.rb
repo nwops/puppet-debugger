@@ -139,6 +139,8 @@ module PuppetDebugger
     #   output content
     #   Disabled if CI or testing is being done
     def handle_output(output)
+      return if output.nil?
+
       if output.lines.count >= TTY::Screen.height && ENV['CI'].nil?
         output << "\n"
         pager.page(output)
