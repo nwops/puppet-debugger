@@ -152,44 +152,45 @@ module PuppetDebugger
     def handle_input(input)
       raise ArgumentError unless input.instance_of?(String)
 
-      output = begin
-        case input.strip
-        when PuppetDebugger::InputResponders::Commands.command_list_regex
-          args = input.split(' ')
-          command = args.shift
-          plugin = PuppetDebugger::InputResponders::Commands.plugin_from_command(command)
-          plugin.execute(args, self) || ''
-        when '_'
-          " => #{@last_item}"
-        else
-          result = puppet_eval(input)
-          @last_item = result
-          o = normalize_output(result)
-          o.nil? ? '' : o.ai
+      output =
+        begin
+          case input.strip
+          when PuppetDebugger::InputResponders::Commands.command_list_regex
+            args = input.split(" ")
+            command = args.shift
+            plugin = PuppetDebugger::InputResponders::Commands.plugin_from_command(command)
+            plugin.execute(args, self) || ""
+          when "_"
+            " => #{@last_item}"
+          else
+            result = puppet_eval(input)
+            @last_item = result
+            o = normalize_output(result)
+            o.nil? ? "" : o.ai
+          end
+        rescue PuppetDebugger::Exception::InvalidCommand => e
+          e.message.fatal
+        rescue LoadError => e
+          e.message.fatal
+        rescue Errno::ETIMEDOUT => e
+          e.message.fatal
+        rescue ArgumentError => e
+          e.message.fatal
+        rescue Puppet::ResourceError => e
+          e.message.fatal
+        rescue Puppet::Error => e
+          e.message.fatal
+        rescue Puppet::ParseErrorWithIssue => e
+          e.message.fatal
+        rescue PuppetDebugger::Exception::FatalError => e
+          handle_output(e.message.fatal)
+          exit 1 # this can sometimes causes tests to fail
+        rescue PuppetDebugger::Exception::Error => e
+          e.message.fatal
+        rescue ::RuntimeError => e
+          handle_output(e.message.fatal)
+          exit 1
         end
-               rescue PuppetDebugger::Exception::InvalidCommand => e
-                 e.message.fatal
-               rescue LoadError => e
-                 e.message.fatal
-               rescue Errno::ETIMEDOUT => e
-                 e.message.fatal
-               rescue ArgumentError => e
-                 e.message.fatal
-               rescue Puppet::ResourceError => e
-                 e.message.fatal
-               rescue Puppet::Error => e
-                 e.message.fatal
-               rescue Puppet::ParseErrorWithIssue => e
-                 e.message.fatal
-               rescue PuppetDebugger::Exception::FatalError => e
-                 handle_output(e.message.fatal)
-                 exit 1 # this can sometimes causes tests to fail
-               rescue PuppetDebugger::Exception::Error => e
-                 e.message.fatal
-               rescue ::RuntimeError => e
-                 handle_output(e.message.fatal)
-                 exit 1
-      end
       output = OUT_SYMBOL + output unless output.empty?
       handle_output(output)
       exec_hook :after_output, out_buffer, self, self
