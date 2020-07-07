@@ -201,7 +201,6 @@ class Puppet::Application::Debugger < Puppet::Application
     # if this is a file we don't play back since its part of the environment
     # if just the code we put in a file and use the play feature of the debugger
     # we could do the same thing with the passed in manifest file but that might be too much code to show
-
     if options[:code]
       code_input = options.delete(:code)
       file = Tempfile.new(['puppet_debugger_input', '.pp'])
@@ -221,7 +220,7 @@ class Puppet::Application::Debugger < Puppet::Application
       raise "Could not find file #{manifest}" unless Puppet::FileSystem.exist?(manifest)
 
       Puppet.warning("Only one file can be used per run.  Skipping #{command_line.args.join(', ')}") unless command_line.args.empty?
-      options[:play] = file
+      options[:play] = manifest
     end
     begin
       if !options[:use_facterdb] && options[:node_name].nil?
