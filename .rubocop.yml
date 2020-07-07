@@ -1,5 +1,7 @@
 inherit_from: .rubocop_todo.yml
 
+#inherit_from: .rubocop_todo.yml
+
 # The behavior of RuboCop can be controlled via the .rubocop.yml
 # configuration file. It makes it possible to enable/disable
 # certain cops (checks) and to alter their behavior if they accept
@@ -16,17 +18,46 @@ AllCops:
   Exclude:
     - 'spec/fixtures/**/*'
     - 'vendor/**/*'
-#   Include:
-#     - lib/puppet
-#     - lib/puppet-debugger
-#     - lib/awesome_print
-#     - lib/version.rb
-#     - lib/puppet-debugger.rb
-#     - bin
+    - 'test_matrix.rb'
+    - 'lib/puppet-debugger/trollop.rb'
+
+
 Lint/Debugger:
   Enabled: false
 Layout/LineLength:
   Max: 129
-        
+Style/NumericPredicate:
+  Exclude:
+    - 'spec/**/*'
+    - lib/puppet-debugger/plugin_test_helper.rb 
 Metrics/BlockLength:
   Max: 277
+
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: false
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: false
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: false
+Lint/MixedRegexpCaptureTypes:
+  Enabled: false 
+Lint/RaiseException:
+  Enabled: false 
+Lint/StructNewOverride:
+  Enabled: false 
+Style/ExponentialNotation:
+  Enabled: false 
+Style/HashEachMethods:
+  Enabled: false 
+Style/HashTransformKeys:
+  Enabled: false 
+Style/HashTransformValues:
+  Enabled: false 
+Style/RedundantFetchBlock:
+  Enabled: false 
+Style/RedundantRegexpCharacterClass:
+  Enabled: false 
+Style/RedundantRegexpEscape:
+  Enabled: false 
+Style/SlicingWithRange:
+  Enabled: false 

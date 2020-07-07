@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'puppet-debugger/plugin_test_helper'
 describe :play do
-  include_examples "plugin_tests"
+  include_examples 'plugin_tests'
 
   describe 'convert  url' do
     describe 'unsupported' do
@@ -132,12 +134,12 @@ describe :play do
     end
     describe 'multiple lines puppet code' do
       let(:input) do
-        <<~EOF
+        <<~OUT
           if $osfamily {
             $var = '3'
           }
           $var
-        EOF
+        OUT
       end
       xit do
         plugin.play_back_string(input)

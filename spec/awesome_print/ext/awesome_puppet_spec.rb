@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'awesome_print'
-require "awesome_print/ext/awesome_puppet"
+require 'awesome_print/ext/awesome_puppet'
 
 RSpec.describe do
   let(:output) do

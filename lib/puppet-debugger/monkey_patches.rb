@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # monkey patch in some color effects string methods
 class String
   def red

@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'puppet-debugger/input_responder_plugin'
 module PuppetDebugger
   module InputResponders
     class Whereami < InputResponderPlugin
-      COMMAND_WORDS = %w(whereami)
+      COMMAND_WORDS = %w[whereami].freeze
       SUMMARY = 'Show code surrounding the current context.'
       COMMAND_GROUP = :context
 
@@ -21,8 +23,8 @@ module PuppetDebugger
           else
             code = DebuggerCode.from_file(file, :puppet)
           end
-          return code.with_marker(line_num).around(line_num, num_lines)
-                     .with_line_numbers.with_indentation(5).with_file_reference.to_s
+          code.with_marker(line_num).around(line_num, num_lines)
+              .with_line_numbers.with_indentation(5).with_file_reference.to_s
         end
       end
 

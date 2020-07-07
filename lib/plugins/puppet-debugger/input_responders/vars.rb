@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'puppet-debugger/input_responder_plugin'
 module PuppetDebugger
   module InputResponders
     class Vars < InputResponderPlugin
-      COMMAND_WORDS = %w(vars ls)
+      COMMAND_WORDS = %w[vars ls].freeze
       SUMMARY = 'List all the variables in the current scopes.'
       COMMAND_GROUP = :scope
 

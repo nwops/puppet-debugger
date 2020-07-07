@@ -33,14 +33,14 @@ end
 
 desc 'Creates generic input_responder spec files'
 task :make_input_responder_tests do
-  files = Dir.glob("lib/plugins/**/*.rb")
+  files = Dir.glob('lib/plugins/**/*.rb')
   files.collect do |pathname|
-    orig_file = File.basename(pathname, ".*")
+    orig_file = File.basename(pathname, '.*')
     test_file = File.join('spec', 'input_responders', "#{orig_file}_spec.rb")
     next if File.exist?(test_file)
 
     # new_file = File.new(test_file, "w")
-    contents = <<-EOS
+    contents = <<-OUT
         require 'spec_helper'
         require 'puppet-debugger'
         require 'puppet-debugger/plugin_test_helper'
@@ -50,7 +50,7 @@ task :make_input_responder_tests do
         let(:args) { [] }
 
         end
-    EOS
+    OUT
     File.write(test_file, contents)
   end
 end

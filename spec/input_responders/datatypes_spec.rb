@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'puppet-debugger'
 require 'puppet-debugger/plugin_test_helper'
@@ -9,7 +11,7 @@ describe :datatypes do
   it 'handle datatypes' do
     output = plugin.run(args)
     if Gem::Version.new(Puppet.version) < Gem::Version.new('4.5.0')
-      expect(output).to eq("[]")
+      expect(output).to eq('[]')
     else
       expect(output).to match(/.*Array.*/)
     end
@@ -29,6 +31,6 @@ describe :datatypes do
 
   it 'search datatypes' do
     output = plugin.run(['integer'])
-    expect(output.split("Integer").count).to be >= 2
+    expect(output.split('Integer').count).to be >= 2
   end
 end

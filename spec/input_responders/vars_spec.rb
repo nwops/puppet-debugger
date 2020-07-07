@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'puppet-debugger'
 require 'puppet-debugger/plugin_test_helper'
@@ -38,10 +40,10 @@ describe :vars do
 
   describe 'list variables' do
     let(:input) do
-      <<-EOF
+      <<-OUT
       class test( $param1 = "files", $param2 = $param1 ) {}
       include test
-      EOF
+      OUT
     end
     it 'ls test' do
       debugger.handle_input(input)

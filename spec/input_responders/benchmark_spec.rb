@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'puppet-debugger'
 require 'puppet-debugger/plugin_test_helper'
 
 describe :benchmark do
   include_examples 'plugin_tests'
-  let(:args) { ["benchmark", "md5('12345')" ] }
+  let(:args) { ['benchmark', "md5('12345')"] }
 
   describe 'mode' do
     before(:each) do

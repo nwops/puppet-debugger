@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'puppet-debugger/input_responder_plugin'
 module PuppetDebugger
   module InputResponders
     class Commands < InputResponderPlugin
-      COMMAND_WORDS = %w(commands)
+      COMMAND_WORDS = %w[commands].freeze
       SUMMARY = 'List all available commands, aka. this screen'
       COMMAND_GROUP = :help
 
@@ -57,18 +59,18 @@ module PuppetDebugger
 
       def self.plugins
         debug_plugins = Pluginator.find('puppet-debugger')
-        debug_plugins["input_responders"]
+        debug_plugins['input_responders']
       rescue NoMethodError
-        raise PuppetDebugger::Exception::InvalidCommand.new(message: "Unsupported gem version.  Please update with: gem update --system")
+        raise PuppetDebugger::Exception::InvalidCommand.new(message: 'Unsupported gem version.  Please update with: gem update --system')
       end
 
       # @param name [String] - the name of the command that is associated with a plugin
       # @return [PuppetDebugger::InputResponders::InputResponderPlugin]
       def self.plugin_from_command(name)
-        p = plugins.find { |p| p::COMMAND_WORDS.include?(name) }
-        raise PuppetDebugger::Exception::InvalidCommand.new(message: "invalid command #{name}") unless p
+        plug = plugins.find { |p| p::COMMAND_WORDS.include?(name) }
+        raise PuppetDebugger::Exception::InvalidCommand.new(message: "invalid command #{name}") unless plug
 
-        p
+        plug
       end
     end
   end

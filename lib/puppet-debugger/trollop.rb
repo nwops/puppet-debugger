@@ -34,10 +34,10 @@ module Trollop
   end
 
   ## Regex for floating point numbers
-  FLOAT_RE = /^-?((\d+(\.\d+)?)|(\.\d+))([eE][-+]?[\d]+)?$/
+  FLOAT_RE = /^-?((\d+(\.\d+)?)|(\.\d+))([eE][-+]?[\d]+)?$/.freeze
 
   ## Regex for parameters
-  PARAM_RE = /^-(-|\.$|[^\d\.])/
+  PARAM_RE = /^-(-|\.$|[^\d\.])/.freeze
 
   ## The commandline parser. In typical usage, the methods in this class
   ## will be handled internally by Trollop::options. In this case, only the
@@ -51,24 +51,24 @@ module Trollop
   class Parser
     ## The set of values that indicate a flag option when passed as the
     ## +:type+ parameter of #opt.
-    FLAG_TYPES = [:flag, :bool, :boolean].freeze
+    FLAG_TYPES = %i[flag bool boolean].freeze
 
     ## The set of values that indicate a single-parameter (normal) option when
     ## passed as the +:type+ parameter of #opt.
     ##
     ## A value of +io+ corresponds to a readable IO resource, including
     ## a filename, URI, or the strings 'stdin' or '-'.
-    SINGLE_ARG_TYPES = [:int, :integer, :string, :double, :float, :io, :date].freeze
+    SINGLE_ARG_TYPES = %i[int integer string double float io date].freeze
 
     ## The set of values that indicate a multiple-parameter option (i.e., that
     ## takes multiple space-separated values on the commandline) when passed as
     ## the +:type+ parameter of #opt.
-    MULTI_ARG_TYPES = [:ints, :integers, :strings, :doubles, :floats, :ios, :dates].freeze
+    MULTI_ARG_TYPES = %i[ints integers strings doubles floats ios dates].freeze
 
     ## The complete set of legal values for the +:type+ parameter of #opt.
     TYPES = FLAG_TYPES + SINGLE_ARG_TYPES + MULTI_ARG_TYPES
 
-    INVALID_SHORT_ARG_REGEX = /[\d-]/ #:nodoc:
+    INVALID_SHORT_ARG_REGEX = /[\d-]/.freeze #:nodoc:
 
     ## The values from the commandline that were not interpreted by #parse.
     attr_reader :leftovers
@@ -256,21 +256,21 @@ module Trollop
     ## Sets the version string. If set, the user can request the version
     ## on the commandline. Should probably be of the form "<program name>
     ## <version number>".
-    def version(s = nil)
-      s ? @version = s : @version
+    def version(value = nil)
+      value ? @version = value : @version
     end
 
     ## Sets the usage string. If set the message will be printed as the
     ## first line in the help (educate) output and ending in two new
     ## lines.
-    def usage(s = nil)
-      s ? @usage = s : @usage
+    def usage(value = nil)
+      value ? @usage = value : @usage
     end
 
     ## Adds a synopsis (command summary description) right below the
     ## usage line, or as the first line if usage isn't specified.
-    def synopsis(s = nil)
-      s ? @synopsis = s : @synopsis
+    def synopsis(value = nil)
+      value ? @synopsis = value : @synopsis
     end
 
     ## Adds text to the help display. Can be interspersed with calls to
@@ -395,9 +395,13 @@ module Trollop
 
         case type
         when :depends
-          syms.each { |sym| raise CommandlineError, "--#{@specs[constraint_sym][:long]} requires --#{@specs[sym][:long]}" unless given_args.include? sym }
+          syms.each do |sym|
+            raise CommandlineError, "--#{@specs[constraint_sym][:long]} requires --#{@specs[sym][:long]}" unless given_args.include? sym
+          end
         when :conflicts
-          syms.each { |sym| raise CommandlineError, "--#{@specs[constraint_sym][:long]} conflicts with --#{@specs[sym][:long]}" if given_args.include?(sym) && (sym != constraint_sym) }
+          syms.each do |sym|
+            raise CommandlineError, "--#{@specs[constraint_sym][:long]} conflicts with --#{@specs[sym][:long]}" if given_args.include?(sym) && (sym != constraint_sym)
+          end
         end
       end
 

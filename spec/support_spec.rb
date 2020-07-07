@@ -28,12 +28,12 @@ describe 'support' do
   end
 
   let(:manifest_code) do
-    <<-EOF
+    <<-OUT
     file{'/tmp/test.txt': ensure => absent } \n
     notify{'hello_there':} \n
     service{'httpd': ensure => running}\n
 
-    EOF
+    OUT
   end
 
   after(:each) do

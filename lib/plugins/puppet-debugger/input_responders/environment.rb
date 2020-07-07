@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'puppet-debugger/input_responder_plugin'
 module PuppetDebugger
   module InputResponders
     class Environment < InputResponderPlugin
-      COMMAND_WORDS = %w(environment)
+      COMMAND_WORDS = %w[environment].freeze
       SUMMARY = 'Show the current environment name'
       COMMAND_GROUP = :context
 

@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'puppet-debugger/input_responder_plugin'
 module PuppetDebugger
   module InputResponders
     class Types < InputResponderPlugin
-      COMMAND_WORDS = %w(types)
+      COMMAND_WORDS = %w[types].freeze
       SUMMARY = 'List all the types available in the environment.'
       COMMAND_GROUP = :environment
 

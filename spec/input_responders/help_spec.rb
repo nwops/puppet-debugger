@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'puppet-debugger/plugin_test_helper'
 
 describe :help do
-  include_examples "plugin_tests"
+  include_examples 'plugin_tests'
   let(:args) { [] }
 
   let(:help_output) do

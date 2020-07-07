@@ -38,7 +38,7 @@ describe :input_responder_plugin do
     end
   end
 
-  [:add_hook, :handle_input, :delete_hook, :handle_input].each do |name|
+  %i[add_hook handle_input delete_hook handle_input].each do |name|
     it "responds to method #{name}" do
       expect(plugin.respond_to?(name)).to eq(true)
     end

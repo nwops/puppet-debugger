@@ -61,16 +61,16 @@ module AwesomePrint
       return '' if object.nil?
       return object.to_s unless object.respond_to?(:name) && object.respond_to?(:title) && object.respond_to?(:to_hash)
 
-      if Array.new.respond_to?(:to_h)
-        # to_h is only supported in ruby 2.1+
-        h = object.to_hash.merge(name: object.name, title: object.title).sort.to_h
-      else
-        h = object.to_hash.merge(name: object.name, title: object.title)
-      end
+      h = if [].respond_to?(:to_h)
+            # to_h is only supported in ruby 2.1+
+            object.to_hash.merge(name: object.name, title: object.title).sort.to_h
+          else
+            object.to_hash.merge(name: object.name, title: object.title)
+          end
       res_str = awesome_hash(JSON.parse(h.to_json)) # converting to json removes symbols
       "#{object.class} #{res_str}"
     end
   end
 end
 
-AwesomePrint::Formatter.send(:include, AwesomePrint::Puppet)
+AwesomePrint::Formatter.include AwesomePrint::Puppet

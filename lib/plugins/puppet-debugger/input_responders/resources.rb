@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'puppet-debugger/input_responder_plugin'
 module PuppetDebugger
   module InputResponders
     class Resources < InputResponderPlugin
-      COMMAND_WORDS = %w(resources)
+      COMMAND_WORDS = %w[resources].freeze
       SUMMARY = 'List all the resources current in the catalog.'
       COMMAND_GROUP = :scope
 

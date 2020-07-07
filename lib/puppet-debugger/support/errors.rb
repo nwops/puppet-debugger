@@ -20,9 +20,9 @@ module PuppetDebugger
 
     class ConnectError < Error
       def message
-        <<~EOF
+        <<~OUT
           #{data[:message]}
-        EOF
+        OUT
       end
     end
 
@@ -34,9 +34,9 @@ module PuppetDebugger
 
     class UndefinedNode < FatalError
       def message
-        <<~EOF
+        <<~OUT
           Cannot find node with name: #{data[:name]} on remote server
-        EOF
+        OUT
       end
     end
 
@@ -46,35 +46,35 @@ module PuppetDebugger
 
     class NoClassError < FatalError
       def message
-        <<~EOF
+        <<~OUT
           #{data[:message]}
           You are missing puppet classes that are required for compilation.
           Please ensure these classes are installed on this machine in any of the following paths:
           #{data[:default_modules_paths]}
-        EOF
+        OUT
       end
     end
 
     class NodeDefinitionError < FatalError
       def message
-        out = <<~EOF
+        out = <<~OUT
           You are missing a default node definition in your site.pp that is required for compilation.
           Please ensure you have at least the following default node definition
             node default {
               # include classes here
             }
           in your #{data[:default_site_manifest]} file.
-        EOF
+        OUT
         out.fatal
       end
     end
 
     class AuthError < FatalError
       def message
-        <<~EOF
+        <<~OUT
           #{data[:message]}
           You will need to edit your auth.conf or conf.d/auth.conf (puppetserver) to allow node calls.
-        EOF
+        OUT
       end
     end
   end

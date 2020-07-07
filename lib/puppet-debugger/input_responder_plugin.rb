@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'singleton'
 require 'puppet-debugger/support/errors'
 require 'forwardable'

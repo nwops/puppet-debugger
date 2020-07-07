@@ -16,11 +16,13 @@ SimpleCov.configure do
   load_profile 'test_frameworks'
 end
 
-SimpleCov.start do
-  add_filter '/.rvm/'
-  add_filter 'vendor'
-  add_filter 'bundler'
-end if ENV['COVERAGE']
+if ENV['COVERAGE']
+  SimpleCov.start do
+    add_filter '/.rvm/'
+    add_filter 'vendor'
+    add_filter 'bundler'
+  end
+end
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
@@ -30,7 +32,7 @@ require 'puppet-debugger'
 ENV['REPL_FACTERDB_FILTER'] = 'operatingsystem=Fedora and operatingsystemrelease=23 and architecture=x86_64 and facterversion=/^2\\.4/'
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
-Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each { |f| require f }
 
 def stdlib_path
   File.join(Puppet[:basemodulepath].split(':').first, 'stdlib')

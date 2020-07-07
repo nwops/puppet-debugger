@@ -72,13 +72,13 @@ describe Puppet::Application::Debugger do
 
     describe 'can reset correctly' do
       let(:input) do
-        <<~EOF
+        <<~OUT
           $var1 = 'dsfasd'
           $var1
           reset
           $var1 = '111111'
           $var1
-        EOF
+        OUT
       end
 
       it 'assign variable' do
@@ -107,7 +107,7 @@ describe Puppet::Application::Debugger do
         ]
       end
       it 'list resources in catalog' do
-        allow(debugger).to receive(:options).and_return(code: "resources",
+        allow(debugger).to receive(:options).and_return(code: 'resources',
                                                         quiet: true, run_once: true, use_facterdb: true,
                                                         catalog: File.expand_path(File.join(fixtures_dir, 'pe-xl-core-0.puppet.vm.json')))
         expect { debugger.run_command }.to output(/Puppet_enterprise/).to_stdout
@@ -116,13 +116,13 @@ describe Puppet::Application::Debugger do
 
     describe 'can reset correctly' do
       let(:input) do
-        <<~EOF
+        <<~OUT
           $var1 = 'dsfasd'
           $var1
           reset
           $var1 = '111111'
           $var1
-        EOF
+        OUT
       end
 
       it 'assign variable' do

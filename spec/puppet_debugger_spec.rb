@@ -92,7 +92,7 @@ describe 'PuppetDebugger' do
 
   describe 'native functions', native_functions: true do
     let(:func) do
-      <<-EOF
+      <<-OUT
       function debugger::bool2http($arg) {
         case $arg {
           false, undef, /(?i:false)/ : { 'Off' }
@@ -100,7 +100,7 @@ describe 'PuppetDebugger' do
           default               : { "$arg" }
         }
       }
-      EOF
+      OUT
     end
     before(:each) do
       debugger.handle_input(func)
@@ -112,9 +112,9 @@ describe 'PuppetDebugger' do
     end
     describe 'run' do
       let(:input) do
-        <<-EOF
+        <<-OUT
         debugger::bool2http(false)
-        EOF
+        OUT
       end
       it do
         debugger.handle_input(input)
@@ -156,7 +156,7 @@ describe 'PuppetDebugger' do
     end
     it 'can process a variable' do
       debugger.handle_input(input)
-      expect(output.string).to match(/\/tmp\/test2.txt/)
+      expect(output.string).to match(%r{/tmp/test2.txt})
     end
   end
 
@@ -177,7 +177,7 @@ describe 'PuppetDebugger' do
     end
     it 'can process' do
       debugger.handle_input(input)
-      expect(output.string).to match(%r{Syntax error at end of})
+      expect(output.string).to match(/Syntax error at end of/)
     end
   end
 
@@ -198,8 +198,8 @@ describe 'PuppetDebugger' do
     end
     it 'can process a each block' do
       debugger.handle_input(input)
-      expect(output.string).to match(/\/tmp\/test3/)
-      expect(output.string).to match(/\/tmp\/test4/)
+      expect(output.string).to match(%r{/tmp/test3})
+      expect(output.string).to match(%r{/tmp/test4})
     end
   end
 

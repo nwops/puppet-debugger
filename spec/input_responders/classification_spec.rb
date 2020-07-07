@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'puppet-debugger'
 require 'puppet-debugger/plugin_test_helper'
@@ -7,7 +9,7 @@ describe :classification do
   let(:args) { [] }
 
   it 'can process a file' do
-    expect(plugin.run(args)).to eq("[]")
+    expect(plugin.run(args)).to eq('[]')
   end
 
   it 'can process a file from handle input' do

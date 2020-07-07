@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'puppet-debugger/input_responder_plugin'
 module PuppetDebugger
   module InputResponders
     class Classes < InputResponderPlugin
-      COMMAND_WORDS = %w(classes)
+      COMMAND_WORDS = %w[classes].freeze
       SUMMARY = 'List all the classes current in the catalog.'
       COMMAND_GROUP = :scope
 

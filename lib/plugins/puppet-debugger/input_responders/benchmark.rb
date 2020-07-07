@@ -1,14 +1,16 @@
+# frozen_string_literal: true
+
 require 'benchmark'
 require 'puppet-debugger/input_responder_plugin'
 module PuppetDebugger
   module InputResponders
     class Benchmark < InputResponderPlugin
-      COMMAND_WORDS = %w(benchmark bm)
+      COMMAND_WORDS = %w[benchmark bm].freeze
       SUMMARY = 'Benchmark your Puppet code.'
       COMMAND_GROUP = :tools
 
       def run(args = [])
-        if args.count > 0
+        if args.count.positive?
           enable(false)
           out = debugger.handle_input(args.first)
           disable

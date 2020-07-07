@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'puppet-debugger/input_responder_plugin'
 module PuppetDebugger
   module InputResponders
     class Exit < InputResponderPlugin
-      COMMAND_WORDS = %w(exit)
+      COMMAND_WORDS = %w[exit].freeze
       SUMMARY = 'Quit Puppet Debugger.'
       COMMAND_GROUP = :help
 

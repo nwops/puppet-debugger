@@ -1,18 +1,20 @@
+# frozen_string_literal: true
+
 require 'puppet-debugger/input_responder_plugin'
 module PuppetDebugger
   module InputResponders
     class Set < InputResponderPlugin
-      COMMAND_WORDS = %w(set :set)
+      COMMAND_WORDS = %w[set :set].freeze
       SUMMARY = 'Set the a puppet debugger config'
       COMMAND_GROUP = :scope
-      KEYWORDS = %w(node loglevel)
-      LOGLEVELS = %w(debug info)
+      KEYWORDS = %w[node loglevel].freeze
+      LOGLEVELS = %w[debug info].freeze
 
       def self.command_completion(buffer_words)
         next_word = buffer_words.shift
         case next_word
         when 'loglevel'
-          if buffer_words.count > 0
+          if buffer_words.count.positive?
             LOGLEVELS.grep(/^#{Regexp.escape(buffer_words.first)}/)
           else
             LOGLEVELS
@@ -20,7 +22,7 @@ module PuppetDebugger
         when 'debug', 'info', 'node'
           []
         when nil
-          %w(node loglevel)
+          %w[node loglevel]
         else
           KEYWORDS.grep(/^#{Regexp.escape(next_word)}/)
         end

@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'puppet-debugger/input_responder_plugin'
 module PuppetDebugger
   module InputResponders
     class Classification < InputResponderPlugin
-      COMMAND_WORDS = %w(classification)
+      COMMAND_WORDS = %w[classification].freeze
       SUMMARY = 'Show the classification details of the node.'
       COMMAND_GROUP = :node
 

@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'puppet-debugger/input_responder_plugin'
 module PuppetDebugger
   module InputResponders
     class Reset < InputResponderPlugin
-      COMMAND_WORDS = %w(reset)
+      COMMAND_WORDS = %w[reset].freeze
       SUMMARY = 'Reset the debugger to a clean state.'
       COMMAND_GROUP = :context
 

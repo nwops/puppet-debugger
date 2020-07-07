@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'puppet-debugger/input_responder_plugin'
 module PuppetDebugger
   module InputResponders
     class Play < InputResponderPlugin
-      COMMAND_WORDS = %w(play)
+      COMMAND_WORDS = %w[play].freeze
       SUMMARY = 'Playback a file or URL as input.'
       COMMAND_GROUP = :editing
 
@@ -51,7 +53,7 @@ module PuppetDebugger
 
       # opens the url and reads the data
       def fetch_url_data(url)
-        open(url).read
+        URI.open(url).read # open(url).read
       end
 
       def play_back_url(url)
@@ -72,12 +74,8 @@ module PuppetDebugger
           begin
             full_buffer += buf
             # unless this is puppet code, otherwise skip repl keywords
-            if PuppetDebugger::InputResponders::Commands.command_list_regex.match(buf)
-              debugger.out_buffer.write('>> ')
-            else
-              debugger.parser.parse_string(full_buffer)
-              debugger.out_buffer.write('>> ')
-            end
+            debugger.parser.parse_string(full_buffer) unless PuppetDebugger::InputResponders::Commands.command_list_regex.match(buf)
+            debugger.out_buffer.write('>> ')
           rescue Puppet::ParseErrorWithIssue => e
             if debugger.multiline_input?(e)
               full_buffer += "\n"

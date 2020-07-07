@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require "puppet"
-require "readline"
-require "json"
-require "puppet-debugger/support"
-require "pluginator"
-require "puppet-debugger/hooks"
-require "forwardable"
-require "plugins/puppet-debugger/input_responders/functions"
-require "plugins/puppet-debugger/input_responders/datatypes"
+require 'puppet'
+require 'readline'
+require 'json'
+require 'puppet-debugger/support'
+require 'pluginator'
+require 'puppet-debugger/hooks'
+require 'forwardable'
+require 'plugins/puppet-debugger/input_responders/functions'
+require 'plugins/puppet-debugger/input_responders/datatypes'
 require 'tty-pager'
 module PuppetDebugger
   class Cli
@@ -25,7 +25,7 @@ module PuppetDebugger
       set_remote_node_name(options[:node_name])
       initialize_from_scope(options[:scope])
       set_catalog(options[:catalog])
-      @log_level = "notice"
+      @log_level = 'notice'
       @out_buffer = options[:out_buffer] || $stdout
       @html_mode = options[:html_mode] || false
       @source_file = options[:source_file] || nil
@@ -33,8 +33,8 @@ module PuppetDebugger
       @in_buffer = options[:in_buffer] || $stdin
       Readline.input = @in_buffer
       Readline.output = @out_buffer
-      Readline.completion_append_character = ""
-      Readline.basic_word_break_characters = " "
+      Readline.completion_append_character = ''
+      Readline.basic_word_break_characters = ' '
       Readline.completion_proc = command_completion
       AwesomePrint.defaults = {
         html: @html_mode,
@@ -77,7 +77,8 @@ module PuppetDebugger
       PuppetDebugger::InputResponders::Functions.instance.debugger = self
       funcs = PuppetDebugger::InputResponders::Functions.instance.func_list
       PuppetDebugger::InputResponders::Datatypes.instance.debugger = self
-      (scoped_vars + funcs + static_responder_list + PuppetDebugger::InputResponders::Datatypes.instance.all_data_types).uniq.sort
+      (scoped_vars + funcs + static_responder_list +
+        PuppetDebugger::InputResponders::Datatypes.instance.all_data_types).uniq.sort
     end
 
     # looks up the type in the catalog by using the type and title
@@ -154,17 +155,17 @@ module PuppetDebugger
       output = begin
         case input.strip
         when PuppetDebugger::InputResponders::Commands.command_list_regex
-          args = input.split(" ")
+          args = input.split(' ')
           command = args.shift
           plugin = PuppetDebugger::InputResponders::Commands.plugin_from_command(command)
-          plugin.execute(args, self) || ""
-        when "_"
+          plugin.execute(args, self) || ''
+        when '_'
           " => #{@last_item}"
         else
           result = puppet_eval(input)
           @last_item = result
           o = normalize_output(result)
-          o.nil? ? "" : o.ai
+          o.nil? ? '' : o.ai
         end
                rescue PuppetDebugger::Exception::InvalidCommand => e
                  e.message.fatal
@@ -195,7 +196,7 @@ module PuppetDebugger
     end
 
     def self.print_repl_desc
-      output = <<~EOT
+      <<~OUT
         Ruby Version: #{RUBY_VERSION}
         Puppet Version: #{Puppet.version}
         Puppet Debugger Version: #{PuppetDebugger::VERSION}
@@ -204,15 +205,14 @@ module PuppetDebugger
         or "help" to show the help screen.
 
 
-      EOT
-      output
+      OUT
     end
 
     # tries to determine if the input is going to be a multiline input
     # by reading the parser error message
     # @return [Boolean] - return true if this is a multiline input, false otherwise
-    def multiline_input?(e)
-      case e.message
+    def multiline_input?(data)
+      case data.message
       when /Syntax error at end of/i
         true
       else
@@ -227,7 +227,7 @@ module PuppetDebugger
     # input
     def read_loop
       line_number = 1
-      full_buffer = ""
+      full_buffer = ''
       while buf = Readline.readline("#{line_number}:#{extra_prompt}>> ", true)
         begin
           full_buffer += buf
@@ -238,14 +238,14 @@ module PuppetDebugger
               parser.parse_string(full_buffer)
             rescue Puppet::ParseErrorWithIssue => e
               if multiline_input?(e)
-                out_buffer.print "  "
+                out_buffer.print '  '
                 full_buffer += "\n"
                 next
               end
             end
           end
           handle_input(full_buffer)
-          full_buffer = ""
+          full_buffer = ''
         end
       end
     end
@@ -267,7 +267,7 @@ module PuppetDebugger
       repl_obj.out_buffer.puts print_repl_desc unless options[:quiet]
       repl_obj.handle_input(options[:content]) if options[:content]
       # TODO: make the output optional so we can have different output destinations
-      repl_obj.handle_input("whereami") if options[:source_file] && options[:source_line]
+      repl_obj.handle_input('whereami') if options[:source_file] && options[:source_line]
       repl_obj.handle_input("play #{options[:play]}") if options[:play]
       repl_obj.read_loop unless options[:run_once]
     end
@@ -278,11 +278,11 @@ module PuppetDebugger
     # @param [Hash] puppet scope object
     def self.start(options = { scope: nil })
       opts = Trollop.options do
-        opt :play, "Url or file to load from", required: false, type: String
-        opt :run_once, "Evaluate and quit", required: false, default: false
-        opt :node_name, "Remote Node to grab facts from", required: false, type: String
-        opt :catalog, "Import a catalog file to inspect", required: false, type: String
-        opt :quiet, "Do not display banner", required: false, default: false
+        opt :play, 'Url or file to load from', required: false, type: String
+        opt :run_once, 'Evaluate and quit', required: false, default: false
+        opt :node_name, 'Remote Node to grab facts from', required: false, type: String
+        opt :catalog, 'Import a catalog file to inspect', required: false, type: String
+        opt :quiet, 'Do not display banner', required: false, default: false
       end
       if !STDIN.tty? && !STDIN.closed?
         options[:run_once] = true
@@ -294,11 +294,11 @@ module PuppetDebugger
       repl_obj.out_buffer.puts print_repl_desc unless options[:quiet]
       if options[:play]
         repl_obj.handle_input("play #{options[:play]}")
-      elsif (ARGF.filename == "-") && (!STDIN.tty? && !STDIN.closed?)
+      elsif (ARGF.filename == '-') && (!STDIN.tty? && !STDIN.closed?)
         # when the user supplied a file content using stdin, aka. cat,pipe,echo or redirection
         input = ARGF.read
         repl_obj.handle_input(input)
-      elsif ARGF.filename != "-"
+      elsif ARGF.filename != '-'
         # when the user supplied a file name without using the args (stdin)
         path = File.expand_path(ARGF.filename)
         repl_obj.handle_input("play #{path}")

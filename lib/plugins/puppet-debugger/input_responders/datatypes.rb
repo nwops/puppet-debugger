@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'puppet-debugger/input_responder_plugin'
 module PuppetDebugger
   module InputResponders
     class Datatypes < InputResponderPlugin
-      COMMAND_WORDS = %w(datatypes)
+      COMMAND_WORDS = %w[datatypes].freeze
       SUMMARY = 'List all the datatypes available in the environment.'
       COMMAND_GROUP = :environment
 

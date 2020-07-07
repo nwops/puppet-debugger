@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 # https://relishapp.com/rspec/rspec-core/v/3-6/docs/example-groups/shared-examples
-RSpec.shared_examples "plugin_tests" do |parameter|
+RSpec.shared_examples 'plugin_tests' do |_parameter|
   let(:plugin) do
     instance = PuppetDebugger::InputResponders::Commands.plugin_from_command(subject.to_s).instance
     instance.debugger = debugger
@@ -18,15 +20,15 @@ RSpec.shared_examples "plugin_tests" do |parameter|
     {}
   end
 
-  it "commands contant is an array" do
+  it 'commands contant is an array' do
     expect(plugin.class::COMMAND_WORDS).to be_a(Array)
   end
 
-  it "commands must contain at least one word" do
+  it 'commands must contain at least one word' do
     expect(plugin.class::COMMAND_WORDS.count).to be > 0
   end
 
-  it "summary must be a string" do
+  it 'summary must be a string' do
     expect(plugin.class::SUMMARY).to be_a(String)
   end
 

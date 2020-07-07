@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.version = PuppetDebugger::VERSION
   s.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|resources|local_test_results|pec)/}) }
   s.bindir        = 'bin'
-  s.executables = ['pdb', 'puppet-debugger']
+  s.executables = %w[pdb puppet-debugger]
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
   if s.respond_to?(:metadata)
@@ -28,18 +28,18 @@ Gem::Specification.new do |s|
     'README.md'
   ]
   s.required_ruby_version = '>= 2.4'
-  s.homepage = "https://gitlab.com/puppet-debugger/puppet-debugger"
-  s.licenses = ["MIT"]
-  s.rubygems_version = "2.4.5.1"
-  s.summary = "A repl based debugger for the puppet language"
-  s.add_runtime_dependency(%q<awesome_print>, ["~> 1.7"])
-  s.add_runtime_dependency(%q<bundler>)
-  s.add_runtime_dependency(%q<facterdb>, [">= 0.4.0"])
-  s.add_runtime_dependency(%q<pluginator>, ["~> 1.5.0"])
-  s.add_runtime_dependency(%q<puppet>, [">= 5.5"])
-  s.add_runtime_dependency(%q<rb-readline>, ['>= 0.5.5'])
-  s.add_runtime_dependency(%q<table_print>, [">= 1.0.0"])
-  s.add_runtime_dependency(%q<tty-pager>, ['~> 0.13.0'])
-  s.add_development_dependency(%q<rdoc>, ["~> 3.12"])
-  s.add_development_dependency(%q<rspec>, ["~> 3.6"])
+  s.homepage = 'https://gitlab.com/puppet-debugger/puppet-debugger'
+  s.licenses = ['MIT']
+  s.rubygems_version = '2.4.5.1'
+  s.summary = 'A repl based debugger for the puppet language'
+  s.add_runtime_dependency('awesome_print', ['~> 1.7'])
+  s.add_runtime_dependency('bundler')
+  s.add_runtime_dependency('facterdb', ['>= 0.4.0'])
+  s.add_runtime_dependency('pluginator', ['~> 1.5.0'])
+  s.add_runtime_dependency('puppet', ['>= 5.5'])
+  s.add_runtime_dependency('rb-readline', ['>= 0.5.5'])
+  s.add_runtime_dependency('table_print', ['>= 1.0.0'])
+  s.add_runtime_dependency('tty-pager', ['~> 0.13.0'])
+  s.add_development_dependency('rdoc', ['~> 3.12'])
+  s.add_development_dependency('rspec', ['~> 3.6'])
 end

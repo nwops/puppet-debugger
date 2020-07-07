@@ -23,7 +23,7 @@ module PuppetDebugger
       end
 
       def bolt_modules
-        spec = Gem::Specification.latest_specs.find { |spec| spec.name.eql?('bolt') }
+        spec = Gem::Specification.latest_specs.find { |s| s.name.eql?('bolt') }
         File.join(spec.full_gem_path, 'bolt-modules') if spec
       end
 
