@@ -7,7 +7,8 @@ class sample_test_breakpoint(
     ensure => present,
   }
   range(1,5).map | $num | {
-    start_repl()
+    $num * $num
   }
+  debug::breaK()
 }
 include sample_test_breakpoint

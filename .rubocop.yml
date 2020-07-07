@@ -42,37 +42,31 @@ Style/NumericPredicate:
 Metrics/BlockLength:
   Max: 277
 
-Layout/EmptyLinesAroundAttributeAccessor:
-  Enabled: false
-Layout/SpaceAroundMethodCallOperator:
-  Enabled: false
-Lint/DeprecatedOpenSSLConstant:
-  Enabled: false
-Lint/MixedRegexpCaptureTypes:
-  Enabled: false 
-Lint/RaiseException:
-  Enabled: false 
-Lint/StructNewOverride:
-  Enabled: false 
-Style/ExponentialNotation:
-  Enabled: false 
-Style/HashEachMethods:
-  Enabled: false 
-Style/HashTransformKeys:
-  Enabled: false 
-Style/HashTransformValues:
-  Enabled: false 
-Style/RedundantFetchBlock:
-  Enabled: false 
-Style/RedundantRegexpCharacterClass:
-  Enabled: false 
-Style/RedundantRegexpEscape:
-  Enabled: false 
-Style/SlicingWithRange:
-  Enabled: false 
-Style/AccessorGrouping:
-  Enabled: false 
-Style/BisectedAttrAccessor:
-  Enabled: false 
-Style/RedundantAssignment:
-  Enabled: false   
+# Layout/EmptyLinesAroundAttributeAccessor:
+#   Enabled: false
+# Layout/SpaceAroundMethodCallOperator:
+#   Enabled: false
+# Lint/DeprecatedOpenSSLConstant:
+#   Enabled: false
+# Lint/MixedRegexpCaptureTypes:
+#   Enabled: false 
+# Lint/RaiseException:
+#   Enabled: false 
+# Lint/StructNewOverride:
+#   Enabled: false 
+# Style/ExponentialNotation:
+#   Enabled: false 
+# Style/HashEachMethods:
+#   Enabled: false 
+# Style/HashTransformKeys:
+#   Enabled: false 
+# Style/HashTransformValues:
+#   Enabled: false 
+# Style/RedundantFetchBlock:
+#   Enabled: false 
+# Style/RedundantRegexpCharacterClass:
+#   Enabled: false 
+# Style/RedundantRegexpEscape:
+#   Enabled: false 
+# Style/SlicingWithRange:
+#   Enabled: false 

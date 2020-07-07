@@ -131,31 +131,41 @@ module PuppetDebugger
       ::Puppet::Parser::AST::Hostclass.new('', code: ast_code)
     end
 
-    # @param String - any valid puppet language code
-    # @return Object - returns either a string of the result or object from puppet evaulation
-    def puppet_eval(input)
-      # in order to add functions to the scope the loaders must be created
-      # in order to call native functions we need to set the global_scope
-      ast = generate_ast(input)
-      # record the input for puppet to retrieve and reference later
+    # @return [String] the path to the manifest file
+    # @param input [String] the manfiest content
+    # @summary creates a manifest file unless one already exist
+    def manifest_file(input)
       file = Tempfile.new(['puppet_debugger_input', '.pp'])
       File.open(file, 'w') do |f|
         f.write(input)
       end
-      Puppet.override({ current_environment: puppet_environment, code: input,
+      file
+    end
+
+    # @param String - any valid puppet language code
+    # @return Object - returns either a string of the result or object from puppet evaulation
+    def puppet_eval(input, file: nil)
+      # in order to add functions to the scope the loaders must be created
+      # in order to call native functions we need to set the global_scope
+      # record the input for puppet to retrieve and reference later
+      manifest_file = file || manifest_file(input)
+      manfifest_content = input || File.read(manifest_file)
+      ast = generate_ast(manfifest_content)
+
+      Puppet.override({ current_environment: puppet_environment, manifest: manifest_file,
                         global_scope: scope, loaders: scope.compiler.loaders }, 'For puppet-debugger') do
-        # because the repl is not a module we leave the modname blank
-        scope.environment.known_resource_types.import_ast(ast, '')
+        # because the debugger is not a module we leave the modname blank
+        scope.environment.known_resource_types.import_ast(ast, 'debugger')
 
         exec_hook :before_eval, '', self, self
         if bench
           result = nil
           time = Benchmark.realtime do
-            result = parser.evaluate_string(scope, input, File.expand_path(file))
+            result = parser.evaluate_string(scope, manfifest_content, File.expand_path(manifest_file))
           end
           out = [result, "Time elapsed #{(time * 1000).round(2)} ms"]
         else
-          out = parser.evaluate_string(scope, input, File.expand_path(file))
+          out = parser.evaluate_string(scope, manfifest_content, File.expand_path(manifest_file))
         end
         exec_hook :after_eval, out, self, self
         out
