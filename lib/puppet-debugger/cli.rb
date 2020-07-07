@@ -156,17 +156,17 @@ module PuppetDebugger
         begin
           case input.strip
           when PuppetDebugger::InputResponders::Commands.command_list_regex
-            args = input.split(" ")
+            args = input.split(' ')
             command = args.shift
             plugin = PuppetDebugger::InputResponders::Commands.plugin_from_command(command)
-            plugin.execute(args, self) || ""
-          when "_"
+            plugin.execute(args, self) || ''
+          when '_'
             " => #{@last_item}"
           else
             result = puppet_eval(input)
             @last_item = result
             o = normalize_output(result)
-            o.nil? ? "" : o.ai
+            o.nil? ? '' : o.ai
           end
         rescue PuppetDebugger::Exception::InvalidCommand => e
           e.message.fatal

@@ -20,8 +20,17 @@ AllCops:
     - 'vendor/**/*'
     - 'test_matrix.rb'
     - 'lib/puppet-debugger/trollop.rb'
+Style/ClassAndModuleChildren:
+  Exclude:
+    - 'lib/puppet-debugger/monkey_patches.rb'
+    - 'lib/puppet/application/debugger.rb'
+    - 'spec/spec_helper.rb'
+Style/DoubleNegation:
+  Exclude:
+    - 'lib/puppet-debugger/debugger_code.rb'
 
-
+Metrics/MethodLength:
+  Max: 45
 Lint/Debugger:
   Enabled: false
 Layout/LineLength:
@@ -61,3 +70,9 @@ Style/RedundantRegexpEscape:
   Enabled: false 
 Style/SlicingWithRange:
   Enabled: false 
+Style/AccessorGrouping:
+  Enabled: false 
+Style/BisectedAttrAccessor:
+  Enabled: false 
+Style/RedundantAssignment:
+  Enabled: false   
