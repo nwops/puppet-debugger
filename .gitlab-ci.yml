@@ -24,7 +24,7 @@ web_trigger_staging:
   variables:
     REF: staging
   only:
-    - master
+    - main
   script:
     - "curl -X POST -F token=$PREPL_BUILD_TRIGGER_TOKEN -F ref=$REF https://gitlab.com/api/v3/projects/1146764/trigger/builds"
 
@@ -45,7 +45,7 @@ bump_and_tag:
   tags:
     - ruby2.2
   only:
-    - master@puppet-debugger/puppet-debugger
+    - main@puppet-debugger/puppet-debugger
   script:
     - gem install release_me
     - bump_and_tag
