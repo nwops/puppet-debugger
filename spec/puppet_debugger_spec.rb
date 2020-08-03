@@ -37,11 +37,11 @@ describe 'PuppetDebugger' do
         'class testfoo {}'
       end
       let(:debugger_output) do
-        "\n => Puppet::Type::Component {\n  loglevel\e[0;37m => \e[0m\e[0;36mnotice\e[0m,\n      name\e[0;37m => \e[0m\e[0;33m\"Testfoo\"\e[0m,\n     title\e[0;37m => \e[0m\e[0;33m\"Class[Testfoo]\"\e[0m\n}\n"
+        " => Puppet::Type::Component {\n  loglevel\e[0;37m => \e[0m\e[0;36mnotice\e[0m,\n      name\e[0;37m => \e[0m\e[0;33m\"Testfoo\"\e[0m,\n     title\e[0;37m => \e[0m\e[0;33m\"Class[Testfoo]\"\e[0m\n}\n"
       end
       it do
         debugger.handle_input(input)
-        expect(output.string).to eq("\n")
+        expect(output.string).to eq('')
         expect(debugger.known_resource_types[:hostclasses]).to include('testfoo')
       end
       it do
@@ -63,19 +63,17 @@ describe 'PuppetDebugger' do
         'define testfoodefine {}'
       end
       let(:debugger_output) do
-        "\n => Puppet::Type::Component {\n  loglevel\e[0;37m => \e[0m\e[0;36mnotice\e[0m,\n      name\e[0;37m => \e[0m\e[0;33m\"some_name\"\e[0m,\n     title\e[0;37m => \e[0m\e[0;33m\"Testfoo[some_name]\"\e[0m\n}\n"
+        " => Puppet::Type::Component {\n  loglevel\e[0;37m => \e[0m\e[0;36mnotice\e[0m,\n      name\e[0;37m => \e[0m\e[0;33m\"some_name\"\e[0m,\n     title\e[0;37m => \e[0m\e[0;33m\"Testfoo[some_name]\"\e[0m\n}\n"
       end
       it do
         debugger.handle_input(input)
         expect(debugger.scope.environment.known_resource_types.definitions.keys).to include('testfoodefine')
-        expect(output.string).to eq("\n")
+        expect(output.string).to eq('')
       end
       it do
         debugger.handle_input(input)
         debugger.handle_input("testfoodefine{'some_name':}")
-        expect(debugger.scope.compiler.resources.collect(&:name)).to include('some_name')
-        expect(debugger.scope.compiler.resources.collect(&:type)).to include('Testfoodefine')
-        expect(output.string).to include("\n => Puppet::Type::Component")
+        expect(output.string).to include(' => Puppet::Type::Component')
       end
     end
   end
@@ -107,7 +105,7 @@ describe 'PuppetDebugger' do
     end
     describe 'create' do
       it 'shows function' do
-        expect(output.string).to eq("\n")
+        expect(output.string).to eq('')
       end
     end
     describe 'run' do
@@ -134,7 +132,8 @@ describe 'PuppetDebugger' do
       ''
     end
     it 'can run' do
-      debugger_output = "\n"
+      debugger_output = ''
+      debugger.handle_input(input)
       debugger.handle_input(input)
       expect(output.string).to eq(debugger_output)
     end
@@ -143,7 +142,7 @@ describe 'PuppetDebugger' do
         ' '
       end
       it 'can run' do
-        debugger_output = "\n"
+        debugger_output = ''
         debugger.handle_input(input)
         expect(output.string).to eq(debugger_output)
       end
@@ -209,7 +208,7 @@ describe 'PuppetDebugger' do
     end
     it 'shows type' do
       debugger.handle_input(input)
-      expect(output.string).to eq("\n => String\n")
+      expect(output.string).to eq(" => String\n")
     end
   end
   describe 'Array', type_function: true do
@@ -217,11 +216,9 @@ describe 'PuppetDebugger' do
       'type([1,2,3,4])'
     end
     it 'shows type' do
-      if Gem::Version.new(Puppet.version) > Gem::Version.new('4.4')
-        debugger.handle_input(input)
-        out = "\n => Tuple[Integer[1, 1], Integer[2, 2], Integer[3, 3], Integer[4, 4]]\n"
-        expect(output.string).to eq(out)
-      end
+      debugger.handle_input(input)
+      out = " => Tuple[Integer[1, 1], Integer[2, 2], Integer[3, 3], Integer[4, 4]]\n"
+      expect(output.string).to eq(out)
     end
   end
 

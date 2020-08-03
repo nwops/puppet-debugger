@@ -155,7 +155,7 @@ module PuppetDebugger
       Puppet.override({ current_environment: puppet_environment, manifest: manifest_file,
                         global_scope: scope, loaders: scope.compiler.loaders }, 'For puppet-debugger') do
         # because the debugger is not a module we leave the modname blank
-        scope.environment.known_resource_types.import_ast(ast, 'debugger')
+        scope.environment.known_resource_types.import_ast(ast, '')
 
         exec_hook :before_eval, '', self, self
         if bench

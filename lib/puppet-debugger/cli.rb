@@ -15,12 +15,13 @@ module PuppetDebugger
     include PuppetDebugger::Support
     extend Forwardable
     attr_accessor :settings, :log_level, :in_buffer, :out_buffer, :html_mode, :extra_prompt, :bench
-    attr_reader :source_file, :source_line_num, :hooks
+    attr_reader :source_file, :source_line_num, :hooks, :options
     def_delegators :hooks, :exec_hook, :add_hook, :delete_hook
     OUT_SYMBOL = ' => '
     def initialize(options = {})
       do_initialize if Puppet[:codedir].nil?
       Puppet.settings[:name] = :debugger
+      @options = options
       Puppet[:static_catalogs] = false unless Puppet.settings[:static_catalogs].nil?
       set_remote_node_name(options[:node_name])
       initialize_from_scope(options[:scope])
@@ -130,7 +131,11 @@ module PuppetDebugger
 
     # @return [TTY::Pager] the pager object, disable if CI or testing is present
     def pager
-      @pager ||= TTY::Pager.new(output: out_buffer, enabled: ENV['CI'].nil?)
+      @pager ||= TTY::Pager.new(output: out_buffer, enabled: pager_enabled?)
+    end
+
+    def pager_enabled?
+      ENV['CI'].nil?
     end
 
     # @param output [String] - the content to output
@@ -140,8 +145,7 @@ module PuppetDebugger
     #   Disabled if CI or testing is being done
     def handle_output(output)
       return if output.nil?
-
-      if output.lines.count >= TTY::Screen.height && ENV['CI'].nil?
+      if pager_enabled? && output.lines.count >= TTY::Screen.height 
         output << "\n"
         pager.page(output)
       else
