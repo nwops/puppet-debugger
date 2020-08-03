@@ -28,11 +28,6 @@ describe 'pdb' do
     expect(`bundle exec bin/pdb --play #{fixtures_file} --run-once`)
       .to match(/Puppet::Type::File/)
   end
-  # xit do
-  #   # this test does not work without internet, and I am at 30K feet right now
-  #   expect(`bundle exec bin/pdb --play #{file_url} --run-once`)
-  #     .to match(/Puppet::Type::File/)
-  # end
 
   describe 'remote_node' do
     let(:node_obj) do
@@ -44,9 +39,5 @@ describe 'pdb' do
     before :each do
       allow(PuppetDebugger).to receive(:get_remote_node).with(node_name).and_return(node_obj)
     end
-    # xit do
-    #   expect(`echo 'vars'| bundle exec bin/pdb -n #{node_name}`)
-    #     .to match(/server_facts/)
-    # end
   end
 end

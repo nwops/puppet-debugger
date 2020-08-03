@@ -141,10 +141,6 @@ describe :play do
           $var
         OUT
       end
-      xit do
-        plugin.play_back_string(input)
-        expect(output.string).to include('"3"')
-      end
     end
   end
 
@@ -158,13 +154,6 @@ describe :play do
     end
     let(:input) do
       "play #{file_url}"
-    end
-    # requires internet and stops testing
-    xit 'url' do
-      allow(debugger).to receive(:fetch_url_data).with(file_url + '.txt').and_return(File.read(fixtures_file))
-      debugger.handle_input(input)
-      expect(output.string).to match(/test/)
-      expect(output.string).to match(/Puppet::Type::File/)
     end
 
     it 'file' do

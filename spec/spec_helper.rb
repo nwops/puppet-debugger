@@ -1,26 +1,29 @@
 # frozen_string_literal: true
 
-require 'simplecov'
 require_relative '../lib/puppet-debugger'
 require 'yaml'
 ENV['CI'] = 'true'
 
-module SimpleCov::Configuration
-  def clean_filters
-    @filters = []
-  end
-end
-
-SimpleCov.configure do
-  clean_filters
-  load_profile 'test_frameworks'
-end
-
 if ENV['COVERAGE']
-  SimpleCov.start do
-    add_filter '/.rvm/'
-    add_filter 'vendor'
-    add_filter 'bundler'
+  require 'simplecov'
+
+  module SimpleCov::Configuration
+    def clean_filters
+      @filters = []
+    end
+  end
+
+  SimpleCov.configure do
+    clean_filters
+    load_profile 'test_frameworks'
+  end
+
+  if ENV['COVERAGE']
+    SimpleCov.start do
+      add_filter '/.rvm/'
+      add_filter 'vendor'
+      add_filter 'bundler'
+    end
   end
 end
 

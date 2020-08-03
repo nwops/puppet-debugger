@@ -6,10 +6,6 @@ require 'puppet-debugger'
 describe :exit do
   let(:args) { [] }
 
-  xit 'exits' do
-    expect { plugin.run(args) }.to eq('')
-  end
-
   let(:plugin) do
     instance = PuppetDebugger::InputResponders::Commands.plugin_from_command(subject.to_s).instance
     instance.debugger = debugger

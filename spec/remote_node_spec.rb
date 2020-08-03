@@ -74,10 +74,6 @@ describe 'PuppetDebugger' do
       let(:node_name) do
         'invalid.localdomain'
       end
-      # this test stopped working in the puppet 5.x series
-      xit 'name' do
-        expect { debugger.node.name }.to raise_error(PuppetDebugger::Exception::UndefinedNode)
-      end
     end
 
     it 'set node name' do
