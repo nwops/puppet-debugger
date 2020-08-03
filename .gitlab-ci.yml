@@ -15,7 +15,7 @@ stages:
     - gem install bundler > /dev/null
     - bundle install --without development validate
     - bundle exec puppet module install puppetlabs-stdlib
-    - bundle exec rake spec
+    - bundle exec rspec
   tags:
     - ruby
 
@@ -90,6 +90,12 @@ puppet_5_ruby24:
     PUPPET_GEM_VERSION: "~> 5.5"
   <<: *puppet_job_def
   <<: *ruby24
+
+puppet_5_ruby25:
+  variables:
+    PUPPET_GEM_VERSION: "~> 5.5"
+  <<: *puppet_job_def
+  <<: *ruby25
 
 puppet_6_ruby25:
   variables:
