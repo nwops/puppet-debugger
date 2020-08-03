@@ -35,7 +35,7 @@ A interactive command line tool for evaluating and debugging the puppet language
 Please visit https://docs.puppet-debugger.com for more info.
 
 ## Compatibility
-Requires Puppet 3.8+ and only uses the future parser.  Works with puppet 4-6.
+Requires Puppet 5.5+, ruby 2.4+
 
 ## Production usage
 The puppet debugger is a developer tool that should only be used when writing puppet code.  Although it might seem useful
@@ -64,8 +64,8 @@ and see what it would actual do when compiling a resource.
 Example Usage
 ```
 Ruby Version: 2.6.5
-Puppet Version: 6.14.0
-Puppet Debugger Version: 0.16.0
+Puppet Version: 6.17.0
+Puppet Debugger Version: 1.0.0
 Created by: NWOps <corey@nwops.io>
 Type "commands" for a list of debugger commands
 or "help" to show the help screen.
@@ -90,8 +90,7 @@ or "help" to show the help screen.
     "policy_version" => "29"
   }
 }
-2:>>
-
+2:>> 
 
 ```
 
