@@ -1,4 +1,11 @@
 ## Unreleased
+- Bump required ruby version to 2.4
+- Bump required puppet version to puppet 5.5
+- Add stacktrace plugin
+- Add a pager for long output
+- Remove puppet4 and older work arounds
+- Use rubocop for better code quality
+- Fix issue when the debugger was not loading the manfiest properely
 
 ## 0.19.0
 - Search datatypes with filter 
