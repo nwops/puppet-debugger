@@ -14,9 +14,17 @@ module PuppetDebugger
         s.empty? ? 'stacktrace not available'.warning : s.ai
       end
 
-      # @return [Array] - an array of files
+      # @return [Array] - an array of files with line numbers
+      # @example
+      # [
+      #   "/nwops/puppetlabs-peadm/spec/fixtures/modules/peadm/plans/status.pp:23",
+      #   "/nwops/puppetlabs-peadm/spec/fixtures/modules/peadm/plans/status.pp:20"
+      # ]
       def stacktrace
-        Puppet::Pops::PuppetStack.stacktrace.find_all { |line| !line.include?('unknown') }
+        stack = Puppet::Pops::PuppetStack.stacktrace.find_all { |line| !line.include?('unknown') }
+        stack.each_with_object([]) do |item, acc|
+          acc << item.join(':')
+        end
       end
     end
   end
