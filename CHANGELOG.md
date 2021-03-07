@@ -1,6 +1,8 @@
 # Puppet Debugger Changelog
 
 ## Unreleased
+
+## 1.1
 - Catch signals and allow control-d for quitting. 
 ## 1.0
 Released: 8/3/2020
