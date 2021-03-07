@@ -42,6 +42,15 @@ module PuppetDebugger
         sort_keys: true,
         indent: 2
       }
+      # Catch control-c sequences
+      trap('SIGINT') do
+        # control-d
+        exit 0
+      end
+      trap('INT') do
+        # control-c
+        # handle_output('Type exit or use control-d')
+      end
     end
 
     # @return [Proc] the proc used in the command completion for readline
@@ -145,7 +154,8 @@ module PuppetDebugger
     #   Disabled if CI or testing is being done
     def handle_output(output)
       return if output.nil?
-      if pager_enabled? && output.lines.count >= TTY::Screen.height 
+
+      if pager_enabled? && output.lines.count >= TTY::Screen.height
         output << "\n"
         pager.page(output)
       else

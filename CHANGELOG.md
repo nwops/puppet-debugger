@@ -1,7 +1,11 @@
+# Puppet Debugger Changelog
+
+## Unreleased
+- Catch signals and allow control-d for quitting. 
 ## 1.0
 Released: 8/3/2020
 
-This is a major revision with breaking changes, notibly the requirement of ruby 2.4 and puppet 5.5.
+This is a major revision with breaking changes, notably the requirement of ruby 2.4 and puppet 5.5.
 
 - Bump required ruby version to 2.4
 - Bump required puppet version to puppet 5.5
@@ -9,7 +13,7 @@ This is a major revision with breaking changes, notibly the requirement of ruby 
 - Add a pager for long output
 - Remove puppet4 and older work arounds
 - Use rubocop for better code quality
-- Fix issue when the debugger was not loading the manfiest properely
+- Fix issue when the debugger was not loading the manifest properly
 
 ## 0.19.0
 - Search datatypes with filter 

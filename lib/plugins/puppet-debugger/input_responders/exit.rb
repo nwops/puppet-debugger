@@ -5,7 +5,7 @@ module PuppetDebugger
   module InputResponders
     class Exit < InputResponderPlugin
       COMMAND_WORDS = %w[exit].freeze
-      SUMMARY = 'Quit Puppet Debugger.'
+      SUMMARY = 'Quit Puppet Debugger, or use control-d'
       COMMAND_GROUP = :help
 
       def run(_args = [])
