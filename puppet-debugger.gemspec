@@ -37,6 +37,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency('facterdb', ['>= 0.4.0'])
   s.add_runtime_dependency('pluginator', ['~> 1.5.0'])
   s.add_runtime_dependency('puppet', ['>= 5.5'])
+  # s.add_runtime_dependency('bolt', ['>= 2.42.0'])
   s.add_runtime_dependency('rb-readline', ['>= 0.5.5'])
   s.add_runtime_dependency('table_print', ['>= 1.0.0'])
   s.add_runtime_dependency('tty-pager', ['~> 0.13.0'])

@@ -1,7 +1,7 @@
 # Puppet Debugger Changelog
 
 ## Unreleased
-
+- Fix puppetdb_query errors when bolt_pdb_client was not loaded
 ## 1.1
 - Catch signals and allow control-d for quitting. 
 ## 1.0

@@ -142,6 +142,22 @@ module PuppetDebugger
       file
     end
 
+    # @return [Bolt::PuppetDB::Client] 
+    def bolt_pdb_client
+      @bolt_pdb_client ||=
+        begin
+          require 'bolt/logger'
+          require 'bolt/puppetdb'
+          require 'bolt/puppetdb/client'
+          require 'bolt/puppetdb/config'
+          config = Bolt::PuppetDB::Config.load_config({})
+          Bolt::PuppetDB::Client.new(config)
+        rescue LoadError
+          # not puppet 6+
+          nil
+        end
+    end
+
     # @param String - any valid puppet language code
     # @return Object - returns either a string of the result or object from puppet evaulation
     def puppet_eval(input, file: nil)
@@ -151,9 +167,9 @@ module PuppetDebugger
       manifest_file = file || manifest_file(input)
       manfifest_content = input || File.read(manifest_file)
       ast = generate_ast(manfifest_content)
-
       Puppet.override({ current_environment: puppet_environment, manifest: manifest_file,
-                        global_scope: scope, loaders: scope.compiler.loaders }, 'For puppet-debugger') do
+                        global_scope: scope, bolt_pdb_client: bolt_pdb_client,
+                        loaders: scope.compiler.loaders }, 'For puppet-debugger') do
         # because the debugger is not a module we leave the modname blank
         scope.environment.known_resource_types.import_ast(ast, '')
 
