@@ -40,7 +40,7 @@ Gem::Specification.new do |s|
   # s.add_runtime_dependency('bolt', ['>= 2.42.0'])
   s.add_runtime_dependency('rb-readline', ['>= 0.5.5'])
   s.add_runtime_dependency('table_print', ['>= 1.0.0'])
-  s.add_runtime_dependency('tty-pager', ['~> 0.13.0'])
+  s.add_runtime_dependency('tty-pager', ['~> 0.13'])
   s.add_development_dependency('rdoc', ['~> 3.12'])
   s.add_development_dependency('rspec', ['~> 3.6'])
 end

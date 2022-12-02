@@ -150,8 +150,13 @@ module PuppetDebugger
           require 'bolt/puppetdb'
           require 'bolt/puppetdb/client'
           require 'bolt/puppetdb/config'
-          config = Bolt::PuppetDB::Config.load_config({})
-          Bolt::PuppetDB::Client.new(config)
+          if Bolt::PuppetDB::Config.respond_to?(:default_config)
+            config = Bolt::PuppetDB::Config.default_config
+            Bolt::PuppetDB::Client.new(config: config)
+          else
+            config = Bolt::PuppetDB::Config.load_config({})
+            Bolt::PuppetDB::Client.new(config)
+          end
         rescue LoadError
           # not puppet 6+
           nil
