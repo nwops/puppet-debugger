@@ -325,7 +325,7 @@ class DebuggerCode
   def method_missing(name, *args, &block)
     to_s.send(name, *args, &block)
   end
-  undef =~
+  undef =~ if method_defined?(:=~)
 
   protected
 
