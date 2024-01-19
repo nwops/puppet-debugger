@@ -1,3 +1,6 @@
+This code has moved to gitlab.  Please see https://gitlab.com/puppet-debugger/puppet-debugger
+
+
 ![demo](resources/puppet_debugger_long_white.png)
 
 ![demo](resources/animated-debugger-demo.gif)
